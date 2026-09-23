@@ -1,22 +1,17 @@
 package ar.edu.unrn.seminario.gui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import ar.edu.unrn.seminario.api.IApi;
-import ar.edu.unrn.seminario.api.MemoryApi;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class VentanaPrincipal extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**
@@ -26,9 +21,7 @@ public class VentanaPrincipal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IApi api = new MemoryApi();
-					VentanaPrincipal frame = new VentanaPrincipal(api);
-					frame.setLocationRelativeTo(null);
+					VentanaPrincipal frame = new VentanaPrincipal();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,50 +33,61 @@ public class VentanaPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaPrincipal(IApi api) {
-		getContentPane().setLayout(null);
+	public VentanaPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-
+		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-
-		JMenu usuarioMenu = new JMenu("Usuarios");
-		menuBar.add(usuarioMenu);
-
-		JMenuItem altaUsuarioMenuItem = new JMenuItem("Alta/Modificación");
-		altaUsuarioMenuItem.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				AltaUsuario alta = new AltaUsuario(api);
-				alta.setLocationRelativeTo(null);
-				alta.setVisible(true);
-			}
-			
-		});
-		usuarioMenu.add(altaUsuarioMenuItem);
-
-		JMenuItem listadoUsuarioMenuItem = new JMenuItem("Listado");
-		listadoUsuarioMenuItem.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				ListadoUsuario listado= new ListadoUsuario(api);
-				listado.setLocationRelativeTo(null);
-				listado.setVisible(true);
-			}
-			
-		});
-		usuarioMenu.add(listadoUsuarioMenuItem);
-
-		JMenu configuracionMenu = new JMenu("Configuración");
-		menuBar.add(configuracionMenu);
-
-		JMenuItem salirMenuItem = new JMenuItem("Salir");
-		configuracionMenu.add(salirMenuItem);
+		
+		JMenu menuCliente = new JMenu("Cliente");
+		menuBar.add(menuCliente);
+		
+		JMenuItem EnlistarClientes = new JMenuItem("Enlistar Clientes");
+		menuCliente.add(EnlistarClientes);
+		
+		JMenuItem altaCliente = new JMenuItem("Registrar Cliente");
+		menuCliente.add(altaCliente);
+		
+		JMenu menuHabitacion = new JMenu("Habitacion");
+		menuBar.add(menuHabitacion);
+		
+		JMenuItem enlistarHabitacion = new JMenuItem("Enlistar Habitacion");
+		menuHabitacion.add(enlistarHabitacion);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Habitacion");
+		menuHabitacion.add(mntmNewMenuItem);
+		
+		JMenu menuReserva = new JMenu("Reserva");
+		menuBar.add(menuReserva);
+		
+		JMenuItem enlistarReserva = new JMenuItem("Enlistar Reserva");
+		menuReserva.add(enlistarReserva);
+		
+		JMenuItem registrarReserva = new JMenuItem("Registrar Reserva");
+		menuReserva.add(registrarReserva);
+		
+		JMenu menuPlan = new JMenu("Plan");
+		menuBar.add(menuPlan);
+		
+		JMenuItem enlistarPlan = new JMenuItem("Enlistar Plan");
+		menuPlan.add(enlistarPlan);
+		
+		JMenuItem registrarPlan = new JMenuItem("Registrar Plan");
+		menuPlan.add(registrarPlan);
+		
+		JMenu menuServicio = new JMenu("Servicio");
+		menuBar.add(menuServicio);
+		
+		JMenuItem enlistarServicio = new JMenuItem("Enlistar Servicio");
+		menuServicio.add(enlistarServicio);
+		
+		JMenuItem registrarServicio = new JMenuItem("Registrar Servicio");
+		menuServicio.add(registrarServicio);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+
 	}
 
 }
