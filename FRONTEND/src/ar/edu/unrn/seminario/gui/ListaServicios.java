@@ -66,27 +66,27 @@ public class ListaServicios extends JFrame {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
-				{null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
 			},
 			new String[] {
-				"Nombre", "Estado vigencia"
+				"Nombre", "Precio", "Estado vigencia"
 			}
 		));
-		table.getColumnModel().getColumn(1).setPreferredWidth(92);
+		table.getColumnModel().getColumn(2).setPreferredWidth(92);
 		scrollPane.setViewportView(table);
 
 	}
