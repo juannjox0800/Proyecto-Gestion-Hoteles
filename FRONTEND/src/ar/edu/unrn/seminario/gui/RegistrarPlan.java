@@ -101,7 +101,7 @@ public class RegistrarPlan extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JButton btnNewButton = new JButton("Agregar Servicio");
-		btnNewButton.setBounds(244, 170, 147, 23);
+		btnNewButton.setBounds(277, 170, 147, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnGuardarPlan = new JButton("Guardar");
@@ -111,6 +111,10 @@ public class RegistrarPlan extends JFrame {
 		JButton btnCancelarPlan = new JButton("Cancelar");
 		btnCancelarPlan.setBounds(108, 227, 89, 23);
 		contentPane.add(btnCancelarPlan);
+		
+		JButton btnEliminarServicio = new JButton("Eliminar Servicio");
+		btnEliminarServicio.setBounds(120, 170, 147, 23);
+		contentPane.add(btnEliminarServicio);
 
 	}
 }
