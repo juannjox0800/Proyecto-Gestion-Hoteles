@@ -67,6 +67,18 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem registrarReserva = new JMenuItem("Registrar Reserva");
 		menuReserva.add(registrarReserva);
 		
+		JMenuItem hacerCheckIn = new JMenuItem("Hacer Check-In");
+		menuReserva.add(hacerCheckIn);
+		
+		JMenuItem hacerCheckOut = new JMenuItem("Hacer Check-Out");
+		menuReserva.add(hacerCheckOut);
+		
+		JMenuItem pagarServicioExtra = new JMenuItem("Pagar Servicio Extra");
+		menuReserva.add(pagarServicioExtra);
+		
+		JMenuItem SolicitarServicioExtra = new JMenuItem("Solicitar servicio extra");
+		menuReserva.add(SolicitarServicioExtra);
+		
 		JMenu menuPlan = new JMenu("Plan");
 		menuBar.add(menuPlan);
 		
