@@ -59,20 +59,20 @@ public class SolicitarServicio extends JFrame {
 		tfBuscaDNI.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Seleccionar servicio");
-		lblNewLabel_1.setBounds(10, 54, 146, 14);
+		lblNewLabel_1.setBounds(10, 92, 146, 14);
 		contentPane.add(lblNewLabel_1);
 		
 		JComboBox cbListaServicio = new JComboBox();
 		cbListaServicio.setModel(new DefaultComboBoxModel(new String[] {"Piscina ", "Gym"}));
-		cbListaServicio.setBounds(166, 50, 190, 22);
+		cbListaServicio.setBounds(166, 89, 190, 20);
 		contentPane.add(cbListaServicio);
 		
 		JLabel lblNewLabel_2 = new JLabel("Dias de consumo");
-		lblNewLabel_2.setBounds(10, 89, 100, 14);
+		lblNewLabel_2.setBounds(10, 129, 100, 14);
 		contentPane.add(lblNewLabel_2);
 		
 		tfDiasConsumo = new JTextField();
-		tfDiasConsumo.setBounds(166, 83, 86, 20);
+		tfDiasConsumo.setBounds(166, 126, 86, 20);
 		contentPane.add(tfDiasConsumo);
 		tfDiasConsumo.setColumns(10);
 		
@@ -91,6 +91,14 @@ public class SolicitarServicio extends JFrame {
 		});
 		btnBuscar.setBounds(267, 11, 89, 23);
 		contentPane.add(btnBuscar);
+		
+		JComboBox cbListaReservas = new JComboBox();
+		cbListaReservas.setBounds(166, 43, 100, 20);
+		contentPane.add(cbListaReservas);
+		
+		JLabel lblNewLabel_3 = new JLabel("Seleccionar reserva");
+		lblNewLabel_3.setBounds(10, 49, 121, 14);
+		contentPane.add(lblNewLabel_3);
 
 	}
 }
