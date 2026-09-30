@@ -63,7 +63,7 @@ public class RegistrarPago extends JFrame {
 		contentPane.add(lblPagoRestante);
 		
 		JLabel lblMetodoPago = new JLabel("Metodo de pago");
-		lblMetodoPago.setBounds(10, 92, 107, 14);
+		lblMetodoPago.setBounds(10, 88, 107, 14);
 		contentPane.add(lblMetodoPago);
 		
 		JComboBox cbMetodoDePago = new JComboBox();
@@ -80,7 +80,7 @@ public class RegistrarPago extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		JLabel lblFechaDePago = new JLabel("Fecha");
-		lblFechaDePago.setBounds(10, 117, 79, 14);
+		lblFechaDePago.setBounds(10, 120, 79, 14);
 		contentPane.add(lblFechaDePago);
 		
 		tfFechaDePago = new JTextField();
