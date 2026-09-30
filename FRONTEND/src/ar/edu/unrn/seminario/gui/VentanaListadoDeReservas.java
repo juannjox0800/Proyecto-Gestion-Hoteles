@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class VentanaListadoDeReservas extends JFrame {
 
@@ -36,18 +37,33 @@ public class VentanaListadoDeReservas extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaListadoDeReservas() {
+		setTitle("Lista de reservas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 748, 364);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 59, 414, 126);
+		scrollPane.setBounds(0, 0, 732, 325);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"Numero de reserva", "Dni del cliente", "Fecha de entrada", "Fecha de salida", "Monto a pagar", "Cantidad de habitaciones", "Plan"
+			}
+		));
+		table.getColumnModel().getColumn(0).setPreferredWidth(110);
+		table.getColumnModel().getColumn(1).setPreferredWidth(87);
+		table.getColumnModel().getColumn(2).setPreferredWidth(101);
+		table.getColumnModel().getColumn(3).setPreferredWidth(91);
+		table.getColumnModel().getColumn(4).setPreferredWidth(88);
+		table.getColumnModel().getColumn(5).setPreferredWidth(144);
 		scrollPane.setViewportView(table);
 
 	}
