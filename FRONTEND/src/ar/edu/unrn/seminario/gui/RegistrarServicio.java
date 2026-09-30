@@ -8,13 +8,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegistrarServicio extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField tfNombre;
-	private JTextField tfDescripcion;
 	private JTextField tfPrecio;
 
 	/**
@@ -37,48 +40,60 @@ public class RegistrarServicio extends JFrame {
 	 * Create the frame.
 	 */
 	public RegistrarServicio() {
+		setTitle("Registrar nuevo Servicio");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 380, 232);
+		setBounds(100, 100, 415, 315);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(67, 28, 53, 14);
+		lblNombre.setBounds(46, 29, 53, 14);
 		contentPane.add(lblNombre);
 		
 		tfNombre = new JTextField();
-		tfNombre.setBounds(151, 25, 134, 20);
+		tfNombre.setBounds(141, 26, 195, 20);
 		contentPane.add(tfNombre);
 		tfNombre.setColumns(10);
 		
 		JLabel lblDescripcion = new JLabel("Descripcion:");
-		lblDescripcion.setBounds(67, 63, 69, 14);
+		lblDescripcion.setBounds(46, 64, 85, 14);
 		contentPane.add(lblDescripcion);
 		
-		tfDescripcion = new JTextField();
-		tfDescripcion.setBounds(151, 60, 134, 20);
-		contentPane.add(tfDescripcion);
-		tfDescripcion.setColumns(10);
-		
 		JLabel lblPrecio = new JLabel("Precio:");
-		lblPrecio.setBounds(67, 94, 46, 14);
+		lblPrecio.setBounds(46, 172, 46, 14);
 		contentPane.add(lblPrecio);
 		
 		tfPrecio = new JTextField();
-		tfPrecio.setBounds(151, 91, 134, 20);
+		tfPrecio.setBounds(141, 169, 195, 20);
 		contentPane.add(tfPrecio);
 		tfPrecio.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(165, 156, 89, 23);
+		btnAceptar.setBounds(46, 242, 89, 23);
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(268, 156, 89, 23);
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnCancelar.setBounds(149, 242, 89, 23);
 		contentPane.add(btnCancelar);
+		
+		JLabel lblNewLabel = new JLabel("$-");
+		lblNewLabel.setBounds(119, 172, 23, 14);
+		contentPane.add(lblNewLabel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(141, 57, 195, 101);
+		contentPane.add(scrollPane);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setWrapStyleWord(true);
+		textArea.setLineWrap(true);
+		scrollPane.setViewportView(textArea);
 
 	}
-
 }
