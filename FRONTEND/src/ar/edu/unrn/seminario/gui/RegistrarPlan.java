@@ -13,6 +13,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.AbstractListModel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class RegistrarPlan extends JFrame {
 
@@ -29,7 +31,7 @@ public class RegistrarPlan extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ListaPlanes frame = new ListaPlanes();
+					RegistrarPlan frame = new RegistrarPlan();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,51 +44,43 @@ public class RegistrarPlan extends JFrame {
 	 * Create the frame.
 	 */
 	public RegistrarPlan() {
+		setTitle("Registrar Plan");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 426, 336);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNombrePlan = new JLabel("Nombre");
-		lblNombrePlan.setBounds(10, 35, 75, 14);
+		lblNombrePlan.setBounds(46, 34, 75, 14);
 		contentPane.add(lblNombrePlan);
 		
 		JLabel lblCostoPlan = new JLabel("Costo");
-		lblCostoPlan.setBounds(10, 60, 75, 14);
+		lblCostoPlan.setBounds(46, 59, 75, 14);
 		contentPane.add(lblCostoPlan);
 		
-		JLabel lblServiciosLista = new JLabel("Servicios incluidos");
-		lblServiciosLista.setBounds(10, 85, 116, 14);
-		contentPane.add(lblServiciosLista);
-		
 		textField = new JTextField();
-		textField.setBounds(136, 32, 276, 20);
+		textField.setBounds(127, 31, 195, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
-		textField_1.setBounds(136, 57, 276, 20);
+		textField_1.setBounds(127, 56, 195, 20);
 		contentPane.add(textField_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(136, 85, 276, 82);
+		scrollPane.setBounds(46, 113, 276, 82);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
 			},
 			new String[] {
-				""
+				"Servicios incluidos"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
@@ -101,20 +95,29 @@ public class RegistrarPlan extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JButton btnNewButton = new JButton("Agregar Servicio");
-		btnNewButton.setBounds(277, 170, 147, 23);
+		btnNewButton.setBounds(191, 203, 131, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnGuardarPlan = new JButton("Guardar");
-		btnGuardarPlan.setBounds(10, 227, 89, 23);
+		btnGuardarPlan.setBounds(167, 263, 89, 23);
 		contentPane.add(btnGuardarPlan);
 		
 		JButton btnCancelarPlan = new JButton("Cancelar");
-		btnCancelarPlan.setBounds(108, 227, 89, 23);
+		btnCancelarPlan.setBounds(265, 263, 89, 23);
 		contentPane.add(btnCancelarPlan);
 		
 		JButton btnEliminarServicio = new JButton("Eliminar Servicio");
-		btnEliminarServicio.setBounds(120, 170, 147, 23);
+		btnEliminarServicio.setBounds(46, 203, 135, 23);
 		contentPane.add(btnEliminarServicio);
+		
+		JLabel lblEstado = new JLabel("Estado");
+		lblEstado.setBounds(46, 88, 71, 14);
+		contentPane.add(lblEstado);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
+		comboBox.setBounds(127, 84, 195, 22);
+		contentPane.add(comboBox);
 
 	}
 }

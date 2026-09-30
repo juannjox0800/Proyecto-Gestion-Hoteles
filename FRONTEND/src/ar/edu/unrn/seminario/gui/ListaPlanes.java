@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ListaPlanes extends JFrame {
 
@@ -37,15 +39,16 @@ public class ListaPlanes extends JFrame {
 	 * Create the frame.
 	 */
 	public ListaPlanes() {
+		setTitle("Lista de planes ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 275);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 414, 118);
+		scrollPane.setBounds(10, 23, 414, 118);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -74,19 +77,23 @@ public class ListaPlanes extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JButton btnEliminarPlan = new JButton("Eliminar");
-		btnEliminarPlan.setBounds(335, 139, 89, 23);
+		btnEliminarPlan.setBounds(109, 152, 89, 23);
 		contentPane.add(btnEliminarPlan);
 		
 		JButton btnModificarPlan = new JButton("Modificar");
-		btnModificarPlan.setBounds(236, 139, 89, 23);
+		btnModificarPlan.setBounds(10, 152, 89, 23);
 		contentPane.add(btnModificarPlan);
 		
 		JButton btnAceptarPlan = new JButton("Aceptar");
-		btnAceptarPlan.setBounds(10, 227, 89, 23);
+		btnAceptarPlan.setBounds(236, 202, 89, 23);
 		contentPane.add(btnAceptarPlan);
 		
 		JButton btnCancelarPlan = new JButton("Cancelar");
-		btnCancelarPlan.setBounds(109, 227, 89, 23);
+		btnCancelarPlan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnCancelarPlan.setBounds(335, 202, 89, 23);
 		contentPane.add(btnCancelarPlan);
 
 	}
