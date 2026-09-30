@@ -56,7 +56,7 @@ public class RegistrarHabitacion extends JFrame {
 		lblNewLabel.setBounds(24, 23, 90, 25);
 		contentPane.add(lblNewLabel);
 		
-		JLabel numeroCamas = new JLabel("Número de camas:");
+		JLabel numeroCamas = new JLabel("Cantidad de camas:");
 		numeroCamas.setBounds(24, 59, 104, 25);
 		contentPane.add(numeroCamas);
 		
@@ -106,6 +106,10 @@ public class RegistrarHabitacion extends JFrame {
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBounds(239, 227, 89, 23);
 		contentPane.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("$-");
+		lblNewLabel_1.setBounds(125, 170, 19, 14);
+		contentPane.add(lblNewLabel_1);
 
 	}
 }

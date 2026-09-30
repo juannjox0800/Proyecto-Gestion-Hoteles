@@ -40,6 +40,7 @@ public class EnlistarHabitación extends JFrame {
 	 * Create the frame.
 	 */
 	public EnlistarHabitación() {
+		setTitle("Lista de Habitaciones ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 499, 349);
 		contentPane = new JPanel();
@@ -78,32 +79,32 @@ public class EnlistarHabitación extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JLabel lblBuscar = new JLabel("Buscar Habitacion:");
-		lblBuscar.setBounds(10, 11, 112, 14);
+		lblBuscar.setBounds(32, 11, 112, 14);
 		contentPane.add(lblBuscar);
 		
 		tFbuscar = new JTextField();
-		tFbuscar.setBounds(132, 8, 143, 20);
+		tFbuscar.setBounds(154, 8, 143, 20);
 		contentPane.add(tFbuscar);
 		tFbuscar.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(285, 7, 89, 23);
+		btnBuscar.setBounds(307, 7, 89, 23);
 		contentPane.add(btnBuscar);
 		
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setBounds(285, 225, 89, 23);
+		btnModificar.setBounds(10, 225, 89, 23);
 		contentPane.add(btnModificar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(384, 225, 89, 23);
+		btnEliminar.setBounds(109, 225, 89, 23);
 		contentPane.add(btnEliminar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(12, 276, 89, 23);
+		btnAceptar.setBounds(285, 276, 89, 23);
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(111, 276, 89, 23);
+		btnCancelar.setBounds(384, 276, 89, 23);
 		contentPane.add(btnCancelar);
 
 	}
