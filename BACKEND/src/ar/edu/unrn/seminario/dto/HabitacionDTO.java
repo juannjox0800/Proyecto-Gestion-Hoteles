@@ -65,30 +65,5 @@ public class HabitacionDTO {
 	}
 
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(camas, costo, estado, numero, tipoHabitacion);
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HabitacionDTO other = (HabitacionDTO) obj;
-		return Objects.equals(camas, other.camas) && costo == other.costo && Objects.equals(estado, other.estado)
-				&& numero == other.numero && Objects.equals(tipoHabitacion, other.tipoHabitacion);
-	}
-
-
-	@Override
-	public String toString() {
-		return "la  habitacion N°"+this.numero+"\nEs del tipo: "+ this.tipoHabitacion+ "\nSu estado actual" + this.estado + "\nCosto de:"+ this.costo;
-	}
-	
 	
 }
