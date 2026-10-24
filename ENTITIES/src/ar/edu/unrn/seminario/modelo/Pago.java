@@ -4,53 +4,53 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Pago {
-	private String TipoPago;
-	private int Monto;
-	private LocalDate FechaPago;
-	private int IdPago;
+	private String tipoPago;
+	private int monto;
+	private LocalDate fechaPago;
+	private int idPago;
 	
 	public Pago(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
-		TipoPago = tipoPago;
-		Monto = monto;
-		FechaPago = fechaPago;
-		IdPago = idPago;
+		this.tipoPago = tipoPago;
+		this.monto = monto;
+		this.fechaPago = fechaPago;
+		this.idPago = idPago;
 	}
 
 	public String getTipoPago() {
-		return TipoPago;
+		return tipoPago;
 	}
 
 	public void setTipoPago(String tipoPago) {
-		TipoPago = tipoPago;
+		this.tipoPago = tipoPago;
 	}
 
 	public int getMonto() {
-		return Monto;
+		return monto;
 	}
 
 	public void setMonto(int monto) {
-		Monto = monto;
+		this.monto = monto;
 	}
 
 	public LocalDate getFechaPago() {
-		return FechaPago;
+		return fechaPago;
 	}
 
 	public void setFechaPago(LocalDate fechaPago) {
-		FechaPago = fechaPago;
+		this.fechaPago = fechaPago;
 	}
 
 	public int getIdPago() {
-		return IdPago;
+		return idPago;
 	}
 
 	public void setIdPago(int idPago) {
-		IdPago = idPago;
+		this.idPago = idPago;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(FechaPago, Integer.valueOf(IdPago), Integer.valueOf(Monto), TipoPago);
+		return Objects.hash(idPago);
 	}
 
 	@Override
@@ -62,12 +62,12 @@ public class Pago {
 		if (getClass() != obj.getClass())
 			return false;
 		Pago other = (Pago) obj;
-		return IdPago == other.IdPago;
+		return idPago == other.idPago;
 	}
 
 	@Override
 	public String toString() {
-		return "Pago [TipoPago=" + TipoPago + ", Monto=" + Monto + ", FechaPago=" + FechaPago + ", IdPago=" + IdPago
+		return "Pago [TipoPago=" + tipoPago + ", Monto=" + monto + ", FechaPago=" + fechaPago + ", IdPago=" + idPago
 				+ "]";
 	}
 

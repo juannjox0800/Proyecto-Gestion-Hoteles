@@ -10,8 +10,10 @@ public class HabitacionDTO {
 	private List <CamaDTO> camas = new ArrayList<CamaDTO>();
 	
 	
-	public HabitacionDTO() {
-		
+	public HabitacionDTO(int numero, String tipoHabitacion, int costo) {
+		this.numero = numero;
+		this.tipoHabitacion = tipoHabitacion;
+		this.costo = costo;
 	}
 
 

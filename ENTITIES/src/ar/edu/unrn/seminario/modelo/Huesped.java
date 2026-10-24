@@ -3,8 +3,8 @@ package ar.edu.unrn.seminario.modelo;
 import java.util.Objects;
 
 public class Huesped {
-	private String Nombre;
-	private String Apellido;
+	private String nombre;
+	private String apellido;
 	private int dni;
 	
 	public Huesped() {
@@ -12,25 +12,25 @@ public class Huesped {
 	}
 
 	public Huesped(String nombre, String apellido, int dni) {
-		Nombre = nombre;
-		Apellido = apellido;
+		this.nombre = nombre;
+		this.apellido = apellido;
 		this.dni = dni;
 	}
 
 	public String getNombre() {
-		return Nombre;
+		return nombre;
 	}
 
 	public void setNombre(String nombre) {
-		Nombre = nombre;
+		this.nombre = nombre;
 	}
 
 	public String getApellido() {
-		return Apellido;
+		return apellido;
 	}
 
 	public void setApellido(String apellido) {
-		Apellido = apellido;
+		this.apellido = apellido;
 	}
 
 	public int getDni() {
@@ -43,7 +43,7 @@ public class Huesped {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(Apellido, Nombre, Integer.valueOf(dni));
+		return Objects.hash(dni);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class Huesped {
 
 	@Override
 	public String toString() {
-		return "Huesped [Nombre=" + Nombre + ", Apellido=" + Apellido + ", dni=" + dni + "]";
+		return "Huesped [Nombre=" + nombre + ", Apellido=" + apellido + ", dni=" + dni + "]";
 	}
 	
 	

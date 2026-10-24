@@ -10,66 +10,56 @@ public class Habitacion {
 	private List <Cama> camas = new ArrayList<Cama>();
 	
 	
-	public Habitacion() {
-		
+	public Habitacion(int numero, String tipoHabitacion, int costo) {
+		this.numero = numero;
+		this.tipoHabitacion = tipoHabitacion;
+		this.costo = costo;
 	}
-
 
 	public int getNumero() {
 		return numero;
 	}
 
-
 	public void setNumero(int numero) {
 		this.numero = numero;
 	}
-
 
 	public String getTipoHabitacion() {
 		return tipoHabitacion;
 	}
 
-
 	public void setTipoHabitacion(String tipoHabitacion) {
 		this.tipoHabitacion = tipoHabitacion;
 	}
-
 
 	public String getEstado() {
 		return estado;
 	}
 
-
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-
 
 	public int getCosto() {
 		return costo;
 	}
 
-
 	public void setCosto(int costo) {
 		this.costo = costo;
 	}
-
 
 	public List<Cama> getCamas() {
 		return camas;
 	}
 
-
 	public void setCamas(List<Cama> camas) {
 		this.camas = camas;
 	}
 
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(camas, costo, estado, numero, tipoHabitacion);
+		return Objects.hash(numero);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -80,15 +70,13 @@ public class Habitacion {
 		if (getClass() != obj.getClass())
 			return false;
 		Habitacion other = (Habitacion) obj;
-		return Objects.equals(camas, other.camas) && costo == other.costo && Objects.equals(estado, other.estado)
-				&& numero == other.numero && Objects.equals(tipoHabitacion, other.tipoHabitacion);
+		return (numero == other.numero);
 	}
-
 
 	@Override
 	public String toString() {
-		return "la  habitacion N°"+this.numero+"\nEs del tipo: "+ this.tipoHabitacion+ "\nSu estado actual" + this.estado + "\nCosto de:"+ this.costo;
+		return "Habitacion [numero=" + numero + ", tipoHabitacion=" + tipoHabitacion + ", estado=" + estado + ", costo="
+				+ costo + ", camas=" + camas + "]";
 	}
-	
 	
 }

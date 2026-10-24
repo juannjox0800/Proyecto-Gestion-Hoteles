@@ -1,40 +1,40 @@
 package ar.edu.unrn.seminario.dto;
 
 public class ClienteDTO {
-	private String Nombre;
-	private String Apellido;
-	private String Contacto;
+	private String nombre;
+	private String apellido;
+	private String contacto;
 	private int dni;
 	
 	public ClienteDTO(String nombre, String apellido, String contacto, int dni) {
-		Nombre = nombre;
-		Apellido = apellido;
-		Contacto = contacto;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.contacto = contacto;
 		this.dni = dni;
 	}
 
 	public String getNombre() {
-		return Nombre;
+		return nombre;
 	}
 
 	public void setNombre(String nombre) {
-		Nombre = nombre;
+		this.nombre = nombre;
 	}
 
 	public String getApellido() {
-		return Apellido;
+		return apellido;
 	}
 
 	public void setApellido(String apellido) {
-		Apellido = apellido;
+		this.apellido = apellido;
 	}
 
 	public String getContacto() {
-		return Contacto;
+		return contacto;
 	}
 
 	public void setContacto(String contacto) {
-		Contacto = contacto;
+		this.contacto = contacto;
 	}
 
 	public int getDni() {

@@ -3,40 +3,40 @@ package ar.edu.unrn.seminario.modelo;
 import java.util.Objects;
 
 public class Cliente {
-	private String Nombre;
-	private String Apellido;
-	private String Contacto;
+	private String nombre;
+	private String apellido;
+	private String contacto;
 	private int dni;
 	
 	public Cliente(String nombre, String apellido, String contacto, int dni) {
-		Nombre = nombre;
-		Apellido = apellido;
-		Contacto = contacto;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.contacto = contacto;
 		this.dni = dni;
 	}
 
 	public String getNombre() {
-		return Nombre;
+		return nombre;
 	}
 
 	public void setNombre(String nombre) {
-		Nombre = nombre;
+		this.nombre = nombre;
 	}
 
 	public String getApellido() {
-		return Apellido;
+		return apellido;
 	}
 
 	public void setApellido(String apellido) {
-		Apellido = apellido;
+		this.apellido = apellido;
 	}
 
 	public String getContacto() {
-		return Contacto;
+		return contacto;
 	}
 
 	public void setContacto(String contacto) {
-		Contacto = contacto;
+		this.contacto = contacto;
 	}
 
 	public int getDni() {
@@ -49,12 +49,12 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return "Cliente [Nombre=" + Nombre + ", Apellido=" + Apellido + ", Contacto=" + Contacto + ", dni=" + dni + "]";
+		return "Cliente [Nombre=" + nombre + ", Apellido=" + apellido + ", Contacto=" + contacto + ", dni=" + dni + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(Apellido, Contacto, Nombre, Integer.valueOf(dni));
+		return Objects.hash(dni);
 	}
 
 	@Override

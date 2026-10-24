@@ -2,10 +2,14 @@ package ar.edu.unrn.seminario.dto;
 
 import java.time.LocalDate;
 
-public class ServicioExtraDTO {
+public class ServicioExtraDTO extends ServicioDTO {
 
 	private int dias;
 	private LocalDate fechaSolicitud;
+	
+	public ServicioExtraDTO(String nombre, String descripcion, int precio) {
+		super(nombre, descripcion, precio);
+	}
 	
 	public int getDias() {
 		return dias;

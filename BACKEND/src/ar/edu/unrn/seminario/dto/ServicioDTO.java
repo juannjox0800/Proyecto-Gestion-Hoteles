@@ -7,6 +7,12 @@ public class ServicioDTO {
 	private int precio;
 	private boolean estadoVigente;
 	
+	public ServicioDTO(String nombre, String descripcion, int precio) {
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.precio = precio;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}

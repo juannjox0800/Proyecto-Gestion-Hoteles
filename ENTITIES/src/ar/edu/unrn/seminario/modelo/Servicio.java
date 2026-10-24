@@ -50,7 +50,7 @@ public class Servicio {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(descripcion, estadoVigente, nombre, precio);
+		return Objects.hash(nombre);
 	}
 
 	@Override
@@ -62,8 +62,7 @@ public class Servicio {
 		if (getClass() != obj.getClass())
 			return false;
 		Servicio other = (Servicio) obj;
-		return Objects.equals(descripcion, other.descripcion) && estadoVigente == other.estadoVigente
-				&& Objects.equals(nombre, other.nombre) && precio == other.precio;
+		return Objects.equals(nombre, other.nombre);
 	}
 
 	@Override
@@ -71,12 +70,5 @@ public class Servicio {
 		return "Nombre del servicio: \n" + nombre + "\n Descripción: " + descripcion + " \n Precio: " + precio + "\n Vigencia: "
 				+ (estadoVigente ? "Sí" : "No");
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 }

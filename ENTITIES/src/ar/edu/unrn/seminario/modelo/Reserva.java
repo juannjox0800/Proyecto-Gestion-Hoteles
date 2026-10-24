@@ -5,129 +5,134 @@ import java.util.List;
 import java.util.Objects;
 
 public class Reserva {
-	private List<Habitacion> Habitaciones;
-	//private Plan plan;
-	private Cliente Cliente;
-	private LocalDate FechaEntrada;
-	private LocalDate FechaSalida;
-	private Pago PagoSeña;
-	private Pago PagoFinal;
-	private int CostoTotal;
-	private boolean EstadoCancelacion;
-	private int NumeroReserva;
-	private List<Huesped> Huespedes;
-	
-	public Reserva(List<Habitacion> habitaciones, ar.edu.unrn.seminario.modelo.Cliente cliente, LocalDate fechaEntrada,
-			LocalDate fechaSalida, Pago pagoSeña, Pago pagoFinal, int costoTotal, boolean estadoCancelacion,
-			int numeroReserva, List<Huesped> huespedes) {
-		Habitaciones = habitaciones;
-		Cliente = cliente;
-		FechaEntrada = fechaEntrada;
-		FechaSalida = fechaSalida;
-		PagoSeña = pagoSeña;
-		PagoFinal = pagoFinal;
-		CostoTotal = costoTotal;
-		EstadoCancelacion = estadoCancelacion;
-		NumeroReserva = numeroReserva;
-		Huespedes = huespedes;
+	private List<Habitacion> habitaciones;
+	private Plan plan;
+	private Cliente cliente;
+	private LocalDate fechaEntrada;
+	private LocalDate fechaSalida;
+	private Pago pagoSeña;
+	private Pago pagoFinal;
+	private int costoTotal;
+	private boolean estadoCancelacion;
+	private int numeroReserva;
+	private List<Huesped> huespedes;
+
+	public Reserva(List<Habitacion> habitaciones, Plan plan, Cliente cliente,
+			LocalDate fechaEntrada, LocalDate fechaSalida, Pago pagoSeña, int numeroReserva, List<Huesped> huespedes) {
+		this.habitaciones = habitaciones;
+		this.plan = plan;
+		this.cliente = cliente;
+		this.fechaEntrada = fechaEntrada;
+		this.fechaSalida = fechaSalida;
+		this.pagoSeña = pagoSeña;
+		this.numeroReserva = numeroReserva;
+		this.huespedes = huespedes;
+		
+		this.estadoCancelacion = false;
+		this.costoTotal = 0;
 	}
 
+
+
 	public List<Habitacion> getHabitaciones() {
-		return Habitaciones;
+		return habitaciones;
 	}
 
 	public void setHabitaciones(List<Habitacion> habitaciones) {
-		Habitaciones = habitaciones;
+		this.habitaciones = habitaciones;
 	}
 
 	public Cliente getCliente() {
-		return Cliente;
+		return cliente;
 	}
 
 	public void setCliente(Cliente cliente) {
-		Cliente = cliente;
+		this.cliente = cliente;
 	}
 
 	public LocalDate getFechaEntrada() {
-		return FechaEntrada;
+		return fechaEntrada;
 	}
 
 	public void setFechaEntrada(LocalDate fechaEntrada) {
-		FechaEntrada = fechaEntrada;
+		this.fechaEntrada = fechaEntrada;
 	}
 
 	public LocalDate getFechaSalida() {
-		return FechaSalida;
+		return fechaSalida;
 	}
 
 	public void setFechaSalida(LocalDate fechaSalida) {
-		FechaSalida = fechaSalida;
+		this.fechaSalida = fechaSalida;
 	}
 
 	public Pago getPagoSeña() {
-		return PagoSeña;
+		return pagoSeña;
 	}
 
 	public void setPagoSeña(Pago pagoSeña) {
-		PagoSeña = pagoSeña;
+		this.pagoSeña = pagoSeña;
 	}
 
 	public Pago getPagoFinal() {
-		return PagoFinal;
+		return pagoFinal;
 	}
 
 	public void setPagoFinal(Pago pagoFinal) {
-		PagoFinal = pagoFinal;
+		this.pagoFinal = pagoFinal;
 	}
 
 	public int getCostoTotal() {
-		return CostoTotal;
+		return costoTotal;
 	}
 
 	public void setCostoTotal(int costoTotal) {
-		CostoTotal = costoTotal;
+		this.costoTotal = costoTotal;
 	}
 
 	public boolean isEstadoCancelacion() {
-		return EstadoCancelacion;
+		return estadoCancelacion;
 	}
 
 	public void cambiarEstadoCancelacion() {
-		EstadoCancelacion = !EstadoCancelacion;
+		this.estadoCancelacion = !estadoCancelacion;
 	}
 
 	public int getNumeroReserva() {
-		return NumeroReserva;
+		return numeroReserva;
 	}
 
 	public void setNumeroReserva(int numeroReserva) {
-		NumeroReserva = numeroReserva;
+		this.numeroReserva = numeroReserva;
 	}
 
 	public List<Huesped> getHuespedes() {
-		return Huespedes;
+		return huespedes;
 	}
 
 	public void setHuespedes(List<Huesped> huespedes) {
-		Huespedes = huespedes;
+		this.huespedes = huespedes;
 	}
 	
+	public Plan getPlan() {
+		return plan;
+	}
+
+	public void setPlan(Plan plan) {
+		this.plan = plan;
+	}
+
 	public void agregarHuesped (Huesped huesped) {
-		Huespedes.add(huesped);
+		huespedes.add(huesped);
 	}
 	
 	public void eliminarHuesped(int dni) {
-		for (Huesped e: Huespedes) {
-			if (e.getDni() == dni) {
-				Huespedes.remove(e);
-			}
-		}
+		huespedes.removeIf(h -> h.getDni() == dni);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(Cliente, Integer.valueOf(CostoTotal), Boolean.valueOf(EstadoCancelacion), FechaEntrada,
-				FechaSalida, Habitaciones, Huespedes, Integer.valueOf(NumeroReserva), PagoFinal, PagoSeña);
+		return Objects.hash(numeroReserva);
 	}
 
 	@Override
@@ -139,18 +144,17 @@ public class Reserva {
 		if (getClass() != obj.getClass())
 			return false;
 		Reserva other = (Reserva) obj;
-		return Objects.equals(Cliente, other.Cliente) && CostoTotal == other.CostoTotal
-				&& EstadoCancelacion == other.EstadoCancelacion && Objects.equals(FechaEntrada, other.FechaEntrada)
-				&& Objects.equals(FechaSalida, other.FechaSalida) && Objects.equals(Habitaciones, other.Habitaciones)
-				&& Objects.equals(Huespedes, other.Huespedes) && NumeroReserva == other.NumeroReserva
-				&& Objects.equals(PagoFinal, other.PagoFinal) && Objects.equals(PagoSeña, other.PagoSeña);
+		return (numeroReserva == other.numeroReserva);
 	}
+
+
 
 	@Override
 	public String toString() {
-		return "Reserva [Habitaciones=" + Habitaciones + ", Cliente=" + Cliente + ", FechaEntrada=" + FechaEntrada
-				+ ", FechaSalida=" + FechaSalida + ", PagoSeña=" + PagoSeña + ", PagoFinal=" + PagoFinal
-				+ ", CostoTotal=" + CostoTotal + ", EstadoCancelacion=" + EstadoCancelacion + ", NumeroReserva="
-				+ NumeroReserva + ", Huespedes=" + Huespedes + "]";
+		return "Reserva [habitaciones=" + habitaciones + ", plan=" + plan + ", cliente=" + cliente + ", fechaEntrada="
+				+ fechaEntrada + ", fechaSalida=" + fechaSalida + ", pagoSeña=" + pagoSeña + ", pagoFinal=" + pagoFinal
+				+ ", costoTotal=" + costoTotal + ", estadoCancelacion=" + estadoCancelacion + ", numeroReserva="
+				+ numeroReserva + ", huespedes=" + huespedes + "]";
 	}
+	
 }
