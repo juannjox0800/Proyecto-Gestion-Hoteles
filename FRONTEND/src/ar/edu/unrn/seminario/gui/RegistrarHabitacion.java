@@ -14,15 +14,16 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.Font;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class RegistrarHabitacion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField tfNumHabitacion;
+	private JTextField tfCostoHabitacion;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -46,7 +47,7 @@ public class RegistrarHabitacion extends JFrame {
 	public RegistrarHabitacion() {
 		setTitle("Registrar Habitacion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 469, 328);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -56,60 +57,64 @@ public class RegistrarHabitacion extends JFrame {
 		lblNewLabel.setBounds(24, 23, 90, 25);
 		contentPane.add(lblNewLabel);
 		
-		JLabel numeroCamas = new JLabel("Cantidad de camas:");
-		numeroCamas.setBounds(24, 59, 104, 25);
-		contentPane.add(numeroCamas);
-		
-		JLabel tipoDeCamas = new JLabel("Tipo de camas:");
-		tipoDeCamas.setBounds(24, 93, 90, 25);
-		contentPane.add(tipoDeCamas);
-		
 		JLabel tipoHabitacion = new JLabel("Tipo Habitacion:");
-		tipoHabitacion.setBounds(24, 129, 90, 25);
+		tipoHabitacion.setBounds(24, 183, 90, 25);
 		contentPane.add(tipoHabitacion);
 		
-		textField = new JTextField();
-		textField.setBounds(145, 25, 183, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		tfNumHabitacion = new JTextField();
+		tfNumHabitacion.setBounds(181, 23, 248, 20);
+		contentPane.add(tfNumHabitacion);
+		tfNumHabitacion.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(145, 61, 183, 20);
-		contentPane.add(textField_1);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(145, 95, 183, 20);
-		contentPane.add(textField_2);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Estandar", "Superior", "Deluxe", "Suite"}));
-		comboBox.setBounds(145, 130, 183, 22);
-		contentPane.add(comboBox);
+		JComboBox cbTipoHabitacion = new JComboBox();
+		cbTipoHabitacion.setModel(new DefaultComboBoxModel(new String[] {"Estandar", "Superior", "Deluxe", "Suite"}));
+		cbTipoHabitacion.setBounds(181, 184, 248, 22);
+		contentPane.add(cbTipoHabitacion);
 		
 		JLabel costoHabitacion = new JLabel("Costo Habitacion:");
-		costoHabitacion.setBounds(24, 165, 104, 25);
+		costoHabitacion.setBounds(24, 219, 104, 19);
 		contentPane.add(costoHabitacion);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(145, 167, 183, 20);
-		contentPane.add(textField_3);
+		tfCostoHabitacion = new JTextField();
+		tfCostoHabitacion.setColumns(10);
+		tfCostoHabitacion.setBounds(181, 217, 248, 20);
+		contentPane.add(tfCostoHabitacion);
 		
-		JButton btnNewButton = new JButton("Cancelar");
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnNewButton.setBounds(338, 227, 89, 23);
-		contentPane.add(btnNewButton);
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnCancelar.setBounds(354, 255, 89, 23);
+		contentPane.add(btnCancelar);
 		
-		JButton btnNewButton_1 = new JButton("Aceptar");
-		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnNewButton_1.setBounds(239, 227, 89, 23);
-		contentPane.add(btnNewButton_1);
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnAceptar.setBounds(255, 255, 89, 23);
+		contentPane.add(btnAceptar);
 		
 		JLabel lblNewLabel_1 = new JLabel("$-");
-		lblNewLabel_1.setBounds(125, 170, 19, 14);
+		lblNewLabel_1.setBounds(152, 219, 19, 19);
 		contentPane.add(lblNewLabel_1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(181, 53, 248, 86);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Cama"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		JButton btnAgregarCama = new JButton("Agregar Cama");
+		btnAgregarCama.setBounds(309, 150, 120, 23);
+		contentPane.add(btnAgregarCama);
+		
+		JButton btnEliminarCama = new JButton("Eliminar Cama");
+		btnEliminarCama.setBounds(181, 150, 120, 23);
+		contentPane.add(btnEliminarCama);
 
 	}
 }
