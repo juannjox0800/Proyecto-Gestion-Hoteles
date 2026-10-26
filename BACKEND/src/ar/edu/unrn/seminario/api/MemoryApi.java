@@ -23,13 +23,14 @@ public class MemoryApi implements IApi {
 	
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public void modificarCLiente(int dni) {
-		// TODO Auto-generated method stub
+		if (existeCliente(47727823))
+System.out.println("que gay");
 		
 	}
 
@@ -181,6 +182,21 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void registrarPlan(ar.edu.unrn.seminario.api.ArrayList<ar.edu.unrn.seminario.api.ServicioDTO> listaServicios,
+			int costo, String nombre) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void realizarReserva(List<ar.edu.unrn.seminario.api.HabitacionDTO> obtenerListaHabitacion,
+			ar.edu.unrn.seminario.api.PlanDTO plan, ar.edu.unrn.seminario.api.ClienteDTO cliente,
+			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes) {
 		// TODO Auto-generated method stub
 		
 	}
