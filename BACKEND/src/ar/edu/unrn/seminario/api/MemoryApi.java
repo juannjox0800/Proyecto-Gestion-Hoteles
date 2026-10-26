@@ -1,9 +1,11 @@
 package ar.edu.unrn.seminario.api;
 
+import java.time.*;
 import java.util.*;
-
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
+import ar.edu.unrn.seminario.dto.HuespedDTO;
+import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
@@ -12,7 +14,6 @@ import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
 import ar.edu.unrn.seminario.modelo.Reserva;
 import ar.edu.unrn.seminario.modelo.Servicio;
-
 
 public class MemoryApi implements IApi {
 	private List<Cliente> clientes = new ArrayList<>();
@@ -29,9 +30,9 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void modificarCLiente(int dni) {
-		if (existeCliente(47727823))
-System.out.println("que gay");
-		
+		for (Cliente a : clientes) {
+			
+		}
 	}
 
 	@Override
@@ -119,7 +120,7 @@ System.out.println("que gay");
 	}
 
 	@Override
-	public void registrarPlan(ar.edu.unrn.seminario.api.ArrayList<ServicioDTO> listaServicios, int costo,
+	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
 			String nombre) {
 		// TODO Auto-generated method stub
 		
@@ -186,20 +187,6 @@ System.out.println("que gay");
 		
 	}
 
-	@Override
-	public void registrarPlan(ar.edu.unrn.seminario.api.ArrayList<ar.edu.unrn.seminario.api.ServicioDTO> listaServicios,
-			int costo, String nombre) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void realizarReserva(List<ar.edu.unrn.seminario.api.HabitacionDTO> obtenerListaHabitacion,
-			ar.edu.unrn.seminario.api.PlanDTO plan, ar.edu.unrn.seminario.api.ClienteDTO cliente,
-			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	
 }

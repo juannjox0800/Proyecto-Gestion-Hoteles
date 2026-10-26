@@ -1,9 +1,19 @@
 package ar.edu.unrn.seminario.api;
 
-import java.util.List;
-
-import ar.edu.unrn.seminario.dto.RolDTO;
-import ar.edu.unrn.seminario.dto.UsuarioDTO;
+import java.time.*;
+import java.util.*;
+import ar.edu.unrn.seminario.dto.ClienteDTO;
+import ar.edu.unrn.seminario.dto.HabitacionDTO;
+import ar.edu.unrn.seminario.dto.HuespedDTO;
+import ar.edu.unrn.seminario.dto.PagoDTO;
+import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.dto.ReservaDTO;
+import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.modelo.Cliente;
+import ar.edu.unrn.seminario.modelo.Habitacion;
+import ar.edu.unrn.seminario.modelo.Plan;
+import ar.edu.unrn.seminario.modelo.Reserva;
+import ar.edu.unrn.seminario.modelo.Servicio;
 
 public interface IApi {
 
