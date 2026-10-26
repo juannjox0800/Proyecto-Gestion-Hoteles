@@ -22,9 +22,9 @@ public class RealizarReserva extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_3;
+	private JTextField tfFechaEntrada;
+	private JTextField tfFechaSalida;
+	private JTextField tfCliente;
 	private JTable table;
 
 	/**
@@ -52,7 +52,7 @@ public class RealizarReserva extends JFrame {
 		setTitle("Realizar Reserva");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
-		setBounds(-8, -23, 984, 528);
+		setBounds(-8, -23, 791, 469);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -77,10 +77,10 @@ public class RealizarReserva extends JFrame {
 		lblNewLabel_5.setBounds(30, 36, 46, 14);
 		panel.add(lblNewLabel_5);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(145, 33, 117, 20);
-		panel.add(textField_3);
-		textField_3.setColumns(10);
+		tfCliente = new JTextField();
+		tfCliente.setBounds(145, 33, 117, 20);
+		panel.add(tfCliente);
+		tfCliente.setColumns(10);
 		
 		JLabel lblNewLabel_7 = new JLabel("Nombre:");
 		lblNewLabel_7.setBounds(40, 61, 60, 14);
@@ -90,13 +90,13 @@ public class RealizarReserva extends JFrame {
 		lblNewLabel_9.setBounds(40, 86, 60, 14);
 		panel.add(lblNewLabel_9);
 		
-		JLabel lblNewLabel_8 = new JLabel("-");
-		lblNewLabel_8.setBounds(110, 61, 133, 14);
-		panel.add(lblNewLabel_8);
+		JLabel lblNombreCliente = new JLabel("-");
+		lblNombreCliente.setBounds(110, 61, 133, 14);
+		panel.add(lblNombreCliente);
 		
-		JLabel lblNewLabel_10 = new JLabel("-");
-		lblNewLabel_10.setBounds(110, 86, 133, 14);
-		panel.add(lblNewLabel_10);
+		JLabel lblContactoCliente = new JLabel("-");
+		lblContactoCliente.setBounds(110, 86, 133, 14);
+		panel.add(lblContactoCliente);
 		
 		JButton btnBuscarCliente = new JButton("Buscar");
 		btnBuscarCliente.setBounds(307, 32, 89, 23);
@@ -110,10 +110,10 @@ public class RealizarReserva extends JFrame {
 		lblNewLabel.setBounds(474, 36, 109, 14);
 		panel.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(593, 33, 117, 20);
-		panel.add(textField);
-		textField.setColumns(10);
+		tfFechaEntrada = new JTextField();
+		tfFechaEntrada.setBounds(593, 33, 117, 20);
+		panel.add(tfFechaEntrada);
+		tfFechaEntrada.setColumns(10);
 		
 		JButton btnNewButton_3 = new JButton("Buscar disponibilidad");
 		btnNewButton_3.setBounds(750, 32, 183, 23);
@@ -123,10 +123,10 @@ public class RealizarReserva extends JFrame {
 		lblNewLabel_1.setBounds(474, 61, 104, 14);
 		panel.add(lblNewLabel_1);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(593, 58, 117, 20);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		tfFechaSalida = new JTextField();
+		tfFechaSalida.setBounds(593, 58, 117, 20);
+		panel.add(tfFechaSalida);
+		tfFechaSalida.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Habitación/es disponibles");
 		lblNewLabel_2.setBounds(445, 120, 488, 14);
@@ -136,25 +136,25 @@ public class RealizarReserva extends JFrame {
 		lblNewLabel_6.setBounds(30, 290, 86, 14);
 		panel.add(lblNewLabel_6);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(145, 286, 117, 22);
-		panel.add(comboBox);
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Estándar", "Premium"}));
+		JComboBox cbPlan = new JComboBox();
+		cbPlan.setBounds(145, 286, 117, 22);
+		panel.add(cbPlan);
+		cbPlan.setModel(new DefaultComboBoxModel(new String[] {"Estándar", "Premium"}));
 		
-		JButton btnNewButton_1 = new JButton("Aceptar");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnNewButton_1.setBounds(32, 387, 89, 23);
-		panel.add(btnNewButton_1);
+		btnAceptar.setBounds(32, 387, 89, 23);
+		panel.add(btnAceptar);
 		
-		JButton btnNewButton_2 = new JButton("Cancelar");
-		btnNewButton_2.setBounds(154, 387, 89, 23);
-		panel.add(btnNewButton_2);
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(154, 387, 89, 23);
+		panel.add(btnCancelar);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(445, 145, 488, 99);
+		scrollPane_1.setBounds(445, 145, 488, 144);
 		panel.add(scrollPane_1);
 		
 		table = new JTable();
@@ -188,6 +188,14 @@ public class RealizarReserva extends JFrame {
 		JLabel lblNewLabel_14 = new JLabel("Agregar plan");
 		lblNewLabel_14.setBounds(10, 265, 90, 14);
 		panel.add(lblNewLabel_14);
+		
+		JLabel lblNewLabel_3 = new JLabel("Realizar Seña:");
+		lblNewLabel_3.setBounds(445, 350, 86, 14);
+		panel.add(lblNewLabel_3);
+		
+		JButton btnNewButton = new JButton("Pagar");
+		btnNewButton.setBounds(541, 346, 89, 23);
+		panel.add(btnNewButton);
 
 	}
 }
