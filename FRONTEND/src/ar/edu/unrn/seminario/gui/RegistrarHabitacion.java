@@ -1,0 +1,120 @@
+package ar.edu.unrn.seminario.gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import java.awt.Font;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+public class RegistrarHabitacion extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField tfNumHabitacion;
+	private JTextField tfCostoHabitacion;
+	private JTable table;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					RegistrarHabitacion frame = new RegistrarHabitacion();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public RegistrarHabitacion() {
+		setTitle("Registrar Habitacion");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 469, 328);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("N° Habitación:");
+		lblNewLabel.setBounds(24, 23, 90, 25);
+		contentPane.add(lblNewLabel);
+		
+		JLabel tipoHabitacion = new JLabel("Tipo Habitacion:");
+		tipoHabitacion.setBounds(24, 183, 90, 25);
+		contentPane.add(tipoHabitacion);
+		
+		tfNumHabitacion = new JTextField();
+		tfNumHabitacion.setBounds(181, 23, 248, 20);
+		contentPane.add(tfNumHabitacion);
+		tfNumHabitacion.setColumns(10);
+		
+		JComboBox cbTipoHabitacion = new JComboBox();
+		cbTipoHabitacion.setModel(new DefaultComboBoxModel(new String[] {"Estandar", "Superior", "Deluxe", "Suite"}));
+		cbTipoHabitacion.setBounds(181, 184, 248, 22);
+		contentPane.add(cbTipoHabitacion);
+		
+		JLabel costoHabitacion = new JLabel("Costo Habitacion:");
+		costoHabitacion.setBounds(24, 219, 104, 19);
+		contentPane.add(costoHabitacion);
+		
+		tfCostoHabitacion = new JTextField();
+		tfCostoHabitacion.setColumns(10);
+		tfCostoHabitacion.setBounds(181, 217, 248, 20);
+		contentPane.add(tfCostoHabitacion);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnCancelar.setBounds(354, 255, 89, 23);
+		contentPane.add(btnCancelar);
+		
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnAceptar.setBounds(255, 255, 89, 23);
+		contentPane.add(btnAceptar);
+		
+		JLabel lblNewLabel_1 = new JLabel("$-");
+		lblNewLabel_1.setBounds(152, 219, 19, 19);
+		contentPane.add(lblNewLabel_1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(181, 53, 248, 86);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Cama"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		JButton btnAgregarCama = new JButton("Agregar Cama");
+		btnAgregarCama.setBounds(309, 150, 120, 23);
+		contentPane.add(btnAgregarCama);
+		
+		JButton btnEliminarCama = new JButton("Eliminar Cama");
+		btnEliminarCama.setBounds(181, 150, 120, 23);
+		contentPane.add(btnEliminarCama);
+
+	}
+}
