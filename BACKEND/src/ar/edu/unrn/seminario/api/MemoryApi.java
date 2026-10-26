@@ -24,14 +24,9 @@ public class MemoryApi implements IApi {
 	
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
-<<<<<<< Updated upstream
-		
-=======
-		//prueba a ver si funciona
-		System.out.println("holaa");
->>>>>>> Stashed changes
-		
+	
 	}
+
 
 	@Override
 	public void modificarCLiente(int dni) {
