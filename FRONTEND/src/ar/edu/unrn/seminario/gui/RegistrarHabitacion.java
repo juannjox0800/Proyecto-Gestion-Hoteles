@@ -95,7 +95,7 @@ public class RegistrarHabitacion extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(181, 53, 248, 86);
+		scrollPane.setBounds(181, 53, 248, 116);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -109,12 +109,21 @@ public class RegistrarHabitacion extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JButton btnAgregarCama = new JButton("Agregar Cama");
-		btnAgregarCama.setBounds(309, 150, 120, 23);
+		btnAgregarCama.setBounds(24, 115, 120, 23);
 		contentPane.add(btnAgregarCama);
 		
 		JButton btnEliminarCama = new JButton("Eliminar Cama");
-		btnEliminarCama.setBounds(181, 150, 120, 23);
+		btnEliminarCama.setBounds(24, 149, 120, 23);
 		contentPane.add(btnEliminarCama);
+		
+		JLabel lblNewLabel_2 = new JLabel("Seleccionar Tipo:");
+		lblNewLabel_2.setBounds(24, 60, 104, 14);
+		contentPane.add(lblNewLabel_2);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Simple", "Matrimonial"}));
+		comboBox.setBounds(24, 85, 147, 22);
+		contentPane.add(comboBox);
 
 	}
 }
