@@ -24,39 +24,57 @@ public class MemoryApi implements IApi {
 	
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
-	
+		
+	Cliente cliente= new Cliente (nombre,apellido,contacto,dni);
+	this.clientes.add(cliente);
 	}
 
 
 	@Override
-	public void modificarCLiente(int dni) {
-		for (Cliente a : clientes) {
-			
+	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) {
+		for (Cliente a : this.clientes) {
+			if (a.getDni()== dni) {
+				a.setNombre(nombre);
+				a.setApellido(apellido);
+				a.setContacto(contacto);
+			}
 		}
 	}
 
 	@Override
 	public void eliminarCliente(int dni) {
 		// TODO Auto-generated method stub
-		
+		this.clientes.removeIf(a-> a.getDni()== dni);
 	}
 
 	@Override
 	public boolean existeCliente(int dni) {
-		// TODO Auto-generated method stub
+		
+		for (Cliente a : this.clientes) {
+			if (a.getDni()== dni) {
+				return true;
+			}
+		}
 		return false;
-	}
-
+		}
 	@Override
-	public ClienteDTO obtenerCLiente(int dni) {
-		// TODO Auto-generated method stub
+	public ClienteDTO obtenerCliente(int dni) {
+		for (Cliente a : this.clientes) {
+			if (a.getDni()== dni) {
+				return new ClienteDTO(a.getNombre(), a.getApellido(), a.getContacto(),a.getDni());
+			}
+		}
 		return null;
 	}
+	
 
 	@Override
 	public List<ClienteDTO> obtenerListaClientes() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ClienteDTO> dtos= new ArrayList<>();
+		for (Cliente a:this.clientes) {
+			dtos.add(new ClienteDTO (a.getNombre(),a.getApellido(),a.getContacto(),a.getDni()));
+		}
+		return dtos;
 	}
 
 	@Override

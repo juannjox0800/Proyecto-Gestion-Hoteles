@@ -44,10 +44,10 @@ public interface IApi {
 	void desactivarUsuario(String username); // recuperar el objeto Usuario, implementar el comportamiento de estado.*/
 				//verificar hacemos con el objeto como parametro 
 	void registrarCliente(String nombre, String apellido, String contacto, int dni);
-	void modificarCLiente(int dni);
+	void modificarCLiente(int dni, String nombre, String apellido, String contacto);
 	void eliminarCliente(int dni);
 	boolean existeCliente(int dni);
-	ClienteDTO obtenerCLiente(int dni);
+	ClienteDTO obtenerCliente(int dni);
 	List<ClienteDTO>obtenerListaClientes();
 	
 	void registrarHabitacion(int numero, String tipoHabitacion, int costo);
