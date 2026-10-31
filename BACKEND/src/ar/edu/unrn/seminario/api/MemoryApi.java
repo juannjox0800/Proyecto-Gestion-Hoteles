@@ -32,6 +32,7 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) {
+		
 		for (Cliente a : this.clientes) {
 			if (a.getDni()== dni) {
 				a.setNombre(nombre);
@@ -40,7 +41,7 @@ public class MemoryApi implements IApi {
 			}
 		}
 	}
-
+	
 	@Override
 	public void eliminarCliente(int dni) {
 		// TODO Auto-generated method stub
@@ -49,12 +50,13 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public boolean existeCliente(int dni) {
-		
+	
 		for (Cliente a : this.clientes) {
 			if (a.getDni()== dni) {
 				return true;
 			}
 		}
+		
 		return false;
 		}
 	@Override
@@ -64,6 +66,7 @@ public class MemoryApi implements IApi {
 				return new ClienteDTO(a.getNombre(), a.getApellido(), a.getContacto(),a.getDni());
 			}
 		}
+
 		return null;
 	}
 	
