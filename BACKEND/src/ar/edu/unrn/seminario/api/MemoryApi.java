@@ -61,32 +61,56 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void registrarHabitacion(int numero, String tipoHabitacion, int costo) {
-		// TODO Auto-generated method stub
+		habitaciones.add(new Habitacion(numero, tipoHabitacion, costo));
 		
 	}
 
 	@Override
-	public void modificarHabitacion(int numero) {
-		// TODO Auto-generated method stub
+	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo) {
+		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
+		if(habitacion.isPresent()) {
+			Habitacion h = habitacion.get();
+			h.setNumero(numeroNuevo);
+			h.setTipoHabitacion(tipoHabitacion);
+			h.setCosto(costo);
+			
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
-	public void eliminarHabitacion(int numero) {
-		// TODO Auto-generated method stub
+	public boolean eliminarHabitacion(int numero) {
+		return habitaciones.removeIf(h -> h.getNumero() == numero);
 		
 	}
 
 	@Override
 	public HabitacionDTO obtenerHabitacion(int numero) {
-		// TODO Auto-generated method stub
+		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
+		
+		if(habitacion.isPresent()) {
+			HabitacionDTO dto = Mapper.aDTO(habitacion.get());
+			return dto;
+		}
+		
 		return null;
 	}
 
 	@Override
 	public List<HabitacionDTO> obtenerListaHabitacion() {
-		// TODO Auto-generated method stub
-		return null;
+		List<HabitacionDTO> listaDTO = new ArrayList<>();
+		
+		for(Habitacion h : habitaciones) {
+			
+			HabitacionDTO dto = Mapper.aDTO(h);
+			
+			listaDTO.add(dto);
+		}
+		
+		return listaDTO;
 	}
 
 	@Override
