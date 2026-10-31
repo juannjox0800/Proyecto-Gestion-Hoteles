@@ -10,6 +10,8 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
@@ -125,13 +127,18 @@ public class MemoryApi implements IApi {
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
 			String nombre) {
-		ArrayList<Servicio> servicios = new ArrayList<>();
-		for (ServicioDTO dto : listaServicios) {
-			servicios.add(HotelMapper.aModelo(dto));
-		}
-		Plan planadd= new Plan(servicios,costo ,nombre, false);
-		this.planes.add(planadd);
-		
+		if (!planExiste(nombre)) {
+			if (nombre!=null&(!nombre.trim().isEmpty())&listaServicios!=null) {
+				if (costo>0) {
+				ArrayList<Servicio> servicios = new ArrayList<>();
+				for (ServicioDTO dto : listaServicios) {
+					servicios.add(HotelMapper.aModelo(dto));
+				}
+				Plan planadd= new Plan(servicios,costo ,nombre, false);
+				this.planes.add(planadd);
+				}else throw new ValorInvalidoException("valor invalido");
+			}else throw new DatoVacioException("faltan datos");
+		}else throw new EntidadDuplicadaException("Ya existe esta entidad");
 	}
 	public boolean planExiste(String nombre) {
 		boolean s =false;
@@ -146,20 +153,22 @@ public class MemoryApi implements IApi {
 	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
 			String nombre) {
 		if (planExiste(nombre)){
-				if (nombre.isEmpty() || costo<0){
-					ArrayList<Servicio> servicios = new ArrayList<>();
-					for (ServicioDTO dto : listaServicios) {
-						servicios.add(HotelMapper.aModelo(dto));
-					}
-				
-					for (Plan a : this.planes) {
-						if (a.getNombre().equals(nombre)) {
-							a.setServicios(servicios);
-							a.setCosto(costo);
-							a.setNombre(nombre);
+				if ( costo>0){
+					if (!nombre.isEmpty() & nombre!=null&listaServicios!=null) {
+						ArrayList<Servicio> servicios = new ArrayList<>();
+						for (ServicioDTO dto : listaServicios) {
+							servicios.add(HotelMapper.aModelo(dto));
 						}
-					}
-				} else throw new ValorInvalidoException("valor no valido o vacio");
+					
+						for (Plan a : this.planes) {
+							if (a.getNombre().equals(nombre)) {
+								a.setServicios(servicios);
+								a.setCosto(costo);
+								a.setNombre(nombre);
+							}
+						}
+					}else throw new DatoVacioException("faltan datos");
+				} else throw new ValorInvalidoException("valor no valido ");
 		
 		}else throw new EntidadNoEncontradaException("Plan no existe");
 		
@@ -172,7 +181,7 @@ public class MemoryApi implements IApi {
 			this.planes.removeIf(p -> p.getNombre().equals(nombre));
 		}else throw new EntidadNoEncontradaException("Plan no existe");
 
-			
+		
 	}
 
 	@Override
