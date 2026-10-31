@@ -9,6 +9,9 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Huesped;
@@ -27,28 +30,50 @@ public class MemoryApi implements IApi {
     private int contReservas = 0;
 	
 	@Override
-	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
+	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException{
 		
+		if (nombre== null || nombre.trim().isEmpty()|| apellido ==null || apellido.trim().isEmpty()) {
+			throw new DatoVacioException("El nombre y el apellido no pueden estar vacios");
+		}
+		if (dni <= 0) {
+            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
+		}
+		if (existeCliente(dni)) {
+			throw new EntidadDuplicadaException("El cliente ya existe");
+		}
+			
 	Cliente cliente= new Cliente (nombre,apellido,contacto,dni);
 	this.clientes.add(cliente);
 	}
 
 
 	@Override
-	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) {
+	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException {
 		
+		if (nombre== null || nombre.trim().isEmpty()|| apellido ==null || apellido.trim().isEmpty()) {
+			throw new DatoVacioException("El nombre y el apellido no pueden estar vacios");
+		}
+		if (dni <= 0) {
+            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
+		}
 		for (Cliente a : this.clientes) {
 			if (a.getDni()== dni) {
+				a.setDni(dni);
 				a.setNombre(nombre);
 				a.setApellido(apellido);
 				a.setContacto(contacto);
+				return;
 			}
+			
 		}
+		throw new EntidadNoEncontradaException ("El cliente a modificar no existe en el sistema");
 	}
 	
 	@Override
-	public void eliminarCliente(int dni) {
-		// TODO Auto-generated method stub
+	public void eliminarCliente(int dni) throws EntidadNoEncontradaException{
+		if (!existeCliente(dni)) {
+			throw new EntidadNoEncontradaException("El cliente no existe. No se puede eliminar");
+		}
 		this.clientes.removeIf(a-> a.getDni()== dni);
 	}
 
@@ -64,14 +89,13 @@ public class MemoryApi implements IApi {
 		return false;
 		}
 	@Override
-	public ClienteDTO obtenerCliente(int dni) {
+	public ClienteDTO obtenerCliente(int dni) throws EntidadNoEncontradaException {
 		for (Cliente a : this.clientes) {
 			if (a.getDni()== dni) {
 				return new ClienteDTO(a.getNombre(), a.getApellido(), a.getContacto(),a.getDni());
 			}
 		}
-
-		return null;
+		throw new EntidadNoEncontradaException ("No se encontró el cliente con el DNI: " + dni);
 	}
 	
 
