@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -23,6 +24,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import ar.edu.unrn.seminario.api.IApi;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class RegistrarHabitacion extends JFrame {
 
@@ -142,15 +145,17 @@ public class RegistrarHabitacion extends JFrame {
 		btnAgregarCama.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evento) {
 					
+				try {
 					String tipo = comboBox.getSelectedItem().toString();
 					listadoCamasTemporal.add(tipo);
 					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 					modelo.addRow(new Object[] {tipo});
 					
-				}
-				
-				
-			});
+				}catch(DatoVacioException e) {
+					JOptionPane.showMessageDialog(null, e, "Error al ingresar datos.", JOptionPane.ERROR_MESSAGE);
+				}	
+			}	
+		});
 		
 		btnEliminarCama.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evento) {
@@ -162,26 +167,32 @@ public class RegistrarHabitacion extends JFrame {
 					listadoCamasTemporal.remove(filaSelec);
 					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 					modelo.removeRow(filaSelec);
-					
 				}
-				
 			}
-			
 		});
 		
 		
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+				
 				int numero = Integer.parseInt(tfNumHabitacion.getText());
-				String tipoHabitacion = comboBox.getSelectedItem().toString();
+				String tipoHabitacion = cbTipoHabitacion.getSelectedItem().toString();
 				int costo = Integer.parseInt(tfCostoHabitacion.getText());
 				
 				api.registrarHabitacion(numero, tipoHabitacion, costo, listadoCamasTemporal);
 				
-			
 				
+				}catch(DatoVacioException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
+				
+				}catch(ValorInvalidoException e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage(), "Datos erroneos.", JOptionPane.ERROR_MESSAGE);	
+				
+				}catch(NumberFormatException e3) {
+					JOptionPane.showMessageDialog(null,"Error al ingresar el número de la habitación o el costo.", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
+				}
 			}
-			
 			
 		});
 		
