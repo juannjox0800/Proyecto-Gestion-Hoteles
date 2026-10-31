@@ -92,7 +92,7 @@ public class MemoryApi implements IApi {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {
-			HabitacionDTO dto = Mapper.aDTO(habitacion.get());
+			HabitacionDTO dto = HotelMapper.aDTO(habitacion.get());
 			return dto;
 		}
 		
@@ -105,7 +105,7 @@ public class MemoryApi implements IApi {
 		
 		for(Habitacion h : habitaciones) {
 			
-			HabitacionDTO dto = Mapper.aDTO(h);
+			HabitacionDTO dto = HotelMapper.aDTO(h);
 			
 			listaDTO.add(dto);
 		}
