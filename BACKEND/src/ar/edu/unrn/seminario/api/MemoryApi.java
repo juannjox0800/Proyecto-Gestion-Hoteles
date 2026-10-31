@@ -126,7 +126,7 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
-			String nombre) {
+			String nombre, boolean esActivo) {
 		if (!planExiste(nombre)) {
 			if (nombre!=null&(!nombre.trim().isEmpty())&listaServicios!=null) {
 				if (costo>0) {
@@ -134,8 +134,9 @@ public class MemoryApi implements IApi {
 				for (ServicioDTO dto : listaServicios) {
 					servicios.add(HotelMapper.aModelo(dto));
 				}
-				Plan planadd= new Plan(servicios,costo ,nombre, false);
+				Plan planadd= new Plan(servicios,costo ,nombre, esActivo);
 				this.planes.add(planadd);
+				
 				}else throw new ValorInvalidoException("valor invalido");
 			}else throw new DatoVacioException("faltan datos");
 		}else throw new EntidadDuplicadaException("Ya existe esta entidad");

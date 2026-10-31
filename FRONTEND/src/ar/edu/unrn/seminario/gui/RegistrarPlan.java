@@ -119,6 +119,11 @@ public class RegistrarPlan extends JFrame {
 		        }
 		}
 		});
+		
+		JComboBox cBActivo = new JComboBox<>();
+		cBActivo.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
+		cBActivo.setBounds(127, 84, 195, 22);
+		contentPane.add(cBActivo);
 		contentPane.add(btnAgregarServicio);
 
 		JButton btnGuardarPlan = new JButton("Guardar");
@@ -131,9 +136,11 @@ public class RegistrarPlan extends JFrame {
 		            }
 					String nombre = tFNombre.getText();
 					int costo = Integer.parseInt(tFCosto.getText());
-					api.registrarPlan(serviciosSeleccionados, costo, nombre);
-					
-					JOptionPane.showMessageDialog(null, "¡Plan registrado con éxito!");
+				
+					String estadoSeleccionado = (String) cBActivo.getSelectedItem();
+					boolean esActivo = "Activo".equals(estadoSeleccionado); 
+					api.registrarPlan(serviciosSeleccionados, costo, nombre, esActivo);
+					JOptionPane.showMessageDialog(null, "Plan registrado con éxito");
 					dispose();
 				} catch (ValorInvalidoException a) {
 					JOptionPane.showMessageDialog(null, a.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -165,10 +172,8 @@ public class RegistrarPlan extends JFrame {
 		            DefaultTableModel modelo = (DefaultTableModel) TableServiciosIncluidos.getModel();
 		            modelo.removeRow(filaSeleccionada);
 		            
-		            // Borramos también de nuestra lista interna de servicios seleccionados
 		            serviciosSeleccionados.remove(filaSeleccionada);
 		        } else {
-		            // Si no seleccionó nada, le avisamos con un cartel
 		            JOptionPane.showMessageDialog(null, 
 		                "Por favor, seleccione un servicio de la tabla para eliminar.", 
 		                "Aviso", 
@@ -182,10 +187,6 @@ public class RegistrarPlan extends JFrame {
 		lblEstado.setBounds(46, 88, 71, 14);
 		contentPane.add(lblEstado);
 		
-		JComboBox cBActivo = new JComboBox<>();
-		cBActivo.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
-		cBActivo.setBounds(127, 84, 195, 22);
-		contentPane.add(cBActivo);
 
 	}
 	public void agregarServicioATabla(ServicioDTO servicio) {
