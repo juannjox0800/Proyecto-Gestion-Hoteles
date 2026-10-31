@@ -2,6 +2,9 @@ package ar.edu.unrn.seminario.modelo;
 
 import java.util.Objects;
 
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 public class Servicio {
 
 	private String nombre;
@@ -9,11 +12,17 @@ public class Servicio {
 	private int precio;
 	private boolean estadoVigente;
 	
-	public Servicio(String nombre, String descripcion, int precio ) {
+	public Servicio(String nombre, String descripcion, int precio, boolean estadoVigente ) {
+		if (nombre == null || nombre.trim().isEmpty())
+			throw new DatoVacioException("El nombre del servicio es obligatorio");
+		
+		if (precio < 0) 
+			throw new ValorInvalidoException ("El precio del servicio no puede ser negativo");
+		
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.precio = precio;
-		this.estadoVigente = false;
+		this.estadoVigente = estadoVigente;
 	}
 
 	public String getNombre() {

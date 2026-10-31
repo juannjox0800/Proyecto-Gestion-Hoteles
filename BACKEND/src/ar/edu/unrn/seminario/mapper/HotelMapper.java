@@ -51,13 +51,13 @@ public class HotelMapper {
 	public static ServicioDTO aDTO (Servicio s) {
 		if (s == null)
 			return null;
-		return new ServicioDTO(s.getNombre(), s.getDescripcion(), s.getPrecio());
+		return new ServicioDTO(s.getNombre(), s.getDescripcion(), s.getPrecio(), s.isEstadoVigente());
 	}
 	
 	public static Servicio aModelo (ServicioDTO s) {
 		if (s == null)
 			return null;
-		return new Servicio(s.getNombre(), s.getDescripcion(), s.getPrecio());
+		return new Servicio(s.getNombre(), s.getDescripcion(), s.getPrecio(), s.isEstadoVigente());
 	}
 	
 	//mapper de Plan
