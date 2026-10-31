@@ -114,34 +114,22 @@ public class ListaPlanes extends JFrame {
 		JButton btnModificarPlan = new JButton("Modificar");
 		btnModificarPlan.setBounds(10, 152, 89, 23);
 		btnModificarPlan.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				 int filaSeleccionada = jtListaPlanes.getSelectedRow();
-				 if (filaSeleccionada!=-1) {
-					 String nombrePlanSeleccionado = (String) jtListaPlanes.getValueAt(filaSeleccionada, 0);
-			            
-			            PlanDTO planAEliminar = null;
-			            for (PlanDTO plan : listaTemporal) {
-			                if (plan.getNombre().equals(nombrePlanSeleccionado)) {
-			                    planAEliminar = plan;
-			                }
-			            }
-			            if (planAEliminar != null) {
-			                listaTemporal.remove(planAEliminar);
-			                
-			                DefaultTableModel modelo = (DefaultTableModel) jtListaPlanes.getModel();
-			                modelo.removeRow(filaSeleccionada);
-			                RegistrarPlan ventana = new RegistrarPlan(api);
-							ventana.setVisible(true);
-			                JOptionPane.showMessageDialog(null, "Plan marcado modificado. Pulse Aceptar para guardar cambios.");
-							
-			            } else {
-			            	JOptionPane.showMessageDialog(null, "el plan seleccionado no existe");
-			            }
-				 }else {
-		                JOptionPane.showMessageDialog(null, "No has seleccionado plan. Selecciona uno.");
+		    public void actionPerformed(ActionEvent e) {
+		        int filaSeleccionada = jtListaPlanes.getSelectedRow();
+		        if (filaSeleccionada == -1) { JOptionPane.showMessageDialog(null, "El plan seleccionado no existe en la lista temporal."); return;}
+		            String nombrePlanSeleccionado = (String) jtListaPlanes.getValueAt(filaSeleccionada, 0);
+		            PlanDTO planAModificar = null;
+		            for (PlanDTO plan : listaTemporal) {
+		                if (plan.getNombre().equals(nombrePlanSeleccionado)) {
+		                    planAModificar = plan;
+		                }
+		            }
+		            
+		            if (planAModificar == null)   JOptionPane.showMessageDialog(null, "El plan seleccionado no existe en la lista temporal.");
 
-				 }
-			}
+		                RegistrarPlan ventana = new RegistrarPlan(api, planAModificar);
+		                ventana.setVisible(true);
+		            }
 		});
 		contentPane.add(btnModificarPlan);
 		

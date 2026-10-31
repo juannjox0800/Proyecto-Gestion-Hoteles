@@ -134,25 +134,27 @@ public class MemoryApi implements IApi {
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
 			String nombre, boolean esActivo) {
-		if (!planExiste(nombre)) {
-			if (nombre!=null&(!nombre.trim().isEmpty())&listaServicios!=null) {
-				if (costo>0) {
-				ArrayList<Servicio> servicios = new ArrayList<>();
-				for (ServicioDTO dto : listaServicios) {
-					servicios.add(HotelMapper.aModelo(dto));
-				}
-				Plan planadd= new Plan(servicios,costo ,nombre, esActivo);
-				this.planes.add(planadd);
-				
-				}else throw new ValorInvalidoException("valor invalido");
-			}else throw new DatoVacioException("faltan datos");
-		}else throw new EntidadDuplicadaException("Ya existe esta entidad");
+
+		if (planExiste(nombre)) throw new EntidadDuplicadaException("Ya existe esta entidad");
+		if (nombre==null||nombre.trim().isEmpty()||listaServicios==null)  throw new DatoVacioException("faltan datos");
+		if (costo<0) throw new ValorInvalidoException("valor invalido de costo");
+		
+		ArrayList<Servicio> servicios = new ArrayList<>();
+		for (ServicioDTO dto : listaServicios) 			servicios.add(HotelMapper.aModelo(dto));
+		
+		Plan planadd= new Plan(servicios,costo ,nombre, esActivo);
+		this.planes.add(planadd);
+		
+			
 	}
+	
+	
 	public boolean planExiste(String nombre) {
 		boolean s =false;
 	for (Plan a : this.planes) {
 		if (a.getNombre().equals(nombre)) s = true;
 	}
+		
 		return s;
 		
 	}
@@ -185,16 +187,13 @@ public class MemoryApi implements IApi {
 	}
 	@Override
 	public void eliminarPlan(String nombre) {
-		if (planExiste(nombre)) {
+		if (!planExiste(nombre))throw new EntidadNoEncontradaException("Plan no existe"); 
 			this.planes.removeIf(p -> p.getNombre().equals(nombre));
-		}else throw new EntidadNoEncontradaException("Plan no existe");
-
-		
 	}
 
 	@Override
 	public PlanDTO obtenerPlan(String nombre) {
-		
+		if (!planExiste(nombre))
 			for(Plan p : this.planes) {
 				if (p.getNombre().equals(nombre)) {
 					return HotelMapper.aDTO(p);
