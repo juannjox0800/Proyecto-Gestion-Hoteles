@@ -99,7 +99,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarServicio(String nombre, String descripcion, int precio) {
+	public void registrarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) {
 		boolean existe = this.servicios
 				.stream()
 				.anyMatch(s -> s.getNombre().equalsIgnoreCase(nombre));
@@ -108,13 +108,13 @@ public class MemoryApi implements IApi {
 			throw new EntidadDuplicadaException("Ya existe un servicio con el nombre: " + nombre);
 		}
 
-		this.servicios.add(new Servicio(nombre, descripcion, precio));
+		this.servicios.add(new Servicio(nombre, descripcion, precio, estadoVigente));
 
 		
 	}
 
 	@Override
-	public void modificarServicio(String nombre, String descripcion, int precio) {
+	public void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) {
 		Servicio servicio = this.servicios
 				.stream()
 				.filter(s -> s.getNombre().equalsIgnoreCase(nombre))
@@ -123,8 +123,7 @@ public class MemoryApi implements IApi {
 
 		servicio.setDescripcion(descripcion);
 		servicio.setPrecio(precio);
-
-	}
+		servicio.setEstadoVigente(estadoVigente);	}
 
 	@Override
 	public void eliminarServicio(String nombre) {

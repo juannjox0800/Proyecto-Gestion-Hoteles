@@ -56,8 +56,8 @@ public interface IApi {
 	HabitacionDTO obtenerHabitacion(int numero);
 	List <HabitacionDTO>obtenerListaHabitacion();
 	
-	void registrarServicio(String nombre,String descripcion, int precio);
-	void modificarServicio(String nombre, String descripcion, int precio);
+	void registrarServicio(String nombre,String descripcion, int precio, boolean estadoVigente);
+	void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente);
 	void eliminarServicio(String nombre);
 	ServicioDTO obtenerServicio(String nombre);
 	List<ServicioDTO> obtenerListaServicios();
