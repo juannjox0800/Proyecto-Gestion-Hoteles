@@ -168,6 +168,7 @@ public class RegistrarPlan extends JFrame {
 		            // Borramos también de nuestra lista interna de servicios seleccionados
 		            serviciosSeleccionados.remove(filaSeleccionada);
 		        } else {
+		            // Si no seleccionó nada, le avisamos con un cartel
 		            JOptionPane.showMessageDialog(null, 
 		                "Por favor, seleccione un servicio de la tabla para eliminar.", 
 		                "Aviso", 
