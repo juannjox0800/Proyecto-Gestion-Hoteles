@@ -80,6 +80,9 @@ public class Habitacion {
 		
 	}
 	
+	public int cantCamas() {
+		return this.camas.size();
+	}
 
 	@Override
 	public int hashCode() {

@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import ar.edu.unrn.seminario.api.IApi;
+import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
@@ -37,6 +38,7 @@ public class RegistrarHabitacion extends JFrame {
 
 	private List<String> listadoCamasTemporal = new ArrayList<>();
 	private IApi api;
+	private Integer numeroOriginal = null; // si es nulo, se registra una habitacion nueva, sino, modifica una habitacion
 	
 	/**
 	 * Launch the application.
@@ -45,7 +47,7 @@ public class RegistrarHabitacion extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistrarHabitacion frame = new RegistrarHabitacion(null);
+					RegistrarHabitacion frame = new RegistrarHabitacion(null, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,7 +59,7 @@ public class RegistrarHabitacion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistrarHabitacion(IApi api) {
+	public RegistrarHabitacion(IApi api, HabitacionDTO dtoH) {
 		setTitle("Registrar Habitacion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 469, 328);
@@ -67,6 +69,12 @@ public class RegistrarHabitacion extends JFrame {
 		contentPane.setLayout(null);
 		
 		this.api = api;
+		if(dtoH == null) {
+			this.numeroOriginal = null;
+		}else {
+			this.numeroOriginal = dtoH.getNumero();
+		}
+		
 		
 		JLabel lblNewLabel = new JLabel("N° Habitación:");
 		lblNewLabel.setBounds(24, 23, 90, 25);
@@ -180,7 +188,12 @@ public class RegistrarHabitacion extends JFrame {
 				String tipoHabitacion = cbTipoHabitacion.getSelectedItem().toString();
 				int costo = Integer.parseInt(tfCostoHabitacion.getText());
 				
-				api.registrarHabitacion(numero, tipoHabitacion, costo, listadoCamasTemporal);
+				if(numeroOriginal == null) {
+					api.registrarHabitacion(numero, tipoHabitacion, costo, listadoCamasTemporal);
+				}else {
+					api.modificarHabitacion(numeroOriginal, numero, tipoHabitacion, costo, listadoCamasTemporal);
+				}
+				
 				
 				
 				}catch(DatoVacioException e1) {

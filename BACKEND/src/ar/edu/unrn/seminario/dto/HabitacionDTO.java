@@ -66,6 +66,8 @@ public class HabitacionDTO {
 		this.camas = camas;
 	}
 
-
+	public int cantCamas() {
+		return this.camas.size();
+	}
 	
 }
