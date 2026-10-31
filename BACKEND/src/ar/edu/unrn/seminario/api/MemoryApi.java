@@ -2,6 +2,7 @@ package ar.edu.unrn.seminario.api;
 
 import java.time.*;
 import java.util.*;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.HuespedDTO;
@@ -122,32 +123,70 @@ public class MemoryApi implements IApi {
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
 			String nombre) {
-		// TODO Auto-generated method stub
+		ArrayList<Servicio> servicios = new ArrayList<>();
+		for (ServicioDTO dto : listaServicios) {
+			servicios.add(HotelMapper.aModelo(dto));
+		}
+		Plan planadd= new Plan(servicios,costo ,nombre, false);
+		this.planes.add(planadd);
+		
+	}
+	public boolean planExiste(String nombre) {
+		boolean s =false;
+	for (Plan a : this.planes) {
+		if (a.getNombre()==nombre) s = true;
+	}
+		return s;
 		
 	}
 
 	@Override
-	public void modificarPlan(String nombre) {
-		// TODO Auto-generated method stub
-		
+	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
+			String nombre) {
+		if (planExiste(nombre)) {
+			ArrayList<Servicio> servicios = new ArrayList<>();
+				for (ServicioDTO dto : listaServicios) {
+					servicios.add(HotelMapper.aModelo(dto));
+				}
+				
+				for (Plan a : this.planes) {
+					if (a.getNombre()== nombre) {
+						a.setServicios(servicios);
+						a.setCosto(costo);
+						a.setNombre(nombre);
+					}
+				}
+		}
+	
 	}
-
 	@Override
 	public void eliminarPlan(String nombre) {
-		// TODO Auto-generated method stub
-		
+		if (planExiste(nombre)) {
+			this.planes.removeIf(p -> p.getNombre().equals(nombre));
+		}
 	}
 
 	@Override
 	public PlanDTO obtenerPlan(String nombre) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if (planExiste(nombre)) {
+			for(Plan p : this.planes) {
+				if (p.getNombre()==nombre) {
+					return HotelMapper.aDTO(p);
+				}
+			}
+		}
+		else return null;
+		
 	}
 
 	@Override
 	public List<PlanDTO> obtenerListaPlan() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList <PlanDTO> planesDTO=new ArrayList<>();
+		for (Plan p: this.planes) {
+			planesDTO.add(HotelMapper.aDTO(p));
+		}
+		return planesDTO;
 	}
 
 	@Override
