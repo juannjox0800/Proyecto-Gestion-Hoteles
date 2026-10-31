@@ -1,6 +1,8 @@
 package ar.edu.unrn.seminario.gui;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,9 +22,9 @@ public class RegistrarPlan extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTable table;
+	private JTextField tFNombre;
+	private JTextField tFCosto;
+	private JTable TableServiciosIncluidos;
 
 	/**
 	 * Launch the application.
@@ -60,22 +62,22 @@ public class RegistrarPlan extends JFrame {
 		lblCostoPlan.setBounds(46, 59, 75, 14);
 		contentPane.add(lblCostoPlan);
 		
-		textField = new JTextField();
-		textField.setBounds(127, 31, 195, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		tFNombre = new JTextField();
+		tFNombre.setBounds(127, 31, 195, 20);
+		contentPane.add(tFNombre);
+		tFNombre.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(127, 56, 195, 20);
-		contentPane.add(textField_1);
+		tFCosto = new JTextField();
+		tFCosto.setColumns(10);
+		tFCosto.setBounds(127, 56, 195, 20);
+		contentPane.add(tFCosto);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(46, 113, 276, 82);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		TableServiciosIncluidos = new JTable();
+		TableServiciosIncluidos.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null},
 			},
@@ -90,34 +92,54 @@ public class RegistrarPlan extends JFrame {
 				return columnEditables[column];
 			}
 		});
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(0).setPreferredWidth(150);
-		scrollPane.setViewportView(table);
+		TableServiciosIncluidos.getColumnModel().getColumn(0).setResizable(false);
+		TableServiciosIncluidos.getColumnModel().getColumn(0).setPreferredWidth(150);
+		scrollPane.setViewportView(TableServiciosIncluidos);
 		
-		JButton btnNewButton = new JButton("Agregar Servicio");
-		btnNewButton.setBounds(191, 203, 131, 23);
-		contentPane.add(btnNewButton);
+		JButton btnAgregarServicio = new JButton("Agregar Servicio");
+		btnAgregarServicio.setBounds(191, 203, 131, 23);
+		contentPane.add(btnAgregarServicio);
 		
+		btnAgregarServicio.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+			
+		}
+		});
 		JButton btnGuardarPlan = new JButton("Guardar");
 		btnGuardarPlan.setBounds(167, 263, 89, 23);
 		contentPane.add(btnGuardarPlan);
+		btnGuardarPlan.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+			
+		}
+		});
 		
 		JButton btnCancelarPlan = new JButton("Cancelar");
 		btnCancelarPlan.setBounds(265, 263, 89, 23);
 		contentPane.add(btnCancelarPlan);
+		btnCancelarPlan.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+			
+		}
+		});
 		
 		JButton btnEliminarServicio = new JButton("Eliminar Servicio");
 		btnEliminarServicio.setBounds(46, 203, 135, 23);
 		contentPane.add(btnEliminarServicio);
+		btnEliminarServicio.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+			
+		}
+		});
 		
 		JLabel lblEstado = new JLabel("Estado");
 		lblEstado.setBounds(46, 88, 71, 14);
 		contentPane.add(lblEstado);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
-		comboBox.setBounds(127, 84, 195, 22);
-		contentPane.add(comboBox);
+		JComboBox cBActivo = new JComboBox<>();
+		cBActivo.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
+		cBActivo.setBounds(127, 84, 195, 22);
+		contentPane.add(cBActivo);
 
 	}
 }

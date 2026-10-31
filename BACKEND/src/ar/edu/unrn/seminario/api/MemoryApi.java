@@ -10,6 +10,8 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
@@ -134,7 +136,7 @@ public class MemoryApi implements IApi {
 	public boolean planExiste(String nombre) {
 		boolean s =false;
 	for (Plan a : this.planes) {
-		if (a.getNombre()==nombre) s = true;
+		if (a.getNombre().equals(nombre)) s = true;
 	}
 		return s;
 		
@@ -143,40 +145,47 @@ public class MemoryApi implements IApi {
 	@Override
 	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
 			String nombre) {
-		if (planExiste(nombre)) {
-			ArrayList<Servicio> servicios = new ArrayList<>();
-				for (ServicioDTO dto : listaServicios) {
-					servicios.add(HotelMapper.aModelo(dto));
-				}
-				
-				for (Plan a : this.planes) {
-					if (a.getNombre()== nombre) {
-						a.setServicios(servicios);
-						a.setCosto(costo);
-						a.setNombre(nombre);
+		if (planExiste(nombre)){
+				if (nombre.isEmpty() || costo<0){
+					ArrayList<Servicio> servicios = new ArrayList<>();
+					for (ServicioDTO dto : listaServicios) {
+						servicios.add(HotelMapper.aModelo(dto));
 					}
-				}
-		}
+				
+					for (Plan a : this.planes) {
+						if (a.getNombre().equals(nombre)) {
+							a.setServicios(servicios);
+							a.setCosto(costo);
+							a.setNombre(nombre);
+						}
+					}
+				} else throw new ValorInvalidoException("valor no valido o vacio");
+		
+		}else throw new EntidadNoEncontradaException("Plan no existe");
+		
+
 	
 	}
 	@Override
 	public void eliminarPlan(String nombre) {
 		if (planExiste(nombre)) {
 			this.planes.removeIf(p -> p.getNombre().equals(nombre));
-		}
+		}else throw new EntidadNoEncontradaException("Plan no existe");
+
+			
 	}
 
 	@Override
 	public PlanDTO obtenerPlan(String nombre) {
 		
-		if (planExiste(nombre)) {
 			for(Plan p : this.planes) {
-				if (p.getNombre()==nombre) {
+				if (p.getNombre().equals(nombre)) {
 					return HotelMapper.aDTO(p);
 				}
-			}
+			
 		}
-		else return null;
+		throw new EntidadNoEncontradaException("Plan no existe");
+
 		
 	}
 
