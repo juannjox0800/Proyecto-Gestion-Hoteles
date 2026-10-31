@@ -88,12 +88,26 @@ public class VentanaPrincipal extends JFrame {
 		
 		JMenu menuReserva = new JMenu("Reserva");
 		menuBar.add(menuReserva);
-		
 		JMenuItem enlistarReserva = new JMenuItem("Enlistar Reserva");
+		enlistarReserva.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				VentanaListadoDeReservas ventana= new VentanaListadoDeReservas();
+				ventana.setVisible(true);
+			}
+		});
 		menuReserva.add(enlistarReserva);
-		
 		JMenuItem registrarReserva = new JMenuItem("Registrar Reserva");
+		registrarReserva.addActionListener(new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e) {
+						RealizarReserva ventana= new RealizarReserva();
+						ventana.setVisible(true);
+					}
+				});
 		menuReserva.add(registrarReserva);
+		
+		
 		
 		JMenuItem hacerCheckIn = new JMenuItem("Hacer Check-In");
 		hacerCheckIn.addActionListener(new ActionListener() {
