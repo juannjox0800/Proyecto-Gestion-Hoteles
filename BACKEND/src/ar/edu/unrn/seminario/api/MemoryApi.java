@@ -2,6 +2,8 @@ package ar.edu.unrn.seminario.api;
 
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.HuespedDTO;
@@ -9,6 +11,9 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Huesped;
@@ -95,32 +100,61 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void registrarServicio(String nombre, String descripcion, int precio) {
-		// TODO Auto-generated method stub
+		boolean existe = this.servicios
+				.stream()
+				.anyMatch(s -> s.getNombre().equalsIgnoreCase(nombre));
+
+		if (existe) {
+			throw new EntidadDuplicadaException("Ya existe un servicio con el nombre: " + nombre);
+		}
+
+		this.servicios.add(new Servicio(nombre, descripcion, precio));
+
 		
 	}
 
 	@Override
-	public void modiicarServicio(String nombre) {
-		// TODO Auto-generated method stub
-		
+	public void modificarServicio(String nombre, String descripcion, int precio) {
+		Servicio servicio = this.servicios
+				.stream()
+				.filter(s -> s.getNombre().equalsIgnoreCase(nombre))
+				.findFirst()
+				.orElseThrow(() -> new EntidadNoEncontradaException("No se encontro el servicio: " + nombre)) ;
+
+		servicio.setDescripcion(descripcion);
+		servicio.setPrecio(precio);
+
 	}
 
 	@Override
 	public void eliminarServicio(String nombre) {
-		// TODO Auto-generated method stub
+		boolean fueEliminado = this.servicios.removeIf(s -> s.getNombre().equalsIgnoreCase(nombre));
 		
+		if (!fueEliminado) {
+			throw new EntidadNoEncontradaException("No se encontro el servicio '" + nombre + "' para eliminar");
+		}
+
 	}
 
 	@Override
 	public ServicioDTO obtenerServicio(String nombre) {
-		// TODO Auto-generated method stub
-		return null;
+		Servicio servicio =  this.servicios
+				.stream()
+				.filter(s -> s.getNombre().equalsIgnoreCase(nombre))
+				.findFirst()
+				.orElseThrow(() -> new EntidadNoEncontradaException("No se encontro el servicio: " + nombre));
+		
+		
+		return HotelMapper.aDTO(servicio);
 	}
 
 	@Override
 	public List<ServicioDTO> obtenerListaServicios() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return this.servicios
+					.stream()
+					.map(HotelMapper :: aDTO)
+					.collect(Collectors.toList());
 	}
 
 	@Override
