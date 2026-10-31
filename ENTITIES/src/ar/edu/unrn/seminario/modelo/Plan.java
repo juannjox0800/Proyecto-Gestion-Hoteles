@@ -1,14 +1,15 @@
 package ar.edu.unrn.seminario.modelo;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Plan {
-	private ArrayList<Servicio> servicios;
+	private List<Servicio> servicios;
 	private int costo;
 	private String nombre;
 	private boolean estadoActivo;
 
-	public Plan(ArrayList<Servicio> servicios, int costo, String nombre, boolean estadoActivo) {
+	public Plan(List<Servicio> servicios, int costo, String nombre, boolean estadoActivo) {
 		this.servicios = servicios;
 		this.costo = costo;
 		this.nombre = nombre;
@@ -22,11 +23,11 @@ public class Plan {
 		this.servicios = new ArrayList<Servicio>();
 	}
 
-	public ArrayList<Servicio> getServicios() {
+	public List<Servicio> getServicios() {
 		return servicios;
 	}
 
-	public void setServicios(ArrayList<Servicio> servicios) {
+	public void setServicios(List<Servicio> servicios) {
 		this.servicios = servicios;
 	}
 
