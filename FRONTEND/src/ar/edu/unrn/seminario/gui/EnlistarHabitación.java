@@ -66,14 +66,14 @@ public class EnlistarHabitación extends JFrame {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null},
+				{null, null, null, null, null},
 			},
 			new String[] {
-				"Numero", "Cant Camas", "Tipo", "Ocupada", "Estado", "Cant Huesped"
+				"Numero", "Cant Camas", "Tipo", "Estado", "Cant Huesped"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false
+				false, false, false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -85,8 +85,7 @@ public class EnlistarHabitación extends JFrame {
 		table.getColumnModel().getColumn(2).setResizable(false);
 		table.getColumnModel().getColumn(3).setResizable(false);
 		table.getColumnModel().getColumn(4).setResizable(false);
-		table.getColumnModel().getColumn(5).setResizable(false);
-		table.getColumnModel().getColumn(5).setPreferredWidth(88);
+		table.getColumnModel().getColumn(4).setPreferredWidth(88);
 		scrollPane.setViewportView(table);
 		
 		JLabel lblBuscar = new JLabel("Buscar Habitacion:");
@@ -118,8 +117,9 @@ public class EnlistarHabitación extends JFrame {
 							dtoH.getNumero(),
 							dtoH.cantCamas(),
 							dtoH.getTipoHabitacion(),
-							dtoH.getCosto(),	
-							dtoH.getEstado()
+							dtoH.getEstado(),
+							dtoH.cantHuespedes()
+							
 						});
 					}
 				
@@ -164,40 +164,36 @@ public class EnlistarHabitación extends JFrame {
 				
 				if(filaSelec != -1) {
 					
-                    int numeroHabitacion = (int) table.getValueAt(filaSelec, 0);
-                    
-                    boolean eliminado = api.eliminarHabitacion(numeroHabitacion);
-                    
-                    if (eliminado) {
+					
+					int verificacion = JOptionPane.showConfirmDialog(null, "¿Estás segura que deseas eliminar esta habitación?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+					
+                    if(verificacion == JOptionPane.YES_OPTION) {
+                    	
+                    	int numeroHabitacion = (int) table.getValueAt(filaSelec, 0);
+                        boolean eliminado = api.eliminarHabitacion(numeroHabitacion);
                         
-                        DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-                        modelo.removeRow(filaSelec);
-                        
-                        JOptionPane.showMessageDialog(null, "Habitación eliminada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No se pudo eliminar la habitación del sistema.", "Error", JOptionPane.ERROR_MESSAGE);
+                        if (eliminado) {
+                            
+                            DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+                            modelo.removeRow(filaSelec);
+                            
+                            JOptionPane.showMessageDialog(null, "Habitación eliminada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No se pudo eliminar la habitación del sistema.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    	
                     }
+					
 				}
 			}
 			
 		});
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(285, 276, 89, 23);
-		contentPane.add(btnAceptar);
+		JButton btnCerrar = new JButton("Cerrar");
+		btnCerrar.setBounds(366, 267, 89, 23);
+		contentPane.add(btnCerrar);
 		
-		btnAceptar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				
-			}
-		});
-		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(384, 276, 89, 23);
-		contentPane.add(btnCancelar);
-		
-		btnCancelar.addActionListener(new ActionListener() {
+		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				

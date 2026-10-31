@@ -83,6 +83,21 @@ public class Habitacion {
 	public int cantCamas() {
 		return this.camas.size();
 	}
+	
+	public int cantHuespedes() {
+		int contador = 0;
+	    
+	    for (Cama cama : this.camas) {
+	        if ("Simple".equalsIgnoreCase(cama.getTipo())) {
+	            contador += 1;
+	        } else if ("Matrimonial".equalsIgnoreCase(cama.getTipo())) {
+	            contador += 2;
+	        }
+	    }
+	    
+	    return contador;
+	}
+		
 
 	@Override
 	public int hashCode() {
