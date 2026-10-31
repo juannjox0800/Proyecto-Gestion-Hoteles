@@ -1,6 +1,8 @@
 package ar.edu.unrn.seminario.gui;
 
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -15,13 +17,13 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 
 public class ListaServicios extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private List<ServicioDTO> listaAux;
 
 	/**
 	 * Launch the application.
@@ -44,7 +46,6 @@ public class ListaServicios extends JFrame {
 	 * Create the frame.
 	 */
 	public ListaServicios(IApi api) {
-		this.listaAux = api.obtenerListaServicios();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -52,20 +53,16 @@ public class ListaServicios extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnAceptarServicio = new JButton("Aceptar");
-		btnAceptarServicio.setBounds(10, 227, 89, 23);
-		contentPane.add(btnAceptarServicio);
-		
-		JButton btnCancelarServicio = new JButton("Cancelar");
-		btnCancelarServicio.setBounds(109, 227, 89, 23);
-		contentPane.add(btnCancelarServicio);
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.setBounds(10, 227, 89, 23);
+		contentPane.add(btnSalir);
 		
 		JButton btnEliminarServicio = new JButton("Eliminar");
-		btnEliminarServicio.setBounds(345, 179, 89, 23);
+		btnEliminarServicio.setBounds(335, 179, 89, 23);
 		contentPane.add(btnEliminarServicio);
 		
 		JButton btnModificarServicio = new JButton("Modificar");
-		btnModificarServicio.setBounds(245, 179, 89, 23);
+		btnModificarServicio.setBounds(235, 179, 89, 23);
 		contentPane.add(btnModificarServicio);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -109,7 +106,39 @@ public class ListaServicios extends JFrame {
 				}
 			}
 		});
-
+		
+		btnModificarServicio.addActionListener((actionEvent) -> {
+			int filaSeleccionada = table.getSelectedRow();
+			
+			if (filaSeleccionada == -1) {
+				JOptionPane.showMessageDialog(null, "Seleccione un servicio de la tabla para modificar", "Atencion", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			
+			String nombre = table.getValueAt(filaSeleccionada, 0).toString();
+			
+			try {
+				ServicioDTO dto = api.obtenerServicio(nombre);
+				
+				RegistrarServicio ventana = new RegistrarServicio(api, dto);
+				
+				ventana.addWindowListener(new WindowAdapter () {
+					@Override
+					public void windowClosed (WindowEvent w) {
+						recargarTabla(api);
+					}
+				});
+				
+				ventana.setVisible(true);
+				
+			} catch (EntidadNoEncontradaException e) {
+				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al registrar el servicio", JOptionPane.ERROR_MESSAGE);
+			}
+		});
+		
+		btnSalir.addActionListener((actionEvent) -> {
+			dispose();
+		});
 	}
 	
 	private void recargarTabla(IApi api) {

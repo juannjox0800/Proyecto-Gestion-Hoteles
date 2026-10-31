@@ -8,7 +8,11 @@ import javax.swing.border.EmptyBorder;
 
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
+import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,7 +31,7 @@ public class RegistrarServicio extends JFrame {
 	private JPanel contentPane;
 	private JTextField tfNombre;
 	private JTextField tfPrecio;
-
+	private String nombreOriginal;
 	/**
 	 * Launch the application.
 	 */
@@ -36,7 +40,7 @@ public class RegistrarServicio extends JFrame {
 			public void run() {
 				try {
 					IApi apiPrueba = new MemoryApi();
-					RegistrarServicio frame = new RegistrarServicio(apiPrueba);
+					RegistrarServicio frame = new RegistrarServicio(apiPrueba, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,8 +52,7 @@ public class RegistrarServicio extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistrarServicio(IApi api) {
-		setTitle("Registrar nuevo Servicio");
+	public RegistrarServicio(IApi api, ServicioDTO dto) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 415, 326);
 		contentPane = new JPanel();
@@ -83,13 +86,13 @@ public class RegistrarServicio extends JFrame {
 		btnAceptar.setBounds(197, 253, 89, 23);
 		contentPane.add(btnAceptar);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnCancelar.setBounds(300, 253, 89, 23);
-		contentPane.add(btnCancelar);
+		btnSalir.setBounds(300, 253, 89, 23);
+		contentPane.add(btnSalir);
 		
 		JLabel lblNewLabel = new JLabel("$-");
 		lblNewLabel.setBounds(119, 172, 23, 14);
@@ -113,6 +116,26 @@ public class RegistrarServicio extends JFrame {
 		comboBox.setBounds(141, 207, 195, 22);
 		contentPane.add(comboBox);
 		
+		if (dto == null) {
+			this.nombreOriginal = null;
+			setTitle ("Registrar nuevo Servicio");
+		} else {
+			this.nombreOriginal = dto.getNombre();
+			setTitle ("Modificar Servicio");
+			
+			tfNombre.setText(dto.getNombre());
+			tfNombre.setEnabled(false);
+			textArea.setText(dto.getDescripcion());
+			tfPrecio.setText(String.valueOf(dto.getPrecio()));
+			
+			if (dto.isEstadoVigente()) {
+				comboBox.setSelectedItem("Activo");
+			} else {
+				comboBox.setSelectedItem("Inactivo");
+			}
+			
+		}
+		
 		btnAceptar.addActionListener((actionEvent) -> {
 			try {
 				String nombre = tfNombre.getText();
@@ -120,24 +143,38 @@ public class RegistrarServicio extends JFrame {
 				int precio = Integer.parseInt(tfPrecio.getText());
 				boolean estadoVigente = comboBox.getSelectedItem().toString().equals("Activo");
 				
-				api.registrarServicio(nombre, descripcion, precio, estadoVigente);
-				
-				JOptionPane.showMessageDialog(null, "Servicio Registrado Correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+				if (nombreOriginal == null) {
+					api.registrarServicio(nombre, descripcion, precio, estadoVigente);
+					JOptionPane.showMessageDialog(null, "Servicio Registrado Correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					api.modificarServicio(nombreOriginal, descripcion, precio, estadoVigente);
+					JOptionPane.showMessageDialog(null, "Servicio Modificado Correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+					dispose();
+				}
 				
 				tfNombre.setText("");
 				textArea.setText("");
 				tfPrecio.setText("");
 				
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "El precio debe ser un numero entero", "Error", JOptionPane.ERROR_MESSAGE);
-			} catch (RuntimeException e) {
-				JOptionPane.showMessageDialog(null, "Error al ingresar datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				
+			} catch (DatoVacioException e1) {
+				JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage(), "Error al ingresar el nombre", JOptionPane.ERROR_MESSAGE);
+			} catch (ValorInvalidoException e2) {
+				JOptionPane.showMessageDialog(null, "Error: " + e2.getMessage(), "Error al ingresar el precio", JOptionPane.ERROR_MESSAGE);
+			} catch (EntidadDuplicadaException e3) {
+				JOptionPane.showMessageDialog(null, "Error: " + e3.getMessage(), "Error al registrar el servicio", JOptionPane.ERROR_MESSAGE);
+			} catch (EntidadNoEncontradaException e4) {
+				JOptionPane.showMessageDialog(null, "Error: " + e4.getMessage(), "Error intentar modificar el servicio", JOptionPane.ERROR_MESSAGE);
+			} catch (NumberFormatException e5) {
+				JOptionPane.showMessageDialog(null, "El precio debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		
-		btnCancelar.addActionListener((actionEvent) -> {
+		btnSalir.addActionListener((actionEvent) -> {
 			dispose();
 		});
+		
+		
 
 	}
 }
