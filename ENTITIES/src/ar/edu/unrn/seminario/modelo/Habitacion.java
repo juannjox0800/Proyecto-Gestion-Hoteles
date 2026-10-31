@@ -55,6 +55,17 @@ public class Habitacion {
 	public void setCamas(List<Cama> camas) {
 		this.camas = camas;
 	}
+	
+	
+	public void agregarCama(Cama cama) {
+		this.camas.add(cama);
+	}
+	
+	public void eliminarCama(Cama cama) {
+		this.camas.remove(cama);
+		
+	}
+	
 
 	@Override
 	public int hashCode() {

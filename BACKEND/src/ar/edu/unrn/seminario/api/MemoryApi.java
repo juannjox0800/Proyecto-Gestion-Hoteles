@@ -2,6 +2,8 @@ package ar.edu.unrn.seminario.api;
 
 import java.time.*;
 import java.util.*;
+
+import ar.edu.unrn.seminario.dto.CamaDTO;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.HuespedDTO;
@@ -9,6 +11,7 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
@@ -60,13 +63,18 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, int costo) {
-		habitaciones.add(new Habitacion(numero, tipoHabitacion, costo));
+	public void registrarHabitacion(int numero, String tipoHabitacion, int costo, List<String> camas) {
+		Habitacion h = new Habitacion(numero, tipoHabitacion, costo);
 		
+		for(String cama : camas ) {
+			h.agregarCama(new Cama(cama));
+		}
+		
+		habitaciones.add(h);
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo) {
+	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo, List<String> camas) {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {
@@ -74,6 +82,11 @@ public class MemoryApi implements IApi {
 			h.setNumero(numeroNuevo);
 			h.setTipoHabitacion(tipoHabitacion);
 			h.setCosto(costo);
+			
+			h.getCamas().clear();
+			for(String cama : camas ) {
+				h.agregarCama(new Cama(cama));
+			}
 			
 			return true;
 		}
@@ -112,6 +125,7 @@ public class MemoryApi implements IApi {
 		
 		return listaDTO;
 	}
+	
 
 	@Override
 	public void registrarServicio(String nombre, String descripcion, int precio) {

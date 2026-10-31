@@ -14,8 +14,15 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import ar.edu.unrn.seminario.api.IApi;
 
 public class RegistrarHabitacion extends JFrame {
 
@@ -25,6 +32,9 @@ public class RegistrarHabitacion extends JFrame {
 	private JTextField tfCostoHabitacion;
 	private JTable table;
 
+	private List<String> listadoCamasTemporal = new ArrayList<>();
+	private IApi api;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -32,7 +42,7 @@ public class RegistrarHabitacion extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistrarHabitacion frame = new RegistrarHabitacion();
+					RegistrarHabitacion frame = new RegistrarHabitacion(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +54,7 @@ public class RegistrarHabitacion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistrarHabitacion() {
+	public RegistrarHabitacion(IApi api) {
 		setTitle("Registrar Habitacion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 469, 328);
@@ -52,6 +62,8 @@ public class RegistrarHabitacion extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		this.api = api;
 		
 		JLabel lblNewLabel = new JLabel("N° Habitación:");
 		lblNewLabel.setBounds(24, 23, 90, 25);
@@ -108,9 +120,6 @@ public class RegistrarHabitacion extends JFrame {
 		));
 		scrollPane.setViewportView(table);
 		
-		JButton btnAgregarCama = new JButton("Agregar Cama");
-		btnAgregarCama.setBounds(24, 115, 120, 23);
-		contentPane.add(btnAgregarCama);
 		
 		JButton btnEliminarCama = new JButton("Eliminar Cama");
 		btnEliminarCama.setBounds(24, 149, 120, 23);
@@ -124,6 +133,65 @@ public class RegistrarHabitacion extends JFrame {
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Simple", "Matrimonial"}));
 		comboBox.setBounds(24, 85, 147, 22);
 		contentPane.add(comboBox);
-
+		
+		
+		JButton btnAgregarCama = new JButton("Agregar Cama");
+		btnAgregarCama.setBounds(24, 115, 120, 23);
+		contentPane.add(btnAgregarCama);
+		
+		btnAgregarCama.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evento) {
+					
+					String tipo = comboBox.getSelectedItem().toString();
+					listadoCamasTemporal.add(tipo);
+					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+					modelo.addRow(new Object[] {tipo});
+					
+				}
+				
+				
+			});
+		
+		btnEliminarCama.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evento) {
+				
+				int filaSelec = table.getSelectedRow();
+				
+				if(filaSelec != -1) {
+					
+					listadoCamasTemporal.remove(filaSelec);
+					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+					modelo.removeRow(filaSelec);
+					
+				}
+				
+			}
+			
+		});
+		
+		
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int numero = Integer.parseInt(tfNumHabitacion.getText());
+				String tipoHabitacion = comboBox.getSelectedItem().toString();
+				int costo = Integer.parseInt(tfCostoHabitacion.getText());
+				
+				api.registrarHabitacion(numero, tipoHabitacion, costo, listadoCamasTemporal);
+				
+			
+				
+			}
+			
+			
+		});
+		
+		
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);	
+			}
+			
+		});
+		
 	}
 }
