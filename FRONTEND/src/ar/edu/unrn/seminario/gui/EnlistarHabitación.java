@@ -149,6 +149,8 @@ public class EnlistarHabitación extends JFrame {
 						HabitacionDTO dtoH = api.obtenerHabitacion(numHabitacion);
 						RegistrarHabitacion ventanaModificar = new RegistrarHabitacion(api, dtoH);
 						ventanaModificar.setVisible(true);
+				}else {
+					JOptionPane.showMessageDialog(null, "Por favor, seleccione una habitación de la tabla para modificar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 			
@@ -184,6 +186,8 @@ public class EnlistarHabitación extends JFrame {
                     	
                     }
 					
+				}else {
+					JOptionPane.showMessageDialog(null, "Por favor, seleccione una habitación de la tabla para eliminar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 			
