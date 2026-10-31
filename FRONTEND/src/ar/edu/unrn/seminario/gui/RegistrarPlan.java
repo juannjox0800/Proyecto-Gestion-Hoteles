@@ -87,21 +87,14 @@ public class RegistrarPlan extends JFrame {
 		contentPane.add(scrollPane);
 		
 		TableServiciosIncluidos = new JTable();
-		TableServiciosIncluidos.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null},
-			},
-			new String[] {
-				"Servicios incluidos"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		String[] columna ={"Servicios incluidos"};
+		DefaultTableModel modelo = new DefaultTableModel(null, columna);
+				TableServiciosIncluidos.setModel(modelo);
+				TableServiciosIncluidos.getColumnModel().getColumn(0).setResizable(false);
+				TableServiciosIncluidos.getColumnModel().getColumn(0).setPreferredWidth(150);
+				scrollPane.setViewportView(TableServiciosIncluidos);
+		
+		TableServiciosIncluidos.setModel(modelo);
 		TableServiciosIncluidos.getColumnModel().getColumn(0).setResizable(false);
 		TableServiciosIncluidos.getColumnModel().getColumn(0).setPreferredWidth(150);
 		scrollPane.setViewportView(TableServiciosIncluidos);
@@ -133,9 +126,14 @@ public class RegistrarPlan extends JFrame {
 				try {
 					if (tFCosto.getText().trim().isEmpty()) {
 		                throw new DatoVacioException("El campo costo no puede estar vacío.");
+		            }int costo = 0;
+		            try {
+		                costo = Integer.parseInt(tFCosto.getText().trim());
+		            } catch (NumberFormatException exception) {
+		                throw new ValorInvalidoException("El costo solo puede contener números enteros válidos.");
 		            }
 					String nombre = tFNombre.getText();
-					int costo = Integer.parseInt(tFCosto.getText());
+					costo = Integer.parseInt(tFCosto.getText());
 				
 					String estadoSeleccionado = (String) cBActivo.getSelectedItem();
 					boolean esActivo = "Activo".equals(estadoSeleccionado); 
@@ -174,10 +172,7 @@ public class RegistrarPlan extends JFrame {
 		            
 		            serviciosSeleccionados.remove(filaSeleccionada);
 		        } else {
-		            JOptionPane.showMessageDialog(null, 
-		                "Por favor, seleccione un servicio de la tabla para eliminar.", 
-		                "Aviso", 
-		                JOptionPane.WARNING_MESSAGE);
+		            JOptionPane.showMessageDialog(null, "Por favor, seleccione un servicio de la tabla para eliminar.", "Aviso",JOptionPane.WARNING_MESSAGE);
 		        }
 		    }
 		});
@@ -190,8 +185,18 @@ public class RegistrarPlan extends JFrame {
 
 	}
 	public void agregarServicioATabla(ServicioDTO servicio) {
+		boolean t= true;
+		for(ServicioDTO a: serviciosSeleccionados) {
+			if (a.getNombre().equals(servicio.getNombre())) {
+				t=false;
+			}
+		}
+		if (t==false) {
+			JOptionPane.showMessageDialog(null, "Ya se encuentra en la lista");
+		}else {
 		serviciosSeleccionados.add(servicio);
 		DefaultTableModel modeloTabla = (DefaultTableModel) TableServiciosIncluidos.getModel();
-		modeloTabla.addRow(new Object[] { servicio.getNombre() });
-	}
+		modeloTabla.addRow(new String[] { servicio.getNombre() });
+		}}
+	
 }

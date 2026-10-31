@@ -44,7 +44,6 @@ public class VentanaSeleccionarServicio extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaSeleccionarServicio(IApi api, RegistrarPlan ventanaPadre) {
-		
 		this.api = api;
 		this.ventanaPadre = ventanaPadre;
 		

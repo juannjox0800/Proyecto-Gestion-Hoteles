@@ -27,8 +27,7 @@ public class VentanaPrincipal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IApi api = new MemoryApi();
-					VentanaPrincipal frame = new VentanaPrincipal(api);
+					VentanaPrincipal frame = new VentanaPrincipal();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,8 +36,8 @@ public class VentanaPrincipal extends JFrame {
 		});
 	}
 
-	public VentanaPrincipal(IApi api) {
-		this.api = api;
+	public VentanaPrincipal() {
+		this.api =new MemoryApi();
 		
 		setTitle("Sistema de Gestión de Hotel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

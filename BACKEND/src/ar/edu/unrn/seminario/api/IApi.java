@@ -67,7 +67,8 @@ public interface IApi {
 	void eliminarPlan(String nombre);
 	PlanDTO obtenerPlan(String nombre);
 	List<PlanDTO> obtenerListaPlan();
-	
+	void guardarListaPLan(List <PlanDTO> listaNueva);
+
 	//
 	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes);
 	void modificarReserva(int numeroReserva);

@@ -54,6 +54,9 @@ public class Plan {
 	public void setEstadoActivo(boolean estadoActivo) {
 		this.estadoActivo = estadoActivo;
 	}
+	public boolean getEstadoActivo() {
+		return estadoActivo;
+	}
 
 	public void agregarServicio(Servicio servicio) {
 		servicios.add(servicio);

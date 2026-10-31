@@ -26,7 +26,11 @@ public class MemoryApi implements IApi {
 	private List<Plan> planes = new ArrayList<>();
 	private List<Reserva> reservas = new ArrayList<>(); 
 	private List<Servicio> servicios = new ArrayList<>();
-	
+ public MemoryApi() {
+	 this.registrarServicio("piscina", "hidratante", 1000);
+	 this.registrarServicio("sauna", "caluroso", 1000);
+	 this.registrarServicio("cancha de futbol", "divertida", 1000);
+ }
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
 	
@@ -67,7 +71,6 @@ public class MemoryApi implements IApi {
 	@Override
 	public void registrarHabitacion(int numero, String tipoHabitacion, int costo) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -97,6 +100,7 @@ public class MemoryApi implements IApi {
 	@Override
 	public void registrarServicio(String nombre, String descripcion, int precio) {
 		// TODO Auto-generated method stub
+		this.servicios.add(new Servicio(nombre, descripcion, precio));
 		
 	}
 
@@ -120,8 +124,11 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public List<ServicioDTO> obtenerListaServicios() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ServicioDTO> service = new ArrayList<>();
+		for (Servicio a: servicios) {
+			service.add(HotelMapper.aDTO(a));
+		}
+		return service;
 	}
 
 	@Override
@@ -197,6 +204,15 @@ public class MemoryApi implements IApi {
 		throw new EntidadNoEncontradaException("Plan no existe");
 
 		
+	}
+	@Override
+	public void guardarListaPLan(List <PlanDTO> listaNueva) {
+		List<Plan> listaGuardar= new ArrayList<>();
+		for(PlanDTO a: listaNueva) {
+			listaGuardar.add(HotelMapper.aModelo(a));
+		}
+		this.planes.clear();
+		this.planes.addAll(listaGuardar);
 	}
 
 	@Override
