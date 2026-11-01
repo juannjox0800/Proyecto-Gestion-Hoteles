@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
+import ar.edu.unrn.seminario.dto.CamaDTO;
 import ar.edu.unrn.seminario.dto.HuespedDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
@@ -15,6 +16,7 @@ import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
+import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Huesped;
 import ar.edu.unrn.seminario.modelo.Pago;
 import ar.edu.unrn.seminario.modelo.Plan;
@@ -40,13 +42,26 @@ public class HotelMapper {
 	public static HabitacionDTO aDTO (Habitacion h) {
 		if (h == null)
 			return null;
-		return new HabitacionDTO(h.getNumero(), h.getTipoHabitacion(), h.getCosto());
+		HabitacionDTO dto = new HabitacionDTO(h.getNumero(), h.getTipoHabitacion(), h.getCosto());
+		dto.setEstado(h.getEstado()); 
+		
+		if (h.getCamas() != null) {
+			List<CamaDTO> camasDTO = h.getCamas().stream()
+					.map(cama -> new CamaDTO(cama.getTipo()))
+					.collect(Collectors.toList());
+			
+			dto.setCamas(camasDTO);
+		}
+		
+		return dto;
 	}
 	
 	public static Habitacion aModelo (HabitacionDTO h)  throws DatoVacioException, ValorInvalidoException {
-		if (h == null)
+		if (h == null) {
 			return null;
+		}
 		return new Habitacion(h.getNumero(), h.getTipoHabitacion(), h.getCosto());
+	
 	}
 	
 	//mapper de Servicio

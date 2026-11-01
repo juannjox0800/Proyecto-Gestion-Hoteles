@@ -3,6 +3,7 @@ package ar.edu.unrn.seminario.gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -55,39 +56,25 @@ public class EnlistarHabitación extends JFrame {
 		this.api = api;
 		setTitle("Lista de Habitaciones ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 499, 349);
+		setBounds(100, 100, 645, 351);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 36, 483, 178);
+		scrollPane.setBounds(0, 36, 631, 178);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
+				{null, null, null, null, null, null},
 			},
 			new String[] {
-				"Numero", "Cant Camas", "Tipo", "Estado", "Cant Huesped"
+				"Numero", "Cantidad camas", "Tipo", "Estado", "Cantidad huespedes", "Costo"
 			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.getColumnModel().getColumn(1).setResizable(false);
-		table.getColumnModel().getColumn(1).setPreferredWidth(103);
-		table.getColumnModel().getColumn(2).setResizable(false);
-		table.getColumnModel().getColumn(3).setResizable(false);
-		table.getColumnModel().getColumn(4).setResizable(false);
-		table.getColumnModel().getColumn(4).setPreferredWidth(88);
+		));
 		scrollPane.setViewportView(table);
 		
 		JLabel lblBuscar = new JLabel("Buscar Habitacion:");
@@ -120,7 +107,8 @@ public class EnlistarHabitación extends JFrame {
 							dtoH.cantCamas(),
 							dtoH.getTipoHabitacion(),
 							dtoH.getEstado(),
-							dtoH.cantHuespedes()
+							dtoH.cantHuespedes(),
+							dtoH.getCosto()
 							
 						});
 					}
@@ -137,7 +125,7 @@ public class EnlistarHabitación extends JFrame {
 			}});
 		
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setBounds(10, 225, 89, 23);
+		btnModificar.setBounds(188, 225, 89, 23);
 		contentPane.add(btnModificar);
 		
 		btnModificar.addActionListener(new ActionListener() {
@@ -167,7 +155,7 @@ public class EnlistarHabitación extends JFrame {
 		});
 		
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(109, 225, 89, 23);
+		btnEliminar.setBounds(307, 225, 89, 23);
 		contentPane.add(btnEliminar);
 		
 		btnEliminar.addActionListener(new ActionListener() {
@@ -204,7 +192,7 @@ public class EnlistarHabitación extends JFrame {
 		});
 		
 		JButton btnCerrar = new JButton("Cerrar");
-		btnCerrar.setBounds(366, 267, 89, 23);
+		btnCerrar.setBounds(517, 269, 89, 23);
 		contentPane.add(btnCerrar);
 		
 		btnCerrar.addActionListener(new ActionListener() {
@@ -214,5 +202,23 @@ public class EnlistarHabitación extends JFrame {
 			}
 		});
 
+		List<HabitacionDTO> listadoCompleto = api.obtenerListaHabitacion();
+		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+		modelo.setRowCount(0);
+		
+		//recorro lista y agrego filas
+		for(HabitacionDTO dtoH : listadoCompleto) {
+			modelo.addRow( new Object[] {
+				dtoH.getNumero(),
+				dtoH.cantCamas(),
+				dtoH.getTipoHabitacion(),
+				dtoH.getEstado(),
+				dtoH.cantHuespedes(),
+				dtoH.getCosto()
+				
+			});
+		}
+		
+		
 	}
 }

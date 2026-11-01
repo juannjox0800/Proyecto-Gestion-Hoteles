@@ -1,10 +1,15 @@
 package ar.edu.unrn.seminario.gui;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import ar.edu.unrn.seminario.api.IApi;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -13,6 +18,8 @@ public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	
+	private IApi api;
 
 	/**
 	 * Launch the application.
@@ -21,7 +28,9 @@ public class VentanaPrincipal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaPrincipal frame = new VentanaPrincipal();
+					
+					IApi api = new ar.edu.unrn.seminario.api.MemoryApi();
+					VentanaPrincipal frame = new VentanaPrincipal(api);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,9 +42,11 @@ public class VentanaPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaPrincipal() {
+	public VentanaPrincipal(IApi api) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		
+		this.api = api;
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -49,13 +60,27 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem altaCliente = new JMenuItem("Registrar Cliente");
 		menuCliente.add(altaCliente);
 		
+		
 		JMenu menuHabitacion = new JMenu("Habitacion");
 		menuBar.add(menuHabitacion);
 		
 		JMenuItem enlistarHabitacion = new JMenuItem("Enlistar Habitacion");
+		enlistarHabitacion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EnlistarHabitación ventana = new EnlistarHabitación(api);
+				ventana.setVisible(true);
+			}
+		});
 		menuHabitacion.add(enlistarHabitacion);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Habitacion");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistrarHabitacion ventana = new RegistrarHabitacion(api, null);
+				ventana.setVisible(true);
+				
+			}});
+			
 		menuHabitacion.add(mntmNewMenuItem);
 		
 		JMenu menuReserva = new JMenu("Reserva");

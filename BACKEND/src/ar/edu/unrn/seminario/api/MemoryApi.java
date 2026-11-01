@@ -34,6 +34,7 @@ public class MemoryApi implements IApi {
 	
     private int contReservas = 0;
 	
+    /*
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
 	
@@ -70,9 +71,9 @@ public class MemoryApi implements IApi {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+*/
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
 	{
 		boolean existe = this.habitaciones.stream().anyMatch(h -> h.getNumero() == numero);
 		
@@ -82,6 +83,7 @@ public class MemoryApi implements IApi {
 		}
 		
 		Habitacion h = new Habitacion(numero, tipoHabitacion, costo);
+		h.setEstado(estado);
 		
 		for(String cama : camas ) {
 			h.agregarCama(new Cama(cama));
@@ -91,13 +93,14 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
+	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {
 			Habitacion h = habitacion.get();
 			h.setNumero(numeroNuevo);
 			h.setTipoHabitacion(tipoHabitacion);
+			h.setEstado(estado);
 			h.setCosto(costo);
 			
 			h.getCamas().clear();
@@ -152,7 +155,7 @@ public class MemoryApi implements IApi {
 		return listaDTO;
 	}
 	
-
+/*
 	@Override
 	public void registrarServicio(String nombre, String descripcion, int precio) {
 		// TODO Auto-generated method stub

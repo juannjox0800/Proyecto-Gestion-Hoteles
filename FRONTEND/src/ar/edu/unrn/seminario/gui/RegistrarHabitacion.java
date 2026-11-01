@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import ar.edu.unrn.seminario.api.IApi;
+import ar.edu.unrn.seminario.dto.CamaDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
@@ -64,7 +65,7 @@ public class RegistrarHabitacion extends JFrame {
 	public RegistrarHabitacion(IApi api, HabitacionDTO dtoH) {
 		setTitle("Registrar Habitacion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 469, 328);
+		setBounds(100, 100, 532, 375);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -107,12 +108,12 @@ public class RegistrarHabitacion extends JFrame {
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnCancelar.setBounds(354, 255, 89, 23);
+		btnCancelar.setBounds(374, 294, 89, 23);
 		contentPane.add(btnCancelar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnAceptar.setBounds(255, 255, 89, 23);
+		btnAceptar.setBounds(275, 294, 89, 23);
 		contentPane.add(btnAceptar);
 		
 		JLabel lblNewLabel_1 = new JLabel("$-");
@@ -152,6 +153,15 @@ public class RegistrarHabitacion extends JFrame {
 		btnAgregarCama.setBounds(24, 115, 120, 23);
 		contentPane.add(btnAgregarCama);
 		
+		JLabel lblNewLabel_3 = new JLabel("Estado:");
+		lblNewLabel_3.setBounds(24, 259, 70, 12);
+		contentPane.add(lblNewLabel_3);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Disponible", "No disponible"}));
+		comboBox_1.setBounds(181, 255, 248, 20);
+		contentPane.add(comboBox_1);
+		
 		btnAgregarCama.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evento) {
 					
@@ -184,15 +194,19 @@ public class RegistrarHabitacion extends JFrame {
 				
 				int numero = Integer.parseInt(tfNumHabitacion.getText());
 				String tipoHabitacion = cbTipoHabitacion.getSelectedItem().toString();
+				String estado = comboBox_1.getSelectedItem().toString();
 				int costo = Integer.parseInt(tfCostoHabitacion.getText());
 				
 				if(numeroOriginal == null) {
-					api.registrarHabitacion(numero, tipoHabitacion, costo, listadoCamasTemporal);
+					api.registrarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
+					
+					JOptionPane.showMessageDialog(null, "La habitación se registró correctamente.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+					
 				}else {
-					api.modificarHabitacion(numeroOriginal, numero, tipoHabitacion, costo, listadoCamasTemporal);
+					api.modificarHabitacion(numeroOriginal, numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
+					
+					JOptionPane.showMessageDialog(null, "La habitación se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
 				}
-				
-				
 				
 				}catch(DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
@@ -205,7 +219,7 @@ public class RegistrarHabitacion extends JFrame {
 				}catch(EntidadNoEncontradaException e4) {
 					JOptionPane.showMessageDialog(null, e4.getMessage(), "Habitacion no encontrada.", JOptionPane.ERROR_MESSAGE);	
 				}catch(EntidadDuplicadaException e5) {
-					JOptionPane.showMessageDialog(null, e5.getMessage(), "Esta habitacion ya se encuentra en el sistema. Intente de nuevo", JOptionPane.WARNING_MESSAGE);	
+					JOptionPane.showMessageDialog(null, e5.getMessage(), "Esta habitacion ya se encuentra en el sistema.", JOptionPane.WARNING_MESSAGE);	
 				}
 				
 			}
@@ -219,6 +233,32 @@ public class RegistrarHabitacion extends JFrame {
 			}
 			
 		});
+		
+		if(dtoH != null) {
+			
+			//autocompleto campos de texto
+			tfNumHabitacion.setText(String.valueOf(dtoH.getNumero()));
+			tfCostoHabitacion.setText(String.valueOf(dtoH.getCosto()));
+			tfNumHabitacion.setEditable(false);
+			
+			String tipoGuardado = dtoH.getTipoHabitacion();
+			if(tipoGuardado != null) {
+				for(int i = 0; i < cbTipoHabitacion.getItemCount(); i++) {
+					if(cbTipoHabitacion.getItemAt(i).toString().trim().equalsIgnoreCase(tipoGuardado.trim())){
+						cbTipoHabitacion.setSelectedIndex(i);
+						break;
+					}
+				}
+			}
+			
+			if(dtoH.getCamas() != null) {
+				DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+				for(CamaDTO cama : dtoH.getCamas()) {
+					listadoCamasTemporal.add(cama.getTipo());
+					modelo.addRow(new Object[] {cama.getTipo()});
+				}
+			}
+		}
 		
 	}
 }

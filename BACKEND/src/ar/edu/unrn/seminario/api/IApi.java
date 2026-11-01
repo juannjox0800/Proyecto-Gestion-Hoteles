@@ -49,6 +49,8 @@ public interface IApi {
 
 	void desactivarUsuario(String username); // recuperar el objeto Usuario, implementar el comportamiento de estado.*/
 				//verificar hacemos con el objeto como parametro 
+	
+	/*
 	void registrarCliente(String nombre, String apellido, String contacto, int dni);
 	void modificarCLiente(int dni);
 	void eliminarCliente(int dni);
@@ -56,12 +58,13 @@ public interface IApi {
 	ClienteDTO obtenerCLiente(int dni);
 	List<ClienteDTO>obtenerListaClientes();
 	
-	void registrarHabitacion(int numero, String tipoHabitacion, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException;
+	*/
+	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
+	boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException;
 	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException;
 	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException;
 	List <HabitacionDTO>obtenerListaHabitacion();
-	
+	/*
 	void registrarServicio(String nombre,String descripcion, int precio);
 	void modiicarServicio(String nombre);
 	void eliminarServicio(String nombre);
@@ -82,7 +85,7 @@ public interface IApi {
 	List<ReservaDTO> obtenerListaReserva();
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
 	
-	
+	*/
 	
 	
 	
