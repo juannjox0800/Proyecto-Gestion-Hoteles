@@ -1,6 +1,6 @@
 package ar.edu.unrn.seminario.exception;
 
-public class FechaInvalidaException extends RuntimeException{
+public class FechaInvalidaException extends Exception{
 	
 	public FechaInvalidaException() {	}
 	
