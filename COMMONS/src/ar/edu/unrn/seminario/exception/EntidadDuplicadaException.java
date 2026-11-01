@@ -1,6 +1,6 @@
 package ar.edu.unrn.seminario.exception;
 
-public class EntidadDuplicadaException extends RuntimeException{
+public class EntidadDuplicadaException extends Exception{
 	
 	public EntidadDuplicadaException() {	}
 	

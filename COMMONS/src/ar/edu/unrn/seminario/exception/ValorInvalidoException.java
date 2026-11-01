@@ -1,6 +1,6 @@
 package ar.edu.unrn.seminario.exception;
 
-public class ValorInvalidoException extends RuntimeException{
+public class ValorInvalidoException extends Exception{
 	
 	public ValorInvalidoException() { 	}
 	

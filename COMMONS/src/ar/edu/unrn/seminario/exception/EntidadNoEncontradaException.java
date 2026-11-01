@@ -1,6 +1,6 @@
 package ar.edu.unrn.seminario.exception;
 
-public class EntidadNoEncontradaException extends RuntimeException{
+public class EntidadNoEncontradaException extends Exception{
 	
 	public EntidadNoEncontradaException() { 	}
 	
