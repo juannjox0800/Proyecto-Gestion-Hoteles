@@ -11,6 +11,8 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Huesped;
@@ -54,7 +56,7 @@ public class HotelMapper {
 		return new ServicioDTO(s.getNombre(), s.getDescripcion(), s.getPrecio(), s.isEstadoVigente());
 	}
 	
-	public static Servicio aModelo (ServicioDTO s) {
+	public static Servicio aModelo (ServicioDTO s) throws DatoVacioException, ValorInvalidoException {
 		if (s == null)
 			return null;
 		return new Servicio(s.getNombre(), s.getDescripcion(), s.getPrecio(), s.isEstadoVigente());
@@ -75,17 +77,17 @@ public class HotelMapper {
 		return new PlanDTO(serviciosDTO, p.getCosto(), p.getNombre());
 	}
 	
-	public static Plan aModelo (PlanDTO p) {
+	public static Plan aModelo (PlanDTO p) throws DatoVacioException, ValorInvalidoException{
 		if (p == null)
 			return null;
 		
-		List<Servicio> serviciosModelo = (p.getServicios() != null) ? 
-									p.getServicios()
-									.stream()
-									.map(HotelMapper :: aModelo)
-									.collect(Collectors.toList())
-									: new ArrayList<>();
+		List<Servicio> serviciosModelo = new ArrayList<>();
 		
+		if (p.getServicios() != null) {
+			for (ServicioDTO dto : p.getServicios()) {
+				serviciosModelo.add(HotelMapper.aModelo(dto));
+			}
+		}
 		return new Plan(serviciosModelo,p.getCosto(), p.getNombre(), p.isEstadoActivo());
 	}
 	
@@ -139,7 +141,7 @@ public class HotelMapper {
 								huespedesDTO);
 	}
 	
-	public static Reserva aModelo (ReservaDTO r) {
+	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException{
 		if (r == null)
 			return null;
 		

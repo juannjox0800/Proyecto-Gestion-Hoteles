@@ -101,7 +101,7 @@ public class ListaServicios extends JFrame {
 					recargarTabla(api);
 					
 					JOptionPane.showMessageDialog(null, "Servicio eliminado correctamente");
-				} catch (RuntimeException e) {
+				} catch (EntidadNoEncontradaException e) {
 					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}

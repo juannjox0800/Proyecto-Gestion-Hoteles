@@ -11,8 +11,10 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.mapper.HotelMapper;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
@@ -99,7 +101,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) {
+	public void registrarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
 		boolean existe = this.servicios
 				.stream()
 				.anyMatch(s -> s.getNombre().equalsIgnoreCase(nombre));
@@ -114,7 +116,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) {
+	public void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) throws EntidadNoEncontradaException {
 		Servicio servicio = this.servicios
 				.stream()
 				.filter(s -> s.getNombre().equalsIgnoreCase(nombre))
@@ -126,7 +128,7 @@ public class MemoryApi implements IApi {
 		servicio.setEstadoVigente(estadoVigente);	}
 
 	@Override
-	public void eliminarServicio(String nombre) {
+	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException{
 		boolean fueEliminado = this.servicios.removeIf(s -> s.getNombre().equalsIgnoreCase(nombre));
 		
 		if (!fueEliminado) {
@@ -136,7 +138,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public ServicioDTO obtenerServicio(String nombre) {
+	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException {
 		Servicio servicio =  this.servicios
 				.stream()
 				.filter(s -> s.getNombre().equalsIgnoreCase(nombre))

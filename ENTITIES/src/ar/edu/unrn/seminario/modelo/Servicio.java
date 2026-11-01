@@ -12,7 +12,7 @@ public class Servicio {
 	private int precio;
 	private boolean estadoVigente;
 	
-	public Servicio(String nombre, String descripcion, int precio, boolean estadoVigente ) {
+	public Servicio(String nombre, String descripcion, int precio, boolean estadoVigente ) throws DatoVacioException, ValorInvalidoException{
 		if (nombre == null || nombre.trim().isEmpty())
 			throw new DatoVacioException("El nombre del servicio es obligatorio");
 		

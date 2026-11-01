@@ -53,7 +53,7 @@ public class RegistrarServicio extends JFrame {
 	 * Create the frame.
 	 */
 	public RegistrarServicio(IApi api, ServicioDTO dto) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 415, 326);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
