@@ -72,7 +72,7 @@ public class HotelMapper {
 											.collect(Collectors.toList())
 											: new ArrayList<>();
 		
-		return new PlanDTO(serviciosDTO, p.getCosto(), p.getNombre());
+		return new PlanDTO(serviciosDTO, p.getCosto(), p.getNombre(),p.getEstadoActivo());
 	}
 	
 	public static Plan aModelo (PlanDTO p) {

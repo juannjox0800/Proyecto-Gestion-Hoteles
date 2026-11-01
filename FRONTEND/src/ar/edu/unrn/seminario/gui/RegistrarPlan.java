@@ -60,22 +60,25 @@ public class RegistrarPlan extends JFrame {
 	public RegistrarPlan(IApi api) {this(api,null);}
 	
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public RegistrarPlan(IApi api, PlanDTO planExistente) {
 		this.planAEditar=planExistente;
 		
 		setTitle("Registrar Plan");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 426, 336);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNombrePlan = new JLabel("Nombre");
+		JLabel lblNombrePlan = new JLabel("Nombre(*)");
 		lblNombrePlan.setBounds(46, 34, 75, 14);
 		contentPane.add(lblNombrePlan);
 		
-		JLabel lblCostoPlan = new JLabel("Costo");
+		JLabel lblCostoPlan = new JLabel("Costo(*)");
 		lblCostoPlan.setBounds(46, 59, 75, 14);
 		contentPane.add(lblCostoPlan);
 		
@@ -156,12 +159,12 @@ public class RegistrarPlan extends JFrame {
 
 		            String nombre = tFNombre.getText();
 		            String estadoSeleccionado = (String) cBActivo.getSelectedItem();
-		            boolean esActivo = "Activo".equals(estadoSeleccionado); 
+		            boolean esActivo = "Activo".equals(estadoSeleccionado.toString()); 
 		            if (planAEditar == null) {
 		                api.registrarPlan(serviciosSeleccionados, costo, nombre, esActivo);
 		                JOptionPane.showMessageDialog(null, "Plan registrado con éxito");
 		            } else {
-		                api.modificarPlan(serviciosSeleccionados, costo, nombre);
+		                api.modificarPlan(serviciosSeleccionados, costo, nombre,esActivo);
 		                JOptionPane.showMessageDialog(null, "Plan modificado con éxito");
 		            }
 		            
@@ -193,8 +196,8 @@ public class RegistrarPlan extends JFrame {
 		btnEliminarServicio.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 		        int filaSeleccionada = TableServiciosIncluidos.getSelectedRow();
-		        if (filaSeleccionada == -1)JOptionPane.showMessageDialog(null, "Por favor, seleccione un servicio de la tabla para eliminar.", "Aviso",JOptionPane.WARNING_MESSAGE);
-
+		        if (filaSeleccionada == -1) {JOptionPane.showMessageDialog(null, "Por favor, seleccione un servicio de la tabla para eliminar.", "Aviso",JOptionPane.WARNING_MESSAGE);
+		        return;}
 		            DefaultTableModel modelo = (DefaultTableModel) TableServiciosIncluidos.getModel();
 		            modelo.removeRow(filaSeleccionada);
 		            serviciosSeleccionados.remove(filaSeleccionada);
@@ -217,10 +220,11 @@ public class RegistrarPlan extends JFrame {
 			}
 		}
 		if (t==false) 	JOptionPane.showMessageDialog(null, "Ya se encuentra en la lista");
-
+		else {
 		serviciosSeleccionados.add(servicio);
 		DefaultTableModel modeloTabla = (DefaultTableModel) TableServiciosIncluidos.getModel();
 		modeloTabla.addRow(new String[] { servicio.getNombre() });
+		}
 		}
 	
 }

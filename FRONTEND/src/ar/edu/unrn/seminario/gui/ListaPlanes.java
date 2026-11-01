@@ -1,7 +1,7 @@
 package ar.edu.unrn.seminario.gui;
 
 import java.awt.EventQueue;
-
+import java.awt.event.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -50,7 +50,7 @@ public class ListaPlanes extends JFrame {
 	public ListaPlanes(IApi api) {
 		List<PlanDTO> listaTemporal = new ArrayList<>(api.obtenerListaPlan());
 		setTitle("Lista de planes ");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 275);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -116,20 +116,32 @@ public class ListaPlanes extends JFrame {
 		btnModificarPlan.addActionListener(new ActionListener(){
 		    public void actionPerformed(ActionEvent e) {
 		        int filaSeleccionada = jtListaPlanes.getSelectedRow();
-		        if (filaSeleccionada == -1) { JOptionPane.showMessageDialog(null, "El plan seleccionado no existe en la lista temporal."); return;}
-		            String nombrePlanSeleccionado = (String) jtListaPlanes.getValueAt(filaSeleccionada, 0);
-		            PlanDTO planAModificar = null;
-		            for (PlanDTO plan : listaTemporal) {
-		                if (plan.getNombre().equals(nombrePlanSeleccionado)) {
-		                    planAModificar = plan;
-		                }
+		        if (filaSeleccionada == -1) {
+		            JOptionPane.showMessageDialog(null, "No has seleccionado plan. Selecciona uno.");
+		            return;
+		        }
+		        String nombrePlanSeleccionado = (String) jtListaPlanes.getValueAt(filaSeleccionada, 0);
+		        PlanDTO planAModificar = null;
+		        for (PlanDTO plan : listaTemporal) {
+		            if (plan.getNombre().equals(nombrePlanSeleccionado)) {
+		                planAModificar = plan;
 		            }
-		            
-		            if (planAModificar == null)   JOptionPane.showMessageDialog(null, "El plan seleccionado no existe en la lista temporal.");
+		        }
 
-		                RegistrarPlan ventana = new RegistrarPlan(api, planAModificar);
-		                ventana.setVisible(true);
-		            }
+		        if (planAModificar == null) {
+		            JOptionPane.showMessageDialog(null, "El plan seleccionado no existe en la lista.");
+		        } else {
+		            RegistrarPlan ventana = new RegistrarPlan(api, planAModificar);
+		            ventana.addWindowListener(new WindowAdapter() {
+		                @Override
+		                public void windowClosed(WindowEvent we) {
+		                    actualizarPlanEnLista(api, listaTemporal, nombrePlanSeleccionado);
+		                    refrescarTabla(listaTemporal);
+		                }
+		            });
+		            ventana.setVisible(true);
+		        }
+		    }
 		});
 		contentPane.add(btnModificarPlan);
 		
@@ -155,5 +167,27 @@ public class ListaPlanes extends JFrame {
 		contentPane.add(btnCancelarPlan);
 
 	}
-
+	private void refrescarTabla(List<PlanDTO>listaTemporal) {
+	    DefaultTableModel modelo = (DefaultTableModel) jtListaPlanes.getModel();
+	    modelo.setRowCount(0); 	    
+	    for (PlanDTO plan : listaTemporal) {
+	        modelo.addRow(new Object[] {
+	            plan.getNombre(),
+	            plan.isEstadoActivo() ? "Activo" : "Inactivo",
+	            plan.getCosto()
+	        });
+	    }
+	    
+	}
+	private void actualizarPlanEnLista(IApi api, List<PlanDTO> listaTemporal, String nombre) {
+	    for (PlanDTO actualizado : api.obtenerListaPlan()) {
+	        if (actualizado.getNombre().equals(nombre)) {
+	            for (int i = 0; i < listaTemporal.size(); i++) {
+	                if (listaTemporal.get(i).getNombre().equals(nombre)) {
+	                    listaTemporal.set(i, actualizado);
+	                }
+	            }
+	        }
+	    }
+	}
 }

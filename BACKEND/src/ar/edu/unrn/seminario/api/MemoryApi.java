@@ -136,7 +136,8 @@ public class MemoryApi implements IApi {
 			String nombre, boolean esActivo) {
 
 		if (planExiste(nombre)) throw new EntidadDuplicadaException("Ya existe esta entidad");
-		if (nombre==null||nombre.trim().isEmpty()||listaServicios==null)  throw new DatoVacioException("faltan datos");
+		if (nombre==null||nombre.trim().isEmpty())  throw new DatoVacioException("coloca un nombre");
+		if(listaServicios==null||listaServicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
 		if (costo<0) throw new ValorInvalidoException("valor invalido de costo");
 		
 		ArrayList<Servicio> servicios = new ArrayList<>();
@@ -160,30 +161,21 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
-			String nombre) {
-		if (planExiste(nombre)){
-				if ( costo>0){
-					if (!nombre.isEmpty() & nombre!=null&listaServicios!=null) {
-						ArrayList<Servicio> servicios = new ArrayList<>();
-						for (ServicioDTO dto : listaServicios) {
-							servicios.add(HotelMapper.aModelo(dto));
-						}
-					
-						for (Plan a : this.planes) {
-							if (a.getNombre().equals(nombre)) {
-								a.setServicios(servicios);
-								a.setCosto(costo);
-								a.setNombre(nombre);
-							}
-						}
-					}else throw new DatoVacioException("faltan datos");
-				} else throw new ValorInvalidoException("valor no valido ");
-		
-		}else throw new EntidadNoEncontradaException("Plan no existe");
-		
-
-	
+	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre,boolean esActivo) {
+			if (!planExiste(nombre)) throw new EntidadNoEncontradaException("Plan no existe");
+			if(costo<0)throw new ValorInvalidoException("valor no valido ");
+			if(nombre.trim().isEmpty() || nombre==null)throw new DatoVacioException("coloca nombre");
+			if(listaServicios==null||listaServicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
+		ArrayList<Servicio> servicios = new ArrayList<>();
+		for (ServicioDTO dto : listaServicios) {
+			servicios.add(HotelMapper.aModelo(dto));
+		for (Plan a : this.planes) {
+			if (a.getNombre().equals(nombre)) {
+				a.setServicios(servicios);
+				a.setCosto(costo);
+				a.setNombre(nombre);
+				a.setEstadoActivo(esActivo);
+			}}}
 	}
 	@Override
 	public void eliminarPlan(String nombre) {
