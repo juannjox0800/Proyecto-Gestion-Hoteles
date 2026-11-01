@@ -54,36 +54,36 @@ public class RegistrarServicio extends JFrame {
 	 */
 	public RegistrarServicio(IApi api, ServicioDTO dto) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 415, 326);
+		setBounds(100, 100, 415, 334);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNombre = new JLabel("* Nombre:");
-		lblNombre.setBounds(19, 26, 66, 14);
+		JLabel lblNombre = new JLabel("(*) Nombre:");
+		lblNombre.setBounds(20, 39, 66, 14);
 		contentPane.add(lblNombre);
 		
 		tfNombre = new JTextField();
-		tfNombre.setBounds(141, 26, 195, 20);
+		tfNombre.setBounds(142, 39, 195, 20);
 		contentPane.add(tfNombre);
 		tfNombre.setColumns(10);
 		
 		JLabel lblDescripcion = new JLabel("Descripcion:");
-		lblDescripcion.setBounds(19, 61, 85, 14);
+		lblDescripcion.setBounds(20, 74, 85, 14);
 		contentPane.add(lblDescripcion);
 		
 		JLabel lblPrecio = new JLabel("Precio:");
-		lblPrecio.setBounds(19, 169, 46, 14);
+		lblPrecio.setBounds(20, 182, 46, 14);
 		contentPane.add(lblPrecio);
 		
 		tfPrecio = new JTextField();
-		tfPrecio.setBounds(141, 169, 195, 20);
+		tfPrecio.setBounds(142, 182, 195, 20);
 		contentPane.add(tfPrecio);
 		tfPrecio.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(197, 253, 89, 23);
+		btnAceptar.setBounds(197, 261, 89, 23);
 		contentPane.add(btnAceptar);
 		
 		JButton btnSalir = new JButton("Salir");
@@ -91,15 +91,15 @@ public class RegistrarServicio extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnSalir.setBounds(300, 253, 89, 23);
+		btnSalir.setBounds(300, 261, 89, 23);
 		contentPane.add(btnSalir);
 		
 		JLabel lblNewLabel = new JLabel("$-");
-		lblNewLabel.setBounds(119, 172, 23, 14);
+		lblNewLabel.setBounds(120, 185, 23, 14);
 		contentPane.add(lblNewLabel);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(141, 57, 195, 101);
+		scrollPane.setBounds(142, 70, 195, 101);
 		contentPane.add(scrollPane);
 		
 		JTextArea textArea = new JTextArea();
@@ -108,13 +108,17 @@ public class RegistrarServicio extends JFrame {
 		scrollPane.setViewportView(textArea);
 		
 		JLabel lblNewLabel_1 = new JLabel("Estado de vigencia: ");
-		lblNewLabel_1.setBounds(19, 211, 112, 14);
+		lblNewLabel_1.setBounds(20, 224, 112, 14);
 		contentPane.add(lblNewLabel_1);
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
-		comboBox.setBounds(141, 207, 195, 22);
+		comboBox.setBounds(142, 220, 195, 22);
 		contentPane.add(comboBox);
+		
+		JLabel lblNewLabel_2 = new JLabel("Datos Obligatorios (*)");
+		lblNewLabel_2.setBounds(20, 11, 169, 14);
+		contentPane.add(lblNewLabel_2);
 		
 		if (dto == null) {
 			this.nombreOriginal = null;
