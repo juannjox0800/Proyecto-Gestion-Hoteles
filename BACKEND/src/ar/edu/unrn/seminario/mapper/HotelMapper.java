@@ -160,8 +160,7 @@ public class HotelMapper {
 							HotelMapper.aModelo(r.getCliente()),
 							r.getFechaEntrada(), r.getFechaSalida(),
 							HotelMapper.aModelo(r.getPagoSeña()),
-							r.getNumeroReserva(),
-							huespedesModelo);
+							r.getNumeroReserva());
 	}
 }
 

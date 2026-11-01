@@ -9,6 +9,9 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.FechaInvalidaException;
+import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
@@ -47,7 +50,7 @@ public interface IApi {
 	void modificarCLiente(int dni);
 	void eliminarCliente(int dni);
 	boolean existeCliente(int dni);
-	ClienteDTO obtenerCLiente(int dni);
+	ClienteDTO obtenerCliente(int dni)  throws EntidadNoEncontradaException, FormatoInvalidoException;
 	List<ClienteDTO>obtenerListaClientes();
 	
 	void registrarHabitacion(int numero, String tipoHabitacion, int costo);
@@ -69,12 +72,15 @@ public interface IApi {
 	List<PlanDTO> obtenerListaPlan();
 	
 	//
-	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes);
+	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal);
 	void modificarReserva(int numeroReserva);
-	void cancelarReserva(int numeroReserva);
-	ReservaDTO obtenerReserva(int numeroReserva);
+	void cancelarReserva(int numeroReserva) throws EntidadNoEncontradaException;
+	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException;
 	List<ReservaDTO> obtenerListaReserva();
+	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException;
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
+	PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException;
+	int calcularSeña(int costoHabitaciones, LocalDate fechaEntrada, LocalDate fechaSalida);
 	
 	
 	

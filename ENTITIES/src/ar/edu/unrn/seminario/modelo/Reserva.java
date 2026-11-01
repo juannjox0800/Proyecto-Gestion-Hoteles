@@ -13,12 +13,12 @@ public class Reserva {
 	private Pago pagoSeña;
 	private Pago pagoFinal;
 	private int costoTotal;
-	private boolean estadoCancelacion;
+	private boolean estadoCancelacion = false;
 	private int numeroReserva;
 	private List<Huesped> huespedes;
 
 	public Reserva(List<Habitacion> habitaciones, Plan plan, Cliente cliente,
-			LocalDate fechaEntrada, LocalDate fechaSalida, Pago pagoSeña, int numeroReserva, List<Huesped> huespedes) {
+			LocalDate fechaEntrada, LocalDate fechaSalida, Pago pagoSeña, int numeroReserva) {
 		this.habitaciones = habitaciones;
 		this.plan = plan;
 		this.cliente = cliente;
@@ -26,7 +26,7 @@ public class Reserva {
 		this.fechaSalida = fechaSalida;
 		this.pagoSeña = pagoSeña;
 		this.numeroReserva = numeroReserva;
-		this.huespedes = huespedes;
+	
 		
 		this.estadoCancelacion = false;
 		this.costoTotal = 0;
