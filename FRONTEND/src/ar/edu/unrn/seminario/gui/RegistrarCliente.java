@@ -96,4 +96,5 @@ public class RegistrarCliente extends JFrame {
 		contentPane.add(btnCancelar);
 
 	}
+	
 }

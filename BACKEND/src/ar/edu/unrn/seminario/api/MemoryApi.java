@@ -30,14 +30,7 @@ public class MemoryApi implements IApi {
     private int contReservas = 0;
 	
 	@Override
-	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException{
-		
-		if (nombre== null || nombre.trim().isEmpty()|| apellido ==null || apellido.trim().isEmpty()) {
-			throw new DatoVacioException("El nombre y el apellido no pueden estar vacios");
-		}
-		if (dni <= 0) {
-            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
-		}
+	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException{
 		if (existeCliente(dni)) {
 			throw new EntidadDuplicadaException("El cliente ya existe");
 		}
