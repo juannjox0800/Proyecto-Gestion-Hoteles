@@ -11,6 +11,10 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.mapper.HotelMapper;
 import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Cliente;
@@ -68,7 +72,15 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, int costo, List<String> camas) {
+	public void registrarHabitacion(int numero, String tipoHabitacion, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
+	{
+		boolean existe = this.habitaciones.stream().anyMatch(h -> h.getNumero() == numero);
+		
+		if(existe) {
+			
+			throw new EntidadDuplicadaException("Ya existe una habitación con el número:" + numero);
+		}
+		
 		Habitacion h = new Habitacion(numero, tipoHabitacion, costo);
 		
 		for(String cama : camas ) {
@@ -79,7 +91,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo, List<String> camas) {
+	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {
@@ -94,27 +106,36 @@ public class MemoryApi implements IApi {
 			}
 			
 			return true;
+		}else {
+			throw new EntidadNoEncontradaException("No se encontró la habitación con el número:" + numero);
 		}
 		
-		return false;
 	}
 
 	@Override
-	public boolean eliminarHabitacion(int numero) {
-		return habitaciones.removeIf(h -> h.getNumero() == numero);
+	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException
+	{
+		boolean eliminado = this.habitaciones.removeIf(h -> h.getNumero() == numero);
 		
+		if (!eliminado) {
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+		}
+		
+		return true;
 	}
 
 	@Override
-	public HabitacionDTO obtenerHabitacion(int numero) {
+	public HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {
 			HabitacionDTO dto = HotelMapper.aDTO(habitacion.get());
 			return dto;
+		}else {
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
 		}
 		
-		return null;
+	
 	}
 
 	@Override
@@ -193,7 +214,7 @@ public class MemoryApi implements IApi {
 		return null;
 	}
 	
-
+	/*
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
 			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes) {
@@ -257,6 +278,7 @@ public class MemoryApi implements IApi {
 		// TODO Auto-generated method stub
 		
 	}
+	*/
 /////////////
 /// /////////////
 ///

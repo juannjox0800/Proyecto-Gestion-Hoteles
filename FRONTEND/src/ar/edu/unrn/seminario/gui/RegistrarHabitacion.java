@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class RegistrarHabitacion extends JFrame {
@@ -153,15 +155,11 @@ public class RegistrarHabitacion extends JFrame {
 		btnAgregarCama.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evento) {
 					
-				try {
-					String tipo = comboBox.getSelectedItem().toString();
-					listadoCamasTemporal.add(tipo);
-					DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-					modelo.addRow(new Object[] {tipo});
+				String tipo = comboBox.getSelectedItem().toString();
+				listadoCamasTemporal.add(tipo);
+				DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+				modelo.addRow(new Object[] {tipo});
 					
-				}catch(DatoVacioException e) {
-					JOptionPane.showMessageDialog(null, e, "Error al ingresar datos.", JOptionPane.ERROR_MESSAGE);
-				}	
 			}	
 		});
 		
@@ -204,7 +202,12 @@ public class RegistrarHabitacion extends JFrame {
 				
 				}catch(NumberFormatException e3) {
 					JOptionPane.showMessageDialog(null,"Error al ingresar el número de la habitación o el costo.", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
+				}catch(EntidadNoEncontradaException e4) {
+					JOptionPane.showMessageDialog(null, e4.getMessage(), "Habitacion no encontrada.", JOptionPane.ERROR_MESSAGE);	
+				}catch(EntidadDuplicadaException e5) {
+					JOptionPane.showMessageDialog(null, e5.getMessage(), "Esta habitacion ya se encuentra en el sistema. Intente de nuevo", JOptionPane.WARNING_MESSAGE);	
 				}
+				
 			}
 			
 		});

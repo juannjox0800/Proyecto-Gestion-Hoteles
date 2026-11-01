@@ -11,6 +11,10 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
@@ -52,10 +56,10 @@ public interface IApi {
 	ClienteDTO obtenerCLiente(int dni);
 	List<ClienteDTO>obtenerListaClientes();
 	
-	void registrarHabitacion(int numero, String tipoHabitacion, int costo, List<String> camas);
-	boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo, List<String> camas);
-	boolean eliminarHabitacion(int numero);
-	HabitacionDTO obtenerHabitacion(int numero);
+	void registrarHabitacion(int numero, String tipoHabitacion, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
+	boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException;
+	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException;
+	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException;
 	List <HabitacionDTO>obtenerListaHabitacion();
 	
 	void registrarServicio(String nombre,String descripcion, int precio);

@@ -19,6 +19,8 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+
 
 public class EnlistarHabitación extends JFrame {
 
@@ -123,12 +125,11 @@ public class EnlistarHabitación extends JFrame {
 						});
 					}
 				
-			}catch(DatoVacioException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
-				
 			}catch(NumberFormatException e2) {
 				JOptionPane.showMessageDialog(null,"Error al ingresar el número de la habitación o el costo.", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
 				
+			}catch(EntidadNoEncontradaException e3) {
+				JOptionPane.showMessageDialog(null,"Esta habitacion no se encuentra en el sistema. Intente de nuevo", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
 			}
 				
 			
@@ -145,10 +146,19 @@ public class EnlistarHabitación extends JFrame {
 				
 				if(filaSelec != -1) {
 						
-						int numHabitacion = (int) table.getValueAt(filaSelec, 0);
-						HabitacionDTO dtoH = api.obtenerHabitacion(numHabitacion);
-						RegistrarHabitacion ventanaModificar = new RegistrarHabitacion(api, dtoH);
-						ventanaModificar.setVisible(true);
+						try {
+							
+							int numHabitacion = (int) table.getValueAt(filaSelec, 0);
+							HabitacionDTO dtoH = api.obtenerHabitacion(numHabitacion);
+							RegistrarHabitacion ventanaModificar = new RegistrarHabitacion(api, dtoH);
+							ventanaModificar.setVisible(true);
+							
+							
+						} catch (EntidadNoEncontradaException e1) {
+							JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
+							
+						}
+					
 				}else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione una habitación de la tabla para modificar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
 				}
@@ -171,20 +181,20 @@ public class EnlistarHabitación extends JFrame {
 					
                     if(verificacion == JOptionPane.YES_OPTION) {
                     	
-                    	int numeroHabitacion = (int) table.getValueAt(filaSelec, 0);
-                        boolean eliminado = api.eliminarHabitacion(numeroHabitacion);
-                        
-                        if (eliminado) {
+                    	try {
+                    		
+                    		int numeroHabitacion = (int) table.getValueAt(filaSelec, 0);
+                            boolean eliminado = api.eliminarHabitacion(numeroHabitacion);
                             
                             DefaultTableModel modelo = (DefaultTableModel) table.getModel();
                             modelo.removeRow(filaSelec);
                             
                             JOptionPane.showMessageDialog(null, "Habitación eliminada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(null, "No se pudo eliminar la habitación del sistema.", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    	
-                    }
+                            
+                    	}catch(EntidadNoEncontradaException e1) {
+                    		JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    	}
+                      }
 					
 				}else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione una habitación de la tabla para eliminar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
