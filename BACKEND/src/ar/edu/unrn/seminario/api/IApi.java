@@ -15,6 +15,8 @@ import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.exception.FechaInvalidaException;
+import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
@@ -55,7 +57,7 @@ public interface IApi {
 	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException;
 	void eliminarCliente(int dni) throws EntidadNoEncontradaException;
 	boolean existeCliente(int dni);
-	ClienteDTO obtenerCliente(int dni)throws EntidadNoEncontradaException;
+	ClienteDTO obtenerCliente(int dni)  throws EntidadNoEncontradaException, FormatoInvalidoException;
 	List<ClienteDTO>obtenerListaClientes();
 	
 	
@@ -81,12 +83,15 @@ public interface IApi {
 	void guardarListaPLan(List <PlanDTO> listaNueva) throws DatoVacioException, ValorInvalidoException;
 
 	//
-	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes);
+	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException;
 	void modificarReserva(int numeroReserva);
 	void cancelarReserva(int numeroReserva);
-	ReservaDTO obtenerReserva(int numeroReserva);
+	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException;
 	List<ReservaDTO> obtenerListaReserva();
+	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException;
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
+	PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException;
+	int calcularSeña(int costoHabitaciones, LocalDate fechaEntrada, LocalDate fechaSalida);
 	
 	
 	

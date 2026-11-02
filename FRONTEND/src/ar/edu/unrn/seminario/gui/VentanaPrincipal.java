@@ -99,7 +99,7 @@ public class VentanaPrincipal extends JFrame {
 		registrarReserva.addActionListener(new ActionListener() {
 					
 					public void actionPerformed(ActionEvent e) {
-						RealizarReserva ventana= new RealizarReserva();
+						RealizarReserva ventana= new RealizarReserva(api);
 						ventana.setVisible(true);
 					}
 				});

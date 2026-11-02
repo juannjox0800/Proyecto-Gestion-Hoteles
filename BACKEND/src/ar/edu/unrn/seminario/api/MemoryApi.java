@@ -31,6 +31,12 @@ import ar.edu.unrn.seminario.modelo.Pago;
 import ar.edu.unrn.seminario.modelo.Plan;
 import ar.edu.unrn.seminario.modelo.Reserva;
 import ar.edu.unrn.seminario.modelo.Servicio;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.FechaInvalidaException;
+import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
+
+
 
 public class MemoryApi implements IApi {
 	private List<Cliente> clientes = new ArrayList<>();
@@ -95,12 +101,15 @@ public class MemoryApi implements IApi {
 		return false;
 		}
 	@Override
-	public ClienteDTO obtenerCliente(int dni) throws EntidadNoEncontradaException {
-		for (Cliente a : this.clientes) {
-			if (a.getDni()== dni) {
-				return HotelMapper.aDTO(a);			}
-		}
-		throw new EntidadNoEncontradaException ("No se encontró el cliente con el DNI: " + dni);
+	public ClienteDTO  obtenerCliente(int dni) throws EntidadNoEncontradaException, FormatoInvalidoException {   
+		if (dni <= 0) {
+		    throw new FormatoInvalidoException("el DNI no es valido");
+		    }
+		for (Cliente cliente : clientes) {
+			if (cliente.getDni() == dni) 
+				return HotelMapper.aDTO(cliente);
+			}
+		 throw new EntidadNoEncontradaException("El cliente no existe en el sistema");
 	}
 	
 
@@ -339,41 +348,125 @@ public class MemoryApi implements IApi {
 	
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
-			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes) {
+			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal) throws DatoVacioException, ValorInvalidoException{
 		
-	}
+				//private boolean estadoCancelacion;		
+		List<Habitacion> habitaciones = new ArrayList<>();
 
-	@Override
-	public void modificarReserva(int numeroReserva) {
-		for (Reserva reserva : reservas) {
-		    if (reserva.getNumeroReserva() == numeroReserva) {
-		       
-		    }
+		for (HabitacionDTO habitacionDTO : obtenerListaHabitacion) {
+		    Habitacion habitacion = HotelMapper.aModelo(habitacionDTO);  
+		    habitaciones.add(habitacion);
 		}
-	}
 
-	@Override
-	public void cancelarReserva(int numeroReserva) {
-		// TODO Auto-generated method stub
+		
+		Plan planModelo = HotelMapper.aModelo(plan);
+		Cliente clienteModelo = HotelMapper.aModelo(cliente);
+		Pago pagoModelo = HotelMapper.aModelo(pagoSeña);
+		
+		int numeroReserva = contReservas;
+		contReservas ++;
+		Reserva reserva = new Reserva(habitaciones, planModelo, clienteModelo, fechaDeEntrada,
+				                      fechaSalida, pagoModelo, numeroReserva);
+		
+		costoTotal = reserva.getCostoTotal() + costoTotal;
+		reserva.setCostoTotal(costoTotal);
+		
+		reservas.add(reserva);
 		
 	}
 
 	@Override
-	public ReservaDTO obtenerReserva(int numeroReserva) {
-		// TODO Auto-generated method stub
-		return null;
+	public void modificarReserva(int numeroReserva) { // falta la ventana ??? TERMINAR METODO excepcion la reserva esta cancelada/no existe
+		//obtenerReserva(numeroReserva);
+		       
 	}
 
 	@Override
-	public List<ReservaDTO> obtenerListaReserva() {
-		// TODO Auto-generated method stub
-		return null;
+	public void cancelarReserva(int numeroReserva) { //  no lanza excepciones pq al llamar al metodo ya se verificaron en el momento de buscarReserva (?
+		
+		for (Reserva reserva : reservas) {
+			if (reserva.getNumeroReserva() == numeroReserva) 
+				reserva.cambiarEstadoCancelacion();
+			}
 	}
+
+	@Override
+	public ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException{ // busca y devuelve un DTO de una reserva
+		if (numeroReserva <= 0) {
+		    throw new FormatoInvalidoException("el numero no es valido");
+		    }
+		for (Reserva reserva : reservas) {
+			if (reserva.getNumeroReserva() == numeroReserva) {
+				return HotelMapper.aDTO(reserva);
+				}
+		    }
+		 throw new EntidadNoEncontradaException("No se encontro la reserva");
+		}
+		
+
+	@Override
+	public List<ReservaDTO> obtenerListaReserva() { // devuelve la lista DTO de reservas 
+		List<ReservaDTO> listaDTO = new ArrayList<>();
+		for (Reserva reserva : reservas) {
+	        ReservaDTO reservaDTO = HotelMapper.aDTO(reserva);
+	        listaDTO.add(reservaDTO);
+	    }
+		return listaDTO;
+	}
+	
+	@Override
+	public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException { 
+		
+		if (!fechaEntrada.isBefore(fechaSalida)){
+			throw new FechaInvalidaException("la fecha de entrada debe ser anterior a la fecha de salida");
+		}
+		
+		List<Habitacion> habitacionesOcupadas = reservas.stream() 
+											.filter(reserva -> !reserva.isEstadoCancelacion())
+											.filter(reserva -> fechaEntrada.isBefore(reserva.getFechaSalida()) &&
+								                       fechaSalida.isAfter(reserva.getFechaEntrada()))
+											.flatMap (reserva -> reserva.getHabitaciones().stream())
+											.collect(Collectors.toList());
+											
+	   List <HabitacionDTO> habitacionesDisponibles = habitaciones.stream().filter (habitacion -> !habitacionesOcupadas.contains(habitacion))
+			   									  .map(habitacion -> HotelMapper.aDTO(habitacion))
+			   									  .collect(Collectors.toList());
+	   
+	   return habitacionesDisponibles;
+	}
+	
+	@Override
+	public PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException {
+	    PlanDTO plan = null;
+		for (Plan p : planes) {
+	        if (p.getNombre().equals(nombrePlan)) {
+	            plan = HotelMapper.aDTO(p);
+	            break;
+	            }
+	        } 
+		
+		if (plan == null) {
+			throw new EntidadNoEncontradaException("Plan no encontrado");
+			}
+		
+		if (!plan.isEstadoActivo()) {
+			throw new EntidadNoEncontradaException("el plan no esta activo");
+			}
+		return plan;
+	}
+	
+	@Override
+	public int calcularSeña(int costoHabitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) { //contar los fakin dias
+		Period periodo = Period.between(fechaEntrada, fechaSalida);
+		int dias = periodo.getDays();
+		return costoHabitaciones * dias / 2;
+		}
+
+	
 
 	@Override
 	public void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

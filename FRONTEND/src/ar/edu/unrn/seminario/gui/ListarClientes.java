@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -94,7 +95,10 @@ public class ListarClientes extends JFrame {
 					
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "El DNI a buscar debe ser numérico.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-				} catch (EntidadNoEncontradaException ex) {
+				} catch (FormatoInvalidoException ex) {
+					JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "El formato no es correcto", JOptionPane.ERROR_MESSAGE);
+				}
+				catch (EntidadNoEncontradaException ex) {
 					JOptionPane.showMessageDialog(null, ex.getMessage(), "No encontrado", JOptionPane.WARNING_MESSAGE);
 					cargarTablaCompleta();
 				}
@@ -154,6 +158,8 @@ int filaSelec = table.getSelectedRow();
 						
 					} catch (EntidadNoEncontradaException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
+					} catch (FormatoInvalidoException e2) {
+						JOptionPane.showMessageDialog(null, e2.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione un cliente de la tabla para modificar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
