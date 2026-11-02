@@ -28,14 +28,20 @@ public class RegistrarCliente extends JFrame {
 	private JTextField tfContacto;
 	private JTextField tfDNI;
 	private IApi api;
-	private ClienteDTO clienteModificar = null;
+	private Integer dniOriginal = null;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public RegistrarCliente(IApi api) {
-	this.api=api;	
+	public RegistrarCliente(IApi api, ClienteDTO clienteDTO) {
+  this.api = api;
+		
+		if (clienteDTO == null) {
+			this.dniOriginal = null;
+		} else {
+			this.dniOriginal = clienteDTO.getDni(); 
+		}	
 	
 		setTitle("Registrar Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,7 +102,7 @@ public class RegistrarCliente extends JFrame {
 					
 					api.registrarCliente(nombre, apellido, contacto, dni);
 
-					JOptionPane.showMessageDialog(null, "¡Cliente registrado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Cliente registrado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 					setVisible(false);
 				
 				} catch (DatoVacioException e1) {
@@ -124,10 +130,18 @@ public class RegistrarCliente extends JFrame {
 		btnCancelar.setBounds(355, 246, 101, 23);
 		contentPane.add(btnCancelar);
 		
-		
+		if (clienteDTO != null) {
+			tfNombre.setText(clienteDTO.getNombre());
+			tfApellido.setText(clienteDTO.getApellido());
+			tfContacto.setText(clienteDTO.getContacto());
+			tfDNI.setText(String.valueOf(clienteDTO.getDni()));
+			tfDNI.setEditable(false); 
 		}
+	
+		}
+}
 
-	}
+	
 	
 
 	
