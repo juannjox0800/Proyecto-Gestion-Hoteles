@@ -51,11 +51,11 @@ public interface IApi {
 				//verificar hacemos con el objeto como parametro 
 	
 	
-	void registrarCliente(String nombre, String apellido, String contacto, int dni);
-	void modificarCLiente(int dni, String nombre, String apellido, String contacto);
-	void eliminarCliente(int dni);
+	void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
+	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException;
+	void eliminarCliente(int dni) throws EntidadNoEncontradaException;
 	boolean existeCliente(int dni);
-	ClienteDTO obtenerCliente(int dni);
+	ClienteDTO obtenerCliente(int dni)throws EntidadNoEncontradaException;
 	List<ClienteDTO>obtenerListaClientes();
 	
 	

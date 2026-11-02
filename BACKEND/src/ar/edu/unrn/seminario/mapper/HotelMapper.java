@@ -32,7 +32,7 @@ public class HotelMapper {
 		return new ClienteDTO(c.getNombre(), c.getApellido(), c.getContacto(), c.getDni());
 	}
 	
-	public static Cliente aModelo (ClienteDTO c) {
+	public static Cliente aModelo (ClienteDTO c) throws DatoVacioException, ValorInvalidoException{
 		if (c == null)
 			return null;
 		return new Cliente(c.getNombre(), c.getApellido(), c.getContacto(), c.getDni());

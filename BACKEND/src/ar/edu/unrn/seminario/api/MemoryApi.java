@@ -43,7 +43,7 @@ public class MemoryApi implements IApi {
 	
 
 	@Override
-	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException{
+	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException{
 		if (existeCliente(dni)) {
 			throw new EntidadDuplicadaException("El cliente ya existe");
 		}

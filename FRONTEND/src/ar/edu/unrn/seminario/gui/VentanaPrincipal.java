@@ -44,7 +44,7 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem enlistarClientes = new JMenuItem("Enlistar Clientes");
 		enlistarClientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListarClientes ventana = new ListarClientes();
+				ListarClientes ventana = new ListarClientes(api);
 				ventana.setVisible(true);
 			}
 		});
@@ -53,7 +53,7 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem altaCliente = new JMenuItem("Registrar Cliente");
 		altaCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarCliente ventana = new RegistrarCliente();
+				RegistrarCliente ventana = new RegistrarCliente(api, null);
 				ventana.setVisible(true);
 			}
 		});
