@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import ar.edu.unrn.seminario.api.IApi;
+import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
@@ -39,7 +40,8 @@ public class RegistrarCliente extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistrarCliente frame = new RegistrarCliente(null, null);
+					IApi apiPrueba = new MemoryApi();
+					RegistrarCliente frame = new RegistrarCliente(apiPrueba, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
