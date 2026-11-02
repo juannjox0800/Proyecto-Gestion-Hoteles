@@ -70,11 +70,6 @@ public interface IApi {
 	void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) throws EntidadNoEncontradaException;
 	void eliminarServicio(String nombre)throws EntidadNoEncontradaException;
 	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException;
-	
-	void registrarServicio(String nombre,String descripcion, int precio);
-	void modiicarServicio(String nombre);
-	void eliminarServicio(String nombre);
-	ServicioDTO obtenerServicio(String nombre);
 
 	List<ServicioDTO> obtenerListaServicios();
 	

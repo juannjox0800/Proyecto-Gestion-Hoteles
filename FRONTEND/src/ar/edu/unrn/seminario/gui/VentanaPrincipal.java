@@ -90,15 +90,15 @@ public class VentanaPrincipal extends JFrame {
 		menuHabitacion.add(enlistarHabitacion);
 		
 
-		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Habitacion");
-		mntmNewMenuItem.addActionListener(new ActionListener() {
+		JMenuItem registrarHabitacion = new JMenuItem("Registrar Habitacion");
+		registrarHabitacion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RegistrarHabitacion ventana = new RegistrarHabitacion(api, null);
 				ventana.setVisible(true);
 				
 			}});
 			
-		menuHabitacion.add(mntmNewMenuItem);
+		menuHabitacion.add(registrarHabitacion);
 
 		
 		JMenu menuReserva = new JMenu("Reserva");
@@ -188,7 +188,7 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem enlistarServicio = new JMenuItem("Enlistar Servicio");
 		enlistarServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListaServicios ventana = new ListaServicios();
+				ListaServicios ventana = new ListaServicios(api);
 				ventana.setVisible(true);
 			}
 		});
@@ -197,7 +197,7 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem registrarServicio = new JMenuItem("Registrar Servicio");
 		registrarServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarServicio ventana = new RegistrarServicio();
+				RegistrarServicio ventana = new RegistrarServicio(api,null);
 				ventana.setVisible(true);
 			}
 		});

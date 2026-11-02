@@ -46,6 +46,7 @@ public class ListaServicios extends JFrame {
 	 * Create the frame.
 	 */
 	public ListaServicios(IApi api) {
+		setTitle("Lista de Servicios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
