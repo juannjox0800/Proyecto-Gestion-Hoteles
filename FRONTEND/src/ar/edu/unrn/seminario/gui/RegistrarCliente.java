@@ -113,10 +113,14 @@ public class RegistrarCliente extends JFrame {
 					String apellido = tfApellido.getText();
 					String contacto = tfContacto.getText();
 					int dni = Integer.parseInt(tfDNI.getText());
-					
+					if (dniOriginal==null) {
 					api.registrarCliente(nombre, apellido, contacto, dni);
 
 					JOptionPane.showMessageDialog(null, "Cliente registrado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						api.modificarCLiente(dniOriginal, nombre, apellido, contacto);
+						JOptionPane.showMessageDialog(null, "El cliente se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+					}
 					setVisible(false);
 				
 				} catch (DatoVacioException e1) {
