@@ -13,6 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 import javax.swing.JOptionPane;
 
@@ -149,9 +151,16 @@ public class ListaPlanes extends JFrame {
 		btnAceptarPlan.setBounds(236, 202, 89, 23);
 		btnAceptarPlan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				api.guardarListaPLan(listaTemporal);
-				JOptionPane.showMessageDialog(null,"Lista Modificada exitosamente" );
-				dispose();
+				try {
+					api.guardarListaPLan(listaTemporal);
+					JOptionPane.showMessageDialog(null,"Lista Modificada exitosamente" );
+					dispose();
+				} catch (DatoVacioException e1) {
+					JOptionPane.showMessageDialog(null, "Error al guardar: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				} catch (ValorInvalidoException e2) {
+					JOptionPane.showMessageDialog(null, "Error al guardar: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
 			}
 		});
 		contentPane.add(btnAceptarPlan);

@@ -160,17 +160,19 @@ public class HotelMapper {
 		if (r == null)
 			return null;
 		
-		List <Habitacion> habitacionesModelo = (r.getHabitaciones() != null) ?
-												r.getHabitaciones().stream()
-												.map(HotelMapper :: aModelo)
-												.collect(Collectors.toList())
-												: new ArrayList<>();
+		List <Habitacion> habitacionesModelo = new ArrayList<>();
+		if (r.getHabitaciones() != null) {
+			for (HabitacionDTO habitacion : r.getHabitaciones()) {
+				habitacionesModelo.add(HotelMapper.aModelo(habitacion));
+			}
+		}
 		
-		List <Huesped> huespedesModelo = (r.getHuespedes() != null) ?
-											r.getHuespedes().stream()
-											.map(HotelMapper :: aModelo)
-											.collect(Collectors.toList())
-											: new ArrayList<>();
+		List <Huesped> huespedesModelo = new ArrayList<>();
+		if (r.getHuespedes() != null) {
+			for (HuespedDTO huesped : r.getHuespedes()) {
+				huespedesModelo.add(HotelMapper.aModelo(huesped));
+			}
+		}
 		
 		return new Reserva(habitacionesModelo,
 							HotelMapper.aModelo(r.getPlan()),

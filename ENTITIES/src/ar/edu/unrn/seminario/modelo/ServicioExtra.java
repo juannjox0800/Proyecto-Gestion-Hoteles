@@ -3,13 +3,16 @@ package ar.edu.unrn.seminario.modelo;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 public class ServicioExtra extends Servicio {
 
 	private int dias;
 	private LocalDate fechaSolicitud;
 	
-	public ServicioExtra(String nombre, String descripcion, int precio) {
-		super(nombre, descripcion, precio);
+	public ServicioExtra(String nombre, String descripcion, int precio, boolean estadoVigente)throws DatoVacioException, ValorInvalidoException {
+		super(nombre, descripcion, precio, estadoVigente);
 	}
 	
 	public int getDias() {

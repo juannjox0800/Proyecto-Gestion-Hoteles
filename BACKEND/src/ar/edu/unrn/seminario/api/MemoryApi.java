@@ -285,7 +285,7 @@ public class MemoryApi implements IApi {
 		
 	}
 	@Override
-	public void guardarListaPLan(List <PlanDTO> listaNueva) {
+	public void guardarListaPLan(List <PlanDTO> listaNueva) throws DatoVacioException, ValorInvalidoException{
 		List<Plan> listaGuardar= new ArrayList<>();
 		for(PlanDTO a: listaNueva) {
 			listaGuardar.add(HotelMapper.aModelo(a));
@@ -307,31 +307,6 @@ public class MemoryApi implements IApi {
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
 			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes) {
-		
-		List<Habitacion> habitaciones = new ArrayList<>();
-
-		for (HabitacionDTO habitacionDTO : obtenerListaHabitacion) {
-		    Habitacion habitacion = HabitacionMapper.toEntity(habitacionDTO);  // Usa la clase mapper que todavia no se implemento
-		    habitaciones.add(habitacion);
-		}
-		
-		List<Huesped> listaHuespedes = new ArrayList<>();
-
-		for (HuespedDTO huespedDTO : huespedes) {
-		    Huesped huesped = HuespedMapper.toEntity(huespedDTO);  // Usa la clase mapper que todavia no se implemento
-		    listaHuespedes.add(huesped);
-		}
-		
-		Plan planModelo = PlanMapper.toEntity(plan);
-		Cliente clienteModelo = ClienteMapper.toEntity(cliente);
-		Pago pagoModelo = PagoMapper.toEntity(pagoSeña);
-		
-		int numeroReserva = contReservas;
-		contReservas ++;
-		Reserva reserva = new Reserva(habitaciones, planModelo, clienteModelo, fechaDeEntrada,
-				                      fechaSalida, pagoModelo, numeroReserva, listaHuespedes);
-		
-		reservas.add(reserva);
 		
 	}
 

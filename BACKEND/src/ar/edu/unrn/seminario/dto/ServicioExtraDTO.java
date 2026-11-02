@@ -7,8 +7,8 @@ public class ServicioExtraDTO extends ServicioDTO {
 	private int dias;
 	private LocalDate fechaSolicitud;
 	
-	public ServicioExtraDTO(String nombre, String descripcion, int precio) {
-		super(nombre, descripcion, precio);
+	public ServicioExtraDTO(String nombre, String descripcion, int precio, boolean estadoVigente) {
+		super(nombre, descripcion, precio, estadoVigente);
 	}
 	
 	public int getDias() {
