@@ -62,7 +62,7 @@ public class MemoryApi implements IApi {
 	@Override
 	public ClienteDTO  obtenerCliente(int dni) throws EntidadNoEncontradaException, FormatoInvalidoException {   
 		if (dni <= 0) {
-		    throw new FormatoInvalidoException("El DNI ingresado no es válido");
+		    throw new FormatoInvalidoException("el DNI no es valido");
 		    }
 		for (Cliente cliente : clientes) {
 			if (cliente.getDni() == dni) 
@@ -202,23 +202,24 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void modificarReserva(int numeroReserva) { // falta la ventana ??? TERMINAR METODO excepcion la reserva esta cancelada/no existe
-		obtenerReserva(numeroReserva);
+		//obtenerReserva(numeroReserva);
 		       
 	}
 
 	@Override
-	public void cancelarReserva(int numeroReserva) throws EntidadNoEncontradaException { //  falta la ventana ??? 
+	public void cancelarReserva(int numeroReserva) { //  no lanza excepciones pq al llamar al metodo ya se verificaron en el momento de buscarReserva (?
+		
 		for (Reserva reserva : reservas) {
-			if (reserva.getNumeroReserva() == numeroReserva) {
+			if (reserva.getNumeroReserva() == numeroReserva) 
 				reserva.cambiarEstadoCancelacion();
 			}
-			 throw new EntidadNoEncontradaException("No se encontro la reserva");
-		}
-		
 	}
 
 	@Override
-	public ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException{ // busca y devuelve un DTO de una reserva
+	public ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException{ // busca y devuelve un DTO de una reserva
+		if (numeroReserva <= 0) {
+		    throw new FormatoInvalidoException("el numero no es valido");
+		    }
 		for (Reserva reserva : reservas) {
 			if (reserva.getNumeroReserva() == numeroReserva) {
 				return HotelMapper.aDTO(reserva);

@@ -74,8 +74,8 @@ public interface IApi {
 	//
 	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal);
 	void modificarReserva(int numeroReserva);
-	void cancelarReserva(int numeroReserva) throws EntidadNoEncontradaException;
-	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException;
+	void cancelarReserva(int numeroReserva);
+	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException;
 	List<ReservaDTO> obtenerListaReserva();
 	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException;
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
