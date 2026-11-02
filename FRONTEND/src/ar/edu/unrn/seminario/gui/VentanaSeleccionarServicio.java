@@ -37,7 +37,7 @@ public class VentanaSeleccionarServicio extends JFrame {
         List<ServicioDTO> serviciosList = api.obtenerListaServicios();
 
         
-        listServiciosDisponibles = new JList<>(serviciosList.toArray(new ServicioDTO[0]));
+        listServiciosDisponibles = new JList<>(serviciosList.stream().filter(s -> s.isEstadoVigente() == true).toArray(ServicioDTO[] :: new));
         JScrollPane scrollPane = new JScrollPane(listServiciosDisponibles);
 		scrollPane.setBounds(30, 30, 240, 180);
 		contentPane.add(scrollPane);
