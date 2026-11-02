@@ -12,6 +12,7 @@ import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Huesped;
@@ -85,8 +86,7 @@ public class MemoryApi implements IApi {
 	public ClienteDTO obtenerCliente(int dni) throws EntidadNoEncontradaException {
 		for (Cliente a : this.clientes) {
 			if (a.getDni()== dni) {
-				return new ClienteDTO(a.getNombre(), a.getApellido(), a.getContacto(),a.getDni());
-			}
+				return HotelMapper.aDTO(a);			}
 		}
 		throw new EntidadNoEncontradaException ("No se encontró el cliente con el DNI: " + dni);
 	}
@@ -96,7 +96,7 @@ public class MemoryApi implements IApi {
 	public List<ClienteDTO> obtenerListaClientes() {
 		List<ClienteDTO> dtos= new ArrayList<>();
 		for (Cliente a:this.clientes) {
-			dtos.add(new ClienteDTO (a.getNombre(),a.getApellido(),a.getContacto(),a.getDni()));
+			dtos.add(HotelMapper.aDTO(a));
 		}
 		return dtos;
 	}
