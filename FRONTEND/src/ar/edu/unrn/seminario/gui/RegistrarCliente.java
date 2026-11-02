@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import ar.edu.unrn.seminario.api.IApi;
+import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 
@@ -27,7 +28,7 @@ public class RegistrarCliente extends JFrame {
 	private JTextField tfContacto;
 	private JTextField tfDNI;
 	private IApi api;
-
+	private ClienteDTO clienteModificar = null;
 
 
 	/**
@@ -113,6 +114,7 @@ public class RegistrarCliente extends JFrame {
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 			}
@@ -124,6 +126,7 @@ public class RegistrarCliente extends JFrame {
 		
 		
 		}
+
 	}
 	
 
