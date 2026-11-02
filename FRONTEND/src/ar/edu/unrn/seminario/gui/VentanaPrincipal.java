@@ -27,32 +27,10 @@ public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private IApi api;
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					IApi api = new MemoryApi();
-
-					VentanaPrincipal frame = new VentanaPrincipal(api);
-
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 
 	public VentanaPrincipal(IApi api) {
 		
 		setTitle("Sistema de Gestión de Hotel");
-
-	/**
-	 * Create the frame.
-	 */
 	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 350);

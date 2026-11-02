@@ -32,25 +32,7 @@ public class EnlistarHabitación extends JFrame {
 
 	private IApi api;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					EnlistarHabitación frame = new EnlistarHabitación(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public EnlistarHabitación(IApi api) {
 		
 		this.api = api;

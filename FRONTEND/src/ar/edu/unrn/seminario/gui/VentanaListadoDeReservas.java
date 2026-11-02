@@ -15,27 +15,6 @@ public class VentanaListadoDeReservas extends JFrame {
 	private JPanel contentPane;
 	private JTable table = new JTable();
 
-	private String[] columnas= {"Fecha entrada", "Fecha salida", "Habitación/es", "Huéspedes", "Seña", "Cliente", "Plan"};
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaListadoDeReservas frame = new VentanaListadoDeReservas();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public VentanaListadoDeReservas() {
 		setTitle("Lista de reservas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

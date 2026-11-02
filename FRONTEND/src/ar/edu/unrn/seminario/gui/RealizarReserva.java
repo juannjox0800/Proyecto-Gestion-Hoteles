@@ -27,27 +27,7 @@ public class RealizarReserva extends JFrame {
 	private JTextField tfCliente;
 	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RealizarReserva frame = new RealizarReserva();
-					
-					frame.setVisible(true);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public RealizarReserva() {
 		setTitle("Realizar Reserva");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

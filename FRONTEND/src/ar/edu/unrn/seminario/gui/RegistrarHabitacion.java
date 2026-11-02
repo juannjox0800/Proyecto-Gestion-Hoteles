@@ -43,25 +43,7 @@ public class RegistrarHabitacion extends JFrame {
 	private IApi api;
 	private Integer numeroOriginal = null; // si es nulo, se registra una habitacion nueva, sino, modifica una habitacion
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistrarHabitacion frame = new RegistrarHabitacion(null, null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public RegistrarHabitacion(IApi api, HabitacionDTO dtoH) {
 		setTitle("Registrar Habitacion");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

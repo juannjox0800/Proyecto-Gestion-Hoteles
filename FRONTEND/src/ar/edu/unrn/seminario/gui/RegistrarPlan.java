@@ -37,26 +37,7 @@ public class RegistrarPlan extends JFrame {
 	private JTextField tFCosto;
 	private JTable TableServiciosIncluidos;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		MemoryApi api = new MemoryApi();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistrarPlan frame = new RegistrarPlan(api);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public RegistrarPlan(IApi api) {this(api,null);}
 	
 	

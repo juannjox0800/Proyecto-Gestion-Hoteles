@@ -20,31 +20,10 @@ public class VentanaSeleccionarServicio extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JList<ServicioDTO> listServiciosDisponibles;
-	private IApi api;
 	private RegistrarPlan ventanaPadre;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			IApi api = new MemoryApi();
-			RegistrarPlan planr= new RegistrarPlan(api);
-			public void run() {
-				try {
-					VentanaSeleccionarServicio frame = new VentanaSeleccionarServicio(api, planr);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	
+	
 	public VentanaSeleccionarServicio(IApi api, RegistrarPlan ventanaPadre) {
-		this.api = api;
 		this.ventanaPadre = ventanaPadre;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

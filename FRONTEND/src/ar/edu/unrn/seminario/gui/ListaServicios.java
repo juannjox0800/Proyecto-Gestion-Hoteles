@@ -25,26 +25,7 @@ public class ListaServicios extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					IApi apiPrueba = new MemoryApi();
-					ListaServicios frame = new ListaServicios(apiPrueba);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public ListaServicios(IApi api) {
 		setTitle("Lista de Servicios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

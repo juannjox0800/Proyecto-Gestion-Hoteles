@@ -32,26 +32,7 @@ public class RegistrarServicio extends JFrame {
 	private JTextField tfNombre;
 	private JTextField tfPrecio;
 	private String nombreOriginal;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					IApi apiPrueba = new MemoryApi();
-					RegistrarServicio frame = new RegistrarServicio(apiPrueba, null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public RegistrarServicio(IApi api, ServicioDTO dto) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 415, 334);

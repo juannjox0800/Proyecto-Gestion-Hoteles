@@ -29,26 +29,7 @@ public class ListaPlanes extends JFrame {
 	private JPanel contentPane;
 	private JTable jtListaPlanes;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		IApi api = new MemoryApi();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ListaPlanes frame = new ListaPlanes(api);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public ListaPlanes(IApi api) {
 		List<PlanDTO> listaTemporal = new ArrayList<>(api.obtenerListaPlan());
 		setTitle("Lista de planes ");

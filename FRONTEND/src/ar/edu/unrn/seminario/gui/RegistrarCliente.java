@@ -19,25 +19,7 @@ public class RegistrarCliente extends JFrame {
 	private JTextField tfContacto;
 	private JTextField tfDNI;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistrarCliente frame = new RegistrarCliente();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public RegistrarCliente() {
 		setTitle("Registrar Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
