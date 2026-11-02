@@ -82,6 +82,7 @@ public class MemoryApi implements IApi {
 		boolean existe = this.habitaciones.stream().anyMatch(h -> h.getNumero() == numero);
 		
 		if(existe) {
+			
 			throw new EntidadDuplicadaException("Ya existe una habitación con el número:" + numero);
 		}
 		
