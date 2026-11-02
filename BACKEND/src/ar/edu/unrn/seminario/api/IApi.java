@@ -2,6 +2,8 @@ package ar.edu.unrn.seminario.api;
 
 import java.time.*;
 import java.util.*;
+
+import ar.edu.unrn.seminario.dto.CamaDTO;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.HuespedDTO;
@@ -47,6 +49,8 @@ public interface IApi {
 
 	void desactivarUsuario(String username); // recuperar el objeto Usuario, implementar el comportamiento de estado.*/
 				//verificar hacemos con el objeto como parametro 
+	
+	
 	void registrarCliente(String nombre, String apellido, String contacto, int dni);
 	void modificarCLiente(int dni);
 	void eliminarCliente(int dni);
@@ -54,10 +58,11 @@ public interface IApi {
 	ClienteDTO obtenerCLiente(int dni);
 	List<ClienteDTO>obtenerListaClientes();
 	
-	void registrarHabitacion(int numero, String tipoHabitacion, int costo);
-	void modificarHabitacion(int numero);
-	void eliminarHabitacion(int numero);
-	HabitacionDTO obtenerHabitacion(int numero);
+	
+	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
+	boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException;
+	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException;
+	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException;
 	List <HabitacionDTO>obtenerListaHabitacion();
 	
 	void registrarServicio(String nombre,String descripcion, int precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
@@ -79,7 +84,6 @@ public interface IApi {
 	ReservaDTO obtenerReserva(int numeroReserva);
 	List<ReservaDTO> obtenerListaReserva();
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
-	
 	
 	
 	

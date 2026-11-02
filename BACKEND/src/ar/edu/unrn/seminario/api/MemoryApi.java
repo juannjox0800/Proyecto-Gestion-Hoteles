@@ -4,6 +4,7 @@ import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import ar.edu.unrn.seminario.dto.CamaDTO;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.HuespedDTO;
@@ -16,6 +17,10 @@ import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.mapper.HotelMapper;
+
+
+import ar.edu.unrn.seminario.modelo.Cama;
+
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Huesped;
@@ -33,6 +38,7 @@ public class MemoryApi implements IApi {
 	
     private int contReservas = 0;
 	
+    
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
 	
@@ -71,34 +77,87 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, int costo) {
-		// TODO Auto-generated method stub
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
+	{
+		boolean existe = this.habitaciones.stream().anyMatch(h -> h.getNumero() == numero);
+		
+		if(existe) {
+			throw new EntidadDuplicadaException("Ya existe una habitación con el número:" + numero);
+		}
+		
+		Habitacion h = new Habitacion(numero, tipoHabitacion, costo);
+		h.setEstado(estado);
+		
+		for(String cama : camas ) {
+			h.agregarCama(new Cama(cama));
+		}
+		
+		habitaciones.add(h);
+	}
+
+	@Override
+	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
+		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
+		
+		if(habitacion.isPresent()) {
+			Habitacion h = habitacion.get();
+			h.setNumero(numeroNuevo);
+			h.setTipoHabitacion(tipoHabitacion);
+			h.setEstado(estado);
+			h.setCosto(costo);
+			
+			h.getCamas().clear();
+			for(String cama : camas ) {
+				h.agregarCama(new Cama(cama));
+			}
+			
+			return true;
+		}else {
+			throw new EntidadNoEncontradaException("No se encontró la habitación con el número:" + numero);
+		}
 		
 	}
 
 	@Override
-	public void modificarHabitacion(int numero) {
-		// TODO Auto-generated method stub
+	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException
+	{
+		boolean eliminado = this.habitaciones.removeIf(h -> h.getNumero() == numero);
 		
+		if (!eliminado) {
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+		}
+		
+		return true;
 	}
 
 	@Override
-	public void eliminarHabitacion(int numero) {
-		// TODO Auto-generated method stub
+	public HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException {
+		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
-	}
-
-	@Override
-	public HabitacionDTO obtenerHabitacion(int numero) {
-		// TODO Auto-generated method stub
-		return null;
+		if(habitacion.isPresent()) {
+			HabitacionDTO dto = HotelMapper.aDTO(habitacion.get());
+			return dto;
+		}else {
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+		}
+		
+	
 	}
 
 	@Override
 	public List<HabitacionDTO> obtenerListaHabitacion() {
-		// TODO Auto-generated method stub
-		return null;
+		List<HabitacionDTO> listaDTO = new ArrayList<>();
+		
+		for(Habitacion h : habitaciones) {
+			
+			HabitacionDTO dto = HotelMapper.aDTO(h);
+			
+			listaDTO.add(dto);
+		}
+		
+		return listaDTO;
 	}
+	
 
 	@Override
 	public void registrarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
@@ -189,7 +248,7 @@ public class MemoryApi implements IApi {
 		return null;
 	}
 	
-
+	
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
 			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes) {
@@ -253,6 +312,7 @@ public class MemoryApi implements IApi {
 		// TODO Auto-generated method stub
 		
 	}
+	
 /////////////
 /// /////////////
 ///

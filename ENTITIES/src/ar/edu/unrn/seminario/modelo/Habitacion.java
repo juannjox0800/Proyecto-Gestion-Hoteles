@@ -1,6 +1,8 @@
 package ar.edu.unrn.seminario.modelo;
 
 import java.util.*;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class Habitacion {
 	private int numero;
@@ -10,10 +12,22 @@ public class Habitacion {
 	private List <Cama> camas = new ArrayList<Cama>();
 	
 	
-	public Habitacion(int numero, String tipoHabitacion, int costo) {
+	public Habitacion(int numero, String tipoHabitacion, int costo) throws DatoVacioException, ValorInvalidoException
+	{ 
+		
+		if(tipoHabitacion.isEmpty()) {
+			throw new DatoVacioException("No pueden existir campos vacíos. Por favor, ingrese la información restante.");
+		}
+		
+		if(numero <= 0  || costo <= 0 ) {
+			throw new ValorInvalidoException("Valores inválidos. Por favor, ingrese la información correctamente.");
+			
+		}
+		
 		this.numero = numero;
 		this.tipoHabitacion = tipoHabitacion;
 		this.costo = costo;
+		
 	}
 
 	public int getNumero() {
@@ -55,6 +69,35 @@ public class Habitacion {
 	public void setCamas(List<Cama> camas) {
 		this.camas = camas;
 	}
+	
+	
+	public void agregarCama(Cama cama) {
+		this.camas.add(cama);
+	}
+	
+	public void eliminarCama(Cama cama) {
+		this.camas.remove(cama);
+		
+	}
+	
+	public int cantCamas() {
+		return this.camas.size();
+	}
+	
+	public int cantHuespedes() {
+		int contador = 0;
+	    
+	    for (Cama cama : this.camas) {
+	        if ("Simple".equalsIgnoreCase(cama.getTipo())) {
+	            contador += 1;
+	        } else if ("Matrimonial".equalsIgnoreCase(cama.getTipo())) {
+	            contador += 2;
+	        }
+	    }
+	    
+	    return contador;
+	}
+		
 
 	@Override
 	public int hashCode() {

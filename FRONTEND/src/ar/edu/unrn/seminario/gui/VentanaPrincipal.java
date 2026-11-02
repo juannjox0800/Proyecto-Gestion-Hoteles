@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import ar.edu.unrn.seminario.api.IApi;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -18,13 +21,14 @@ public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private IApi api;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+
 					IApi api = new MemoryApi();
+
 					VentanaPrincipal frame = new VentanaPrincipal(api);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -34,12 +38,18 @@ public class VentanaPrincipal extends JFrame {
 		});
 	}
 
+
 	public VentanaPrincipal(IApi api) {
-		this.api = api;
 		
 		setTitle("Sistema de Gestión de Hotel");
+
+	/**
+	 * Create the frame.
+	 */
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -65,26 +75,31 @@ public class VentanaPrincipal extends JFrame {
 		});
 		menuCliente.add(altaCliente);
 		
+		
 		JMenu menuHabitacion = new JMenu("Habitacion");
 		menuBar.add(menuHabitacion);
 		
 		JMenuItem enlistarHabitacion = new JMenuItem("Enlistar Habitacion");
 		enlistarHabitacion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EnlistarHabitación ventana = new EnlistarHabitación();
+
+				EnlistarHabitación ventana = new EnlistarHabitación(api);
 				ventana.setVisible(true);
 			}
 		});
 		menuHabitacion.add(enlistarHabitacion);
 		
-		JMenuItem registrarHabitacion = new JMenuItem("Registrar Habitacion");
-		registrarHabitacion.addActionListener(new ActionListener() {
+
+		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Habitacion");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarHabitacion ventana = new RegistrarHabitacion();
+				RegistrarHabitacion ventana = new RegistrarHabitacion(api, null);
 				ventana.setVisible(true);
-			}
-		});
-		menuHabitacion.add(registrarHabitacion);
+				
+			}});
+			
+		menuHabitacion.add(mntmNewMenuItem);
+
 		
 		JMenu menuReserva = new JMenu("Reserva");
 		menuBar.add(menuReserva);

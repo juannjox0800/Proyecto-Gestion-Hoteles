@@ -1,6 +1,8 @@
 package ar.edu.unrn.seminario.gui;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -71,6 +73,15 @@ public class CheckOut extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar ");
 		btnCancelar.setBounds(109, 227, 89, 23);
 		contentPane.add(btnCancelar);
+		
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				
+			}
+			
+			
+		});
 
 	}
 

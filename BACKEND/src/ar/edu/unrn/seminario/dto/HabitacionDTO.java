@@ -2,6 +2,8 @@ package ar.edu.unrn.seminario.dto;
 
 import java.util.*;
 
+import ar.edu.unrn.seminario.modelo.Cama;
+
 public class HabitacionDTO {
 	private int numero;
 	private String tipoHabitacion;
@@ -66,6 +68,22 @@ public class HabitacionDTO {
 		this.camas = camas;
 	}
 
-
+	public int cantCamas() {
+		return this.camas.size();
+	}
+	
+	public int cantHuespedes() {
+		int contador = 0;
+	    
+	    for (CamaDTO cama : this.camas) {
+	        if ("Simple".equalsIgnoreCase(cama.getTipo())) {
+	            contador += 1;
+	        } else if ("Matrimonial".equalsIgnoreCase(cama.getTipo())) {
+	            contador += 2;
+	        }
+	    }
+	    
+	    return contador;
+	}
 	
 }
