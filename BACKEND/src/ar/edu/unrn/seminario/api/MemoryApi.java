@@ -2,9 +2,11 @@ package ar.edu.unrn.seminario.api;
 
 import java.time.*;
 import java.util.*;
+
 import java.util.stream.Collectors;
 
 import ar.edu.unrn.seminario.dto.CamaDTO;
+
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.HuespedDTO;
@@ -16,6 +18,7 @@ import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 import ar.edu.unrn.seminario.mapper.HotelMapper;
 
 
@@ -38,7 +41,7 @@ public class MemoryApi implements IApi {
 	
     private int contReservas = 0;
 	
-    
+
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
 	
@@ -116,8 +119,7 @@ public class MemoryApi implements IApi {
 		}else {
 			throw new EntidadNoEncontradaException("No se encontró la habitación con el número:" + numero);
 		}
-		
-	}
+}
 
 	@Override
 	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException
@@ -171,7 +173,6 @@ public class MemoryApi implements IApi {
 		}
 
 		this.servicios.add(new Servicio(nombre, descripcion, precio, estadoVigente));
-
 		
 	}
 
@@ -220,33 +221,86 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
-			String nombre) {
-		// TODO Auto-generated method stub
+			String nombre, boolean esActivo) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException{
+
+		if (planExiste(nombre)) throw new EntidadDuplicadaException("Ya existe esta entidad");
+		if (nombre==null||nombre.trim().isEmpty())  throw new DatoVacioException("coloca un nombre");
+		if(listaServicios==null||listaServicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
+		if (costo<0) throw new ValorInvalidoException("valor invalido de costo");
+		
+		ArrayList<Servicio> servicios = new ArrayList<>();
+		for (ServicioDTO dto : listaServicios) 			servicios.add(HotelMapper.aModelo(dto));
+		
+		Plan planadd= new Plan(servicios,costo ,nombre, esActivo);
+		this.planes.add(planadd);
+		
+			
+	}
+	
+	
+	public boolean planExiste(String nombre) {
+		boolean s =false;
+	for (Plan a : this.planes) {
+		if (a.getNombre().equals(nombre)) s = true;
+	}
+		
+		return s;
 		
 	}
 
 	@Override
-	public void modificarPlan(String nombre) {
-		// TODO Auto-generated method stub
-		
+	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre,boolean esActivo) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException{
+			if (!planExiste(nombre)) throw new EntidadNoEncontradaException("Plan no existe");
+			if(costo<0)throw new ValorInvalidoException("valor no valido ");
+			if(nombre.trim().isEmpty() || nombre==null)throw new DatoVacioException("coloca nombre");
+			if(listaServicios==null||listaServicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
+		ArrayList<Servicio> servicios = new ArrayList<>();
+		for (ServicioDTO dto : listaServicios) {
+			servicios.add(HotelMapper.aModelo(dto));
+		for (Plan a : this.planes) {
+			if (a.getNombre().equals(nombre)) {
+				a.setServicios(servicios);
+				a.setCosto(costo);
+				a.setNombre(nombre);
+				a.setEstadoActivo(esActivo);
+			}}}
+	}
+	@Override
+	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException{
+		if (!planExiste(nombre))throw new EntidadNoEncontradaException("Plan no existe"); 
+			this.planes.removeIf(p -> p.getNombre().equals(nombre));
 	}
 
 	@Override
-	public void eliminarPlan(String nombre) {
-		// TODO Auto-generated method stub
+	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException{
+		if (!planExiste(nombre))
+			for(Plan p : this.planes) {
+				if (p.getNombre().equals(nombre)) {
+					return HotelMapper.aDTO(p);
+				}
+			
+		}
+		throw new EntidadNoEncontradaException("Plan no existe");
+
 		
 	}
-
 	@Override
-	public PlanDTO obtenerPlan(String nombre) {
-		// TODO Auto-generated method stub
-		return null;
+	public void guardarListaPLan(List <PlanDTO> listaNueva) {
+		List<Plan> listaGuardar= new ArrayList<>();
+		for(PlanDTO a: listaNueva) {
+			listaGuardar.add(HotelMapper.aModelo(a));
+		}
+		this.planes.clear();
+		this.planes.addAll(listaGuardar);
 	}
 
 	@Override
 	public List<PlanDTO> obtenerListaPlan() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList <PlanDTO> planesDTO=new ArrayList<>();
+		for (Plan p: this.planes) {
+			planesDTO.add(HotelMapper.aDTO(p));
+		}
+		return planesDTO;
 	}
 	
 	

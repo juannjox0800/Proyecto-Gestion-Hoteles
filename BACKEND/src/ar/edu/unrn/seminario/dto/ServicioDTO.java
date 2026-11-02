@@ -45,6 +45,8 @@ public class ServicioDTO {
 	public void setEstadoVigente(boolean estadoVigente) {
 		this.estadoVigente = estadoVigente;
 	}
-	
+	public String toString() {
+		return nombre;
+	}
 	
 }

@@ -9,10 +9,11 @@ public class PlanDTO {
 	private String nombre;
 	private boolean estadoActivo;
 	
-	public PlanDTO(List<ServicioDTO> servicios, int costo, String nombre) {
+	public PlanDTO(List<ServicioDTO> servicios, int costo, String nombre,boolean EstadoActivo) {
 		this.servicios = servicios;
 		this.costo = costo;
 		this.nombre = nombre;
+		this.estadoActivo=EstadoActivo;
 	}
 
 	public List<ServicioDTO> getServicios() {

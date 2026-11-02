@@ -3,10 +3,15 @@ package ar.edu.unrn.seminario.gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import ar.edu.unrn.seminario.api.IApi;
 
@@ -16,20 +21,22 @@ import javax.swing.JMenuItem;
 
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
+import ar.edu.unrn.seminario.dto.PlanDTO;
 
 public class VentanaPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private IApi api;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-
 					IApi api = new MemoryApi();
 
 					VentanaPrincipal frame = new VentanaPrincipal(api);
+
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +56,6 @@ public class VentanaPrincipal extends JFrame {
 	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
-		
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -75,14 +81,13 @@ public class VentanaPrincipal extends JFrame {
 		});
 		menuCliente.add(altaCliente);
 		
-		
+
 		JMenu menuHabitacion = new JMenu("Habitacion");
 		menuBar.add(menuHabitacion);
 		
 		JMenuItem enlistarHabitacion = new JMenuItem("Enlistar Habitacion");
 		enlistarHabitacion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				EnlistarHabitación ventana = new EnlistarHabitación(api);
 				ventana.setVisible(true);
 			}
@@ -161,14 +166,22 @@ public class VentanaPrincipal extends JFrame {
 		});
 		menuReserva.add(solicitarServicioExtra);
 		
+
+		
 		JMenu menuPlan = new JMenu("Plan");
 		menuBar.add(menuPlan);
 		
 		JMenuItem enlistarPlan = new JMenuItem("Enlistar Plan");
 		enlistarPlan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListaPlanes ventana = new ListaPlanes();
-				ventana.setVisible(true);
+				List<PlanDTO> planesList = api.obtenerListaPlan();
+
+				if (planesList == null || planesList.isEmpty()) {
+				    JOptionPane.showMessageDialog(null,"No hay planes registrados en el sistema para listar, modificar o eliminar.","Aviso",JOptionPane.WARNING_MESSAGE);
+				   
+				}else {
+				ListaPlanes ventana = new ListaPlanes(api);
+				ventana.setVisible(true);}
 			}
 		});
 		menuPlan.add(enlistarPlan);
@@ -189,6 +202,7 @@ public class VentanaPrincipal extends JFrame {
 		enlistarServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ListaServicios ventana = new ListaServicios(api);
+
 				ventana.setVisible(true);
 			}
 		});

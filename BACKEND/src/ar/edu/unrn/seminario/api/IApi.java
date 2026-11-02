@@ -73,12 +73,13 @@ public interface IApi {
 
 	List<ServicioDTO> obtenerListaServicios();
 	
-	void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo, String nombre);
-	void modificarPlan(String nombre);
+	void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo);
+	void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo);
 	void eliminarPlan(String nombre);
 	PlanDTO obtenerPlan(String nombre);
 	List<PlanDTO> obtenerListaPlan();
-	
+	void guardarListaPLan(List <PlanDTO> listaNueva);
+
 	//
 	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes);
 	void modificarReserva(int numeroReserva);
