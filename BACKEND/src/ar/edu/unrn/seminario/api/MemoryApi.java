@@ -27,9 +27,6 @@ public class MemoryApi implements IApi {
 	private List<Reserva> reservas = new ArrayList<>(); 
 	private List<Servicio> servicios = new ArrayList<>();
  public MemoryApi() {
-	 this.registrarServicio("piscina", "hidratante", 1000);
-	 this.registrarServicio("sauna", "caluroso", 1000);
-	 this.registrarServicio("cancha de futbol", "divertida", 1000);
  }
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) {
@@ -99,8 +96,6 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void registrarServicio(String nombre, String descripcion, int precio) {
-		// TODO Auto-generated method stub
-		this.servicios.add(new Servicio(nombre, descripcion, precio));
 		
 	}
 
