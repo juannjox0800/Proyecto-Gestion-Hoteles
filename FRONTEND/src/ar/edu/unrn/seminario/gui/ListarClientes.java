@@ -29,7 +29,21 @@ public class ListarClientes extends JFrame {
 	private JTextField textField;
 	private IApi api;
 
-	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ListarClientes frame = new ListarClientes(null);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	/**
 	 * Create the frame.
 	 */
@@ -170,11 +184,13 @@ int filaSelec = table.getSelectedRow();
 		JButton btnCerrar = new JButton("Cerrar");
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
 			}
 		});
 		btnCerrar.setBounds(27, 295, 89, 23);
 		contentPane.add(btnCerrar);
 
+		cargarTablaCompleta();
 	}
 private void cargarTablaCompleta() {
 	DefaultTableModel modelo = (DefaultTableModel) table.getModel();
