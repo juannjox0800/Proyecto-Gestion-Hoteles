@@ -10,6 +10,8 @@ import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -131,7 +133,13 @@ public class RegistrarCliente extends JFrame {
 					
 				} catch (NumberFormatException e3) {
 					JOptionPane.showMessageDialog(null, "El DNI debe ser un número entero válido.", "Datos inválidos", JOptionPane.ERROR_MESSAGE);
-				}
+					
+				}catch (ValorInvalidoException e2) {
+		            JOptionPane.showMessageDialog(null, e2.getMessage(), "Datos erróneos.", JOptionPane.ERROR_MESSAGE);
+			}
+				catch (EntidadNoEncontradaException e3) { 
+		            JOptionPane.showMessageDialog(null, e3.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
 			}
 		});
 		btnAceptar.setBounds(234, 246, 101, 23);
