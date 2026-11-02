@@ -195,7 +195,7 @@ int filaSelec = table.getSelectedRow();
 private void cargarTablaCompleta() {
 	DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 	modelo.setRowCount(0); 
-	
+	if (api!=null) {
 	List<ClienteDTO> clientes = api.obtenerListaClientes();
 	for (ClienteDTO c : clientes) {
 		modelo.addRow(new Object[] {
@@ -205,5 +205,6 @@ private void cargarTablaCompleta() {
 			c.getContacto()
 		});
 	}
+}
 }
 }
