@@ -3,13 +3,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 public class Plan {
 	private List<Servicio> servicios;
 	private int costo;
 	private String nombre;
 	private boolean estadoActivo;
 
-	public Plan(List<Servicio> servicios, int costo, String nombre, boolean estadoActivo) {
+	public Plan(List<Servicio> servicios, int costo, String nombre, boolean estadoActivo) throws DatoVacioException, ValorInvalidoException{
+		if (nombre==null||nombre.trim().isEmpty())  throw new DatoVacioException("coloca un nombre");
+		if(servicios==null||servicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
+		if (costo<0) throw new ValorInvalidoException("valor invalido de costo");
+		
 		this.servicios = servicios;
 		this.costo = costo;
 		this.nombre = nombre;

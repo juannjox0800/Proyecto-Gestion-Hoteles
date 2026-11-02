@@ -224,12 +224,11 @@ public class MemoryApi implements IApi {
 			String nombre, boolean esActivo) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException{
 
 		if (planExiste(nombre)) throw new EntidadDuplicadaException("Ya existe esta entidad");
-		if (nombre==null||nombre.trim().isEmpty())  throw new DatoVacioException("coloca un nombre");
-		if(listaServicios==null||listaServicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
-		if (costo<0) throw new ValorInvalidoException("valor invalido de costo");
 		
 		ArrayList<Servicio> servicios = new ArrayList<>();
-		for (ServicioDTO dto : listaServicios) 			servicios.add(HotelMapper.aModelo(dto));
+		for (ServicioDTO dto : listaServicios) { 			
+			servicios.add(HotelMapper.aModelo(dto));
+		}
 		
 		Plan planadd= new Plan(servicios,costo ,nombre, esActivo);
 		this.planes.add(planadd);
