@@ -5,10 +5,22 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import ar.edu.unrn.seminario.api.IApi;
+import ar.edu.unrn.seminario.api.MemoryApi;
+import ar.edu.unrn.seminario.dto.ClienteDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegistrarCliente extends JFrame {
 
@@ -18,9 +30,17 @@ public class RegistrarCliente extends JFrame {
 	private JTextField tfApellido;
 	private JTextField tfContacto;
 	private JTextField tfDNI;
+	private IApi api;
+	private Integer dniOriginal = null;
 
-
-	public RegistrarCliente() {
+	public RegistrarCliente(IApi api, ClienteDTO clienteDTO) {
+		this.api = api;
+		
+		if (clienteDTO == null) {
+			this.dniOriginal = null;
+		} else {
+			this.dniOriginal = clienteDTO.getDni(); 
+		}	
 		setTitle("Registrar Cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 482, 326);
@@ -70,12 +90,68 @@ public class RegistrarCliente extends JFrame {
 		tfDNI.setColumns(10);
 		
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String nombre = tfNombre.getText();
+					String apellido = tfApellido.getText();
+					String contacto = tfContacto.getText();
+					int dni = Integer.parseInt(tfDNI.getText());
+					if (dniOriginal==null) {
+					api.registrarCliente(nombre, apellido, contacto, dni);
+
+					JOptionPane.showMessageDialog(null, "Cliente registrado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						api.modificarCLiente(dniOriginal, nombre, apellido, contacto);
+						JOptionPane.showMessageDialog(null, "El cliente se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+					}
+					setVisible(false);
+				
+				} catch (DatoVacioException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
+					
+				} catch (EntidadDuplicadaException e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage(), "Cliente duplicado", JOptionPane.ERROR_MESSAGE);
+					
+				} catch (NumberFormatException e3) {
+					JOptionPane.showMessageDialog(null, "El DNI debe ser un número entero válido.", "Datos inválidos", JOptionPane.ERROR_MESSAGE);
+					
+				}catch (ValorInvalidoException e2) {
+		            JOptionPane.showMessageDialog(null, e2.getMessage(), "Datos erróneos.", JOptionPane.ERROR_MESSAGE);
+			}
+				catch (EntidadNoEncontradaException e3) { 
+		            JOptionPane.showMessageDialog(null, e3.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			}
+		});
 		btnAceptar.setBounds(234, 246, 101, 23);
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
+	
+
 		btnCancelar.setBounds(355, 246, 101, 23);
 		contentPane.add(btnCancelar);
-
-	}
+		
+		if (clienteDTO != null) {
+			tfNombre.setText(clienteDTO.getNombre());
+			tfApellido.setText(clienteDTO.getApellido());
+			tfContacto.setText(clienteDTO.getContacto());
+			tfDNI.setText(String.valueOf(clienteDTO.getDni()));
+			tfDNI.setEditable(false); 
+		}
+	
+		}
 }
+
+	
+	
+
+	
+	
+

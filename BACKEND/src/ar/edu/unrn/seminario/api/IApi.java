@@ -52,10 +52,10 @@ public interface IApi {
 	
 	
 	void registrarCliente(String nombre, String apellido, String contacto, int dni);
-	void modificarCLiente(int dni);
+	void modificarCLiente(int dni, String nombre, String apellido, String contacto);
 	void eliminarCliente(int dni);
 	boolean existeCliente(int dni);
-	ClienteDTO obtenerCLiente(int dni);
+	ClienteDTO obtenerCliente(int dni);
 	List<ClienteDTO>obtenerListaClientes();
 	
 	

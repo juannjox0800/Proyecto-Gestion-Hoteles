@@ -2,13 +2,26 @@ package ar.edu.unrn.seminario.modelo;
 
 import java.util.Objects;
 
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 public class Cliente {
 	private String nombre;
 	private String apellido;
 	private String contacto;
 	private int dni;
 	
-	public Cliente(String nombre, String apellido, String contacto, int dni) {
+	public Cliente(String nombre, String apellido, String contacto, int dni) throws DatoVacioException, ValorInvalidoException{
+		
+		if (nombre== null || nombre.trim().isEmpty()|| apellido ==null || apellido.trim().isEmpty()) {
+			throw new DatoVacioException("El nombre y el apellido no pueden estar vacios");
+		}
+		if (nombre.matches(".*\\d.*") || apellido.matches(".*\\d.*")) {
+	        throw new ValorInvalidoException("El nombre y el apellido no pueden contener números.");
+	    }
+		if (dni <= 0) {
+            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
+		}
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.contacto = contacto;
