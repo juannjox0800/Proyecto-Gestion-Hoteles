@@ -3,6 +3,8 @@ package ar.edu.unrn.seminario.gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -119,8 +121,18 @@ public class EnlistarHabitación extends JFrame {
 						try {
 							
 							int numHabitacion = (int) table.getValueAt(filaSelec, 0);
+							
 							HabitacionDTO dtoH = api.obtenerHabitacion(numHabitacion);
 							RegistrarHabitacion ventanaModificar = new RegistrarHabitacion(api, dtoH);
+							
+							ventanaModificar.addWindowListener(new WindowAdapter() {
+								@Override
+								public void windowClosed(WindowEvent e) {
+									recargarTabla(api);
+								}
+								 
+							});
+							
 							ventanaModificar.setVisible(true);
 							
 							
@@ -136,6 +148,7 @@ public class EnlistarHabitación extends JFrame {
 			
 		});
 		
+				
 		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.setBounds(307, 225, 89, 23);
 		contentPane.add(btnEliminar);
@@ -173,23 +186,26 @@ public class EnlistarHabitación extends JFrame {
 			
 		});
 		
-		JButton btnCerrar = new JButton("Cerrar");
+		JButton btnCerrar = new JButton("Salir");
 		btnCerrar.setBounds(517, 269, 89, 23);
 		contentPane.add(btnCerrar);
 		
 		btnCerrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				dispose();
 				
 			}
 		});
 
-		List<HabitacionDTO> listadoCompleto = api.obtenerListaHabitacion();
+	
+		
+		recargarTabla(this.api);
+		//recorro lista y agrego filas
+		/**
+		 * List<HabitacionDTO> listadoCompleto = api.obtenerListaHabitacion();
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 		modelo.setRowCount(0);
-		
-		//recorro lista y agrego filas
-		for(HabitacionDTO dtoH : listadoCompleto) {
+		 * for(HabitacionDTO dtoH : listadoCompleto) {
 			modelo.addRow( new Object[] {
 				dtoH.getNumero(),
 				dtoH.cantCamas(),
@@ -200,7 +216,26 @@ public class EnlistarHabitación extends JFrame {
 				
 			});
 		}
-		
-		
+
+		**/
 	}
+	
+
+	private void recargarTabla(IApi api) {
+		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+		modelo.setRowCount(0);
+		
+		for(HabitacionDTO dtoH : api.obtenerListaHabitacion()) {
+			modelo.addRow(new Object[] {
+					dtoH.getNumero(),
+					dtoH.cantCamas(),
+					dtoH.getTipoHabitacion(),
+					dtoH.getEstado(),
+					dtoH.cantHuespedes(),
+					dtoH.getCosto()
+			});
+		}
+	}
+
+	
 }
