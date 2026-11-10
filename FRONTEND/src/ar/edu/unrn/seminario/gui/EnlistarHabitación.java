@@ -191,7 +191,7 @@ public class EnlistarHabitación extends JFrame {
 			
 		});
 		
-		JButton btnCerrar = new JButton("Cerrar");
+		JButton btnCerrar = new JButton("Salir");
 		btnCerrar.setBounds(517, 269, 89, 23);
 		contentPane.add(btnCerrar);
 		
