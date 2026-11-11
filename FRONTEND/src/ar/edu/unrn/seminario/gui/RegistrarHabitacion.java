@@ -216,7 +216,7 @@ public class RegistrarHabitacion extends JFrame {
 				}
 				
 				
-			
+				limpiarCampos();
 				
 				}catch(DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
@@ -279,6 +279,10 @@ public class RegistrarHabitacion extends JFrame {
 		
 		cbTipoHabitacion.setSelectedIndex(0);
 		comboBox_1.setSelectedIndex(0);
+		
+		listadoCamasTemporal.clear();
+		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+		modelo.setRowCount(0);
 		
 		tfNumHabitacion.setEditable(true); //pongo modificable por si vengo de una modificacion
 		this.numeroOriginal = null;
