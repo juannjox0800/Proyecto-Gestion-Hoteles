@@ -37,6 +37,9 @@ public class RegistrarHabitacion extends JFrame {
 	private JPanel contentPane;
 	private JTextField tfNumHabitacion;
 	private JTextField tfCostoHabitacion;
+	
+	private JComboBox cbTipoHabitacion;
+	private JComboBox comboBox_1;
 	private JTable table;
 
 	private List<String> listadoCamasTemporal = new ArrayList<>();
@@ -76,7 +79,7 @@ public class RegistrarHabitacion extends JFrame {
 		contentPane.add(tfNumHabitacion);
 		tfNumHabitacion.setColumns(10);
 		
-		JComboBox cbTipoHabitacion = new JComboBox();
+		cbTipoHabitacion = new JComboBox();
 		cbTipoHabitacion.setModel(new DefaultComboBoxModel(new String[] {"Estandar", "Superior", "Deluxe", "Suite"}));
 		cbTipoHabitacion.setBounds(191, 215, 248, 22);
 		contentPane.add(cbTipoHabitacion);
@@ -141,7 +144,7 @@ public class RegistrarHabitacion extends JFrame {
 		lblNewLabel_3.setBounds(24, 303, 70, 12);
 		contentPane.add(lblNewLabel_3);
 		
-		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1 = new JComboBox();
 		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Disponible", "No disponible"}));
 		comboBox_1.setBounds(191, 299, 248, 20);
 		contentPane.add(comboBox_1);
@@ -196,6 +199,9 @@ public class RegistrarHabitacion extends JFrame {
 					JOptionPane.showMessageDialog(null, "La habitación se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
+				
+			
+				
 				}catch(DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
 				
@@ -247,6 +253,19 @@ public class RegistrarHabitacion extends JFrame {
 				}
 			}
 		}
+		
+	}
+	
+	
+	private void limpiarCampos() {
+		tfNumHabitacion.setText("");
+		tfCostoHabitacion.setText("");
+		
+		cbTipoHabitacion.setSelectedIndex(0);
+		comboBox_1.setSelectedIndex(0);
+		
+		tfNumHabitacion.setEditable(true); //pongo modificable por si vengo de una modificacion
+		this.numeroOriginal = null;
 		
 	}
 }
