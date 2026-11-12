@@ -220,7 +220,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) throws EntidadNoEncontradaException {
+	public void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException {
 		Servicio servicio = this.servicios
 				.stream()
 				.filter(s -> s.getNombre().equalsIgnoreCase(nombre))

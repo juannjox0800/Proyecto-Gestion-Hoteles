@@ -54,8 +54,8 @@ public class RegistrarServicio extends JFrame {
 		lblDescripcion.setBounds(20, 74, 85, 14);
 		contentPane.add(lblDescripcion);
 		
-		JLabel lblPrecio = new JLabel("Precio:");
-		lblPrecio.setBounds(20, 182, 46, 14);
+		JLabel lblPrecio = new JLabel("(*) Precio:");
+		lblPrecio.setBounds(20, 182, 66, 14);
 		contentPane.add(lblPrecio);
 		
 		tfPrecio = new JTextField();
@@ -63,16 +63,16 @@ public class RegistrarServicio extends JFrame {
 		contentPane.add(tfPrecio);
 		tfPrecio.setColumns(10);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(197, 261, 89, 23);
-		contentPane.add(btnAceptar);
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setBounds(300, 261, 89, 23);
+		contentPane.add(btnGuardar);
 		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnSalir.setBounds(300, 261, 89, 23);
+		btnSalir.setBounds(197, 261, 89, 23);
 		contentPane.add(btnSalir);
 		
 		JLabel lblNewLabel = new JLabel("$-");
@@ -88,8 +88,8 @@ public class RegistrarServicio extends JFrame {
 		textArea.setLineWrap(true);
 		scrollPane.setViewportView(textArea);
 		
-		JLabel lblNewLabel_1 = new JLabel("Estado de vigencia: ");
-		lblNewLabel_1.setBounds(20, 224, 112, 14);
+		JLabel lblNewLabel_1 = new JLabel("Estado: ");
+		lblNewLabel_1.setBounds(20, 224, 85, 14);
 		contentPane.add(lblNewLabel_1);
 		
 		JComboBox comboBox = new JComboBox();
@@ -121,7 +121,7 @@ public class RegistrarServicio extends JFrame {
 			
 		}
 		
-		btnAceptar.addActionListener((actionEvent) -> {
+		btnGuardar.addActionListener((actionEvent) -> {
 			try {
 				String nombre = tfNombre.getText();
 				String descripcion = textArea.getText();
