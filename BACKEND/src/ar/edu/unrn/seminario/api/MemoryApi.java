@@ -44,12 +44,6 @@ public class MemoryApi implements IApi {
 	@Override
 	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException {
 		
-		if (nombre== null || nombre.trim().isEmpty()|| apellido ==null || apellido.trim().isEmpty()) {
-			throw new DatoVacioException("El nombre y el apellido no pueden estar vacios");
-		}
-		if (dni <= 0) {
-            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
-		}
 		for (Cliente a : this.clientes) {
 			if (a.getDni()== dni) {
 				a.setDni(dni);
