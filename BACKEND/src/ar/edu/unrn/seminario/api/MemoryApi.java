@@ -263,16 +263,12 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,
-			String nombre, boolean esActivo) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException{
-
-		if (planExiste(nombre)) throw new EntidadDuplicadaException("Ya existe esta entidad");
-		
+	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,	String nombre, boolean esActivo) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException{
+		boolean existe = this.planes.stream().anyMatch(s -> s.getNombre().equalsIgnoreCase(nombre)); throw new EntidadDuplicadaException("Ya existe esta entidad");
 		ArrayList<Servicio> servicios = new ArrayList<>();
 		for (ServicioDTO dto : listaServicios) { 			
 			servicios.add(HotelMapper.aModelo(dto));
 		}
-		
 		Plan planadd= new Plan(servicios,costo ,nombre, esActivo);
 		this.planes.add(planadd);
 		
@@ -280,32 +276,9 @@ public class MemoryApi implements IApi {
 	}
 	
 	
-	public boolean planExiste(String nombre) {
-		boolean s =false;
-	for (Plan a : this.planes) {
-		if (a.getNombre().equals(nombre)) s = true;
-	}
-		
-		return s;
-		
-	}
-
 	@Override
 	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre,boolean esActivo) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException{
-			if (!planExiste(nombre)) throw new EntidadNoEncontradaException("Plan no existe");
-			if(costo<0)throw new ValorInvalidoException("valor no valido ");
-			if(nombre.trim().isEmpty() || nombre==null)throw new DatoVacioException("coloca nombre");
-			if(listaServicios==null||listaServicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
-		ArrayList<Servicio> servicios = new ArrayList<>();
-		for (ServicioDTO dto : listaServicios) {
-			servicios.add(HotelMapper.aModelo(dto));
-		for (Plan a : this.planes) {
-			if (a.getNombre().equals(nombre)) {
-				a.setServicios(servicios);
-				a.setCosto(costo);
-				a.setNombre(nombre);
-				a.setEstadoActivo(esActivo);
-			}}}
+
 	}
 	@Override
 	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException{

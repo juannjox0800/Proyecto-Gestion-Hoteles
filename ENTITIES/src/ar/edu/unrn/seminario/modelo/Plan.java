@@ -12,15 +12,11 @@ public class Plan {
 	private String nombre;
 	private boolean estadoActivo;
 
-	public Plan(List<Servicio> servicios, int costo, String nombre, boolean estadoActivo) throws DatoVacioException, ValorInvalidoException{
-		if (nombre==null||nombre.trim().isEmpty())  throw new DatoVacioException("coloca un nombre");
-		if(servicios==null||servicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
-		if (costo<0) throw new ValorInvalidoException("valor invalido de costo");
-		
-		this.servicios = servicios;
-		this.costo = costo;
-		this.nombre = nombre;
-		this.estadoActivo = estadoActivo;
+	public Plan(List<Servicio> servicios, int costo, String nombre, boolean estadoActivo)throws valorInvalidoException,DatoVacioException{
+		this.setServicios(servicios);
+		this.setCosto(costo);
+		this.setNombre(nombre);
+		this.setServicios(servicios);
 	}
 
 	public Plan(int costo, String nombre, boolean estadoActivo) {
@@ -34,15 +30,18 @@ public class Plan {
 		return servicios;
 	}
 
-	public void setServicios(List<Servicio> servicios) {
-		this.servicios = servicios;
+	public void setServicios(List<Servicio> servicios)throws valorInvalidoException {
+		for (Servicio a : servicios) {
+			this.agregarServicio(a);
+		}
 	}
 
 	public int getCosto() {
 		return costo;
 	}
 
-	public void setCosto(int costo) {
+	public void setCosto(int costo) throws valorInvalidoException{
+		if (costo<0) throw new ValorInvalidoException("costo invalido, vuelve a escribir uno");
 		this.costo = costo;
 	}
 
@@ -50,7 +49,8 @@ public class Plan {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(String nombre) throws DatoVacioException{
+		if (nombre.trim().isEmpty()|| nombre==null) throw new DatoVacioException("nombre vacio, escribe un nombre para el plan");
 		this.nombre = nombre;
 	}
 
@@ -65,8 +65,13 @@ public class Plan {
 		return estadoActivo;
 	}
 
-	public void agregarServicio(Servicio servicio) {
+	public void agregarServicio(Servicio servicio) throws valorInvalidoException {
+
+		if (servicio.getDescripcion() == null||servicio.getDescripcion().trim().isEmpty() || servicio.getNombre()== null ||servicio.getNombre().trim().isEmpty() ||servicio.getPrecio()<0 || servicio.isEstadoVigente()==false) {
+			throw new valorInvalidoException("intentaste ingresar servicios invalidos, chequealos y vuelve a intentar");
+		}
 		servicios.add(servicio);
+		
 	}
 
 	public void eliminarServicio(Servicio servicio) {
