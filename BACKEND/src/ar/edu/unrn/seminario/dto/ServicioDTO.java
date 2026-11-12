@@ -4,10 +4,10 @@ public class ServicioDTO {
 
 	private String nombre;
 	private String descripcion;
-	private int precio;
+	private float precio;
 	private boolean estadoVigente;
 	
-	public ServicioDTO(String nombre, String descripcion, int precio, boolean estadoVigente) {
+	public ServicioDTO(String nombre, String descripcion, float precio, boolean estadoVigente) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.precio = precio;
@@ -30,11 +30,11 @@ public class ServicioDTO {
 		this.descripcion = descripcion;
 	}
 	
-	public int getPrecio() {
+	public float getPrecio() {
 		return precio;
 	}
 	
-	public void setPrecio(int precio) {
+	public void setPrecio(float precio) {
 		this.precio = precio;
 	}
 	

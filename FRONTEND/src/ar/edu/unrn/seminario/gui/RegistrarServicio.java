@@ -125,7 +125,7 @@ public class RegistrarServicio extends JFrame {
 			try {
 				String nombre = tfNombre.getText();
 				String descripcion = textArea.getText();
-				int precio = Integer.parseInt(tfPrecio.getText());
+				float precio = Float.parseFloat(tfPrecio.getText());
 				boolean estadoVigente = comboBox.getSelectedItem().toString().equals("Activo");
 				
 				if (nombreOriginal == null) {

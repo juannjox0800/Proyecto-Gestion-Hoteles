@@ -9,10 +9,10 @@ public class Servicio {
 
 	private String nombre;
 	private String descripcion;
-	private int precio;
+	private float precio;
 	private boolean estadoVigente;
 	
-	public Servicio(String nombre, String descripcion, int precio, boolean estadoVigente ) throws DatoVacioException, ValorInvalidoException{
+	public Servicio(String nombre, String descripcion, float precio, boolean estadoVigente ) throws DatoVacioException, ValorInvalidoException{
 		this.setNombre(nombre);
 		this.setDescripcion(descripcion);
 		this.setPrecio(precio);
@@ -37,11 +37,11 @@ public class Servicio {
 		this.descripcion = descripcion;
 	}
 
-	public int getPrecio() {
+	public float getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(int precio) throws ValorInvalidoException{
+	public void setPrecio(float precio) throws ValorInvalidoException{
 		if (precio < 0) 
 			throw new ValorInvalidoException ("El precio del servicio no puede ser negativo");
 		this.precio = precio;
