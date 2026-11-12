@@ -282,42 +282,24 @@ public class MemoryApi implements IApi {
 	}
 	@Override
 	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException{
-		if (!planExiste(nombre))throw new EntidadNoEncontradaException("Plan no existe"); 
-			this.planes.removeIf(p -> p.getNombre().equals(nombre));
+			boolean eliminado = this.planes.removeIf(h -> h.getNombre()==nombre);		
+			if (!eliminado) {
+				throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
+				}
 	}
 
 	@Override
 	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException{
-		if (!planExiste(nombre))
-			for(Plan p : this.planes) {
-				if (p.getNombre().equals(nombre)) {
-					return HotelMapper.aDTO(p);
-				}
-			
+		Optional<Plan> plan = planes.stream().filter(h -> h.getNombre() == nombre).findFirst();		
+		if(plan.isPresent()) {
+			PlanDTO dto = HotelMapper.aDTO(plan.get());
+			return dto;
+		}else {
+			throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
 		}
-		throw new EntidadNoEncontradaException("Plan no existe");
-
 		
-	}
-	@Override
-	public void guardarListaPLan(List <PlanDTO> listaNueva) throws DatoVacioException, ValorInvalidoException{
-		List<Plan> listaGuardar= new ArrayList<>();
-		for(PlanDTO a: listaNueva) {
-			listaGuardar.add(HotelMapper.aModelo(a));
-		}
-		this.planes.clear();
-		this.planes.addAll(listaGuardar);
-	}
-
-	@Override
-	public List<PlanDTO> obtenerListaPlan() {
-		ArrayList <PlanDTO> planesDTO=new ArrayList<>();
-		for (Plan p: this.planes) {
-			planesDTO.add(HotelMapper.aDTO(p));
-		}
-		return planesDTO;
-	}
 	
+	}
 	
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
