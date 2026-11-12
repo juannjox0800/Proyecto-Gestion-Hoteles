@@ -90,15 +90,15 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void registrarServicio(String nombre, String descripcion, int precio, boolean estadoVigente)
+	public void registrarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)
 			throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente)
-			throws EntidadNoEncontradaException {
+	public void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)
+			throws EntidadNoEncontradaException, ValorInvalidoException {
 		// TODO Auto-generated method stub
 		
 	}
