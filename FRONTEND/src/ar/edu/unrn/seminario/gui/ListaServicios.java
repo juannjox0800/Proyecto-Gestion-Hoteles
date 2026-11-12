@@ -36,15 +36,15 @@ public class ListaServicios extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setBounds(10, 227, 89, 23);
+		btnSalir.setBounds(335, 227, 89, 23);
 		contentPane.add(btnSalir);
 		
 		JButton btnEliminarServicio = new JButton("Eliminar");
-		btnEliminarServicio.setBounds(335, 179, 89, 23);
+		btnEliminarServicio.setBounds(218, 179, 89, 23);
 		contentPane.add(btnEliminarServicio);
 		
 		JButton btnModificarServicio = new JButton("Modificar");
-		btnModificarServicio.setBounds(235, 179, 89, 23);
+		btnModificarServicio.setBounds(118, 179, 89, 23);
 		contentPane.add(btnModificarServicio);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -58,7 +58,17 @@ public class ListaServicios extends JFrame {
 			new String[] {
 				"Nombre", "Precio", "Estado vigencia"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getColumnModel().getColumn(1).setResizable(false);
+		table.getColumnModel().getColumn(2).setResizable(false);
 		table.getColumnModel().getColumn(2).setPreferredWidth(92);
 		scrollPane.setViewportView(table);
 		

@@ -9,27 +9,23 @@ public class Servicio {
 
 	private String nombre;
 	private String descripcion;
-	private int precio;
+	private float precio;
 	private boolean estadoVigente;
 	
-	public Servicio(String nombre, String descripcion, int precio, boolean estadoVigente ) throws DatoVacioException, ValorInvalidoException{
-		if (nombre == null || nombre.trim().isEmpty())
-			throw new DatoVacioException("El nombre del servicio es obligatorio");
-		
-		if (precio < 0) 
-			throw new ValorInvalidoException ("El precio del servicio no puede ser negativo");
-		
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.precio = precio;
-		this.estadoVigente = estadoVigente;
+	public Servicio(String nombre, String descripcion, float precio, boolean estadoVigente ) throws DatoVacioException, ValorInvalidoException{
+		this.setNombre(nombre);
+		this.setDescripcion(descripcion);
+		this.setPrecio(precio);
+		this.setEstadoVigente(estadoVigente);
 	}
 
 	public String getNombre() {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(String nombre) throws DatoVacioException{
+		if (nombre == null || nombre.trim().isEmpty())
+			throw new DatoVacioException("El nombre del servicio es obligatorio");
 		this.nombre = nombre;
 	}
 
@@ -41,11 +37,13 @@ public class Servicio {
 		this.descripcion = descripcion;
 	}
 
-	public int getPrecio() {
+	public float getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(int precio) {
+	public void setPrecio(float precio) throws ValorInvalidoException{
+		if (precio < 0) 
+			throw new ValorInvalidoException ("El precio del servicio no puede ser negativo");
 		this.precio = precio;
 	}
 

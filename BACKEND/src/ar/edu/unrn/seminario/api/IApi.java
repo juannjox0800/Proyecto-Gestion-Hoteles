@@ -68,8 +68,8 @@ public interface IApi {
 	List <HabitacionDTO>obtenerListaHabitacion();
 
 	
-	void registrarServicio(String nombre,String descripcion, int precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
-	void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente) throws EntidadNoEncontradaException;
+	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
+	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException;
 	void eliminarServicio(String nombre)throws EntidadNoEncontradaException;
 	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException;
 
