@@ -296,7 +296,7 @@ public class MemoryApi implements IApi {
 	}
 	@Override
 	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException{
-			boolean eliminado = this.planes.removeIf(h -> h.getNombre()==nombre);		
+			boolean eliminado = this.planes.removeIf(h -> h.getNombre().equalsIgnoreCase(nombre));		
 			if (!eliminado) {
 				throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
 				}
@@ -304,7 +304,7 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException{
-		Optional<Plan> plan = planes.stream().filter(h -> h.getNombre() == nombre).findFirst();		
+		Optional<Plan> plan = planes.stream().filter(h -> h.getNombre().equalsIgnoreCase(nombre)).findFirst();		
 		if(plan.isPresent()) {
 			PlanDTO dto = HotelMapper.aDTO(plan.get());
 			return dto;

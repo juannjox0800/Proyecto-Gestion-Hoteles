@@ -139,6 +139,8 @@ public class RegistrarPlan extends JFrame {
 		contentPane.add(btnAgregarServicio);
 
 		if(planAEditar!=null) {
+		     actualizarPrecio(api);
+
 			tFNombre.setText(planAEditar.getNombre());
 	        tFNombre.setEditable(false);
 	        tFCosto.setText(String.valueOf(planAEditar.getCosto()));
@@ -147,7 +149,8 @@ public class RegistrarPlan extends JFrame {
 	            for (ServicioDTO servicio : planAEditar.getServicios()) {
 	                serviciosSeleccionados.add(servicio);
 	                DefaultTableModel modeloTabla = (DefaultTableModel) TableServiciosIncluidos.getModel();
-	                modeloTabla.addRow(new Object[] { servicio.getNombre() });
+	                modeloTabla.addRow(new Object[] { servicio.getNombre()
+	                		});
 	            }
 	        }
 		}

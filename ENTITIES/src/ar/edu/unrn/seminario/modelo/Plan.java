@@ -33,6 +33,7 @@ public class Plan {
 	}
 
 	public void setServicios(List<Servicio> servicios)throws ValorInvalidoException, EntidadDuplicadaException {
+		this.servicios = new ArrayList<>();
 		for (Servicio a : servicios) {
 			this.agregarServicio(a);
 		}
@@ -70,7 +71,7 @@ public class Plan {
 	public void agregarServicio(Servicio servicio) throws ValorInvalidoException, EntidadDuplicadaException {
 		boolean yaAgregado = servicios.stream().anyMatch(s -> s.getNombre().equalsIgnoreCase(servicio.getNombre()));	
 		if (yaAgregado) throw new EntidadDuplicadaException("ya se encuentra ese servicio en el plan");
-		if (servicio.getDescripcion() == null||servicio.getDescripcion().trim().isEmpty() || servicio.getNombre()== null ||servicio.getNombre().trim().isEmpty() ||servicio.getPrecio()<0 || servicio.isEstadoVigente()==false) {
+		if ( servicio.getNombre()== null ||servicio.getNombre().trim().isEmpty() ||servicio.getPrecio()<0 || servicio.isEstadoVigente()==false) {
 			throw new ValorInvalidoException("intentaste ingresar servicios invalidos, chequealos y vuelve a intentar");
 		}
 		servicios.add(servicio);
