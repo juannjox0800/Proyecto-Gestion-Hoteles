@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.unrn.seminario.accesos.HabitacionDao;
+import ar.edu.unrn.seminario.accesos.HabitacionDAOJDBC;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
@@ -16,9 +18,17 @@ import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.modelo.Habitacion;
 
 public class PersistenceApi implements IApi{
+	
+	private HabitacionDao habitacionDao;
+	
 
+	public PersistenceApi() {
+		habitacionDao = new HabitacionDAOJDBC();
+	}
+	
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni)
 			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
@@ -60,7 +70,8 @@ public class PersistenceApi implements IApi{
 	@Override
 	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas)
 			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
-		// TODO Auto-generated method stub
+		Habitacion h = habitacionDao.find(numero);
+		this.habitacionDao.create(h);
 		
 	}
 
