@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.unrn.seminario.accesos.ServicioDAO;
+import ar.edu.unrn.seminario.accesos.ServicioDAOJDBC;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
@@ -16,8 +18,16 @@ import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
+import ar.edu.unrn.seminario.modelo.Servicio;
 
 public class PersistenceApi implements IApi{
+	
+	private ServicioDAO servicioDao;
+	
+	public PersistenceApi(){
+		servicioDao = new ServicioDAOJDBC();
+	}
 
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni)
@@ -92,33 +102,46 @@ public class PersistenceApi implements IApi{
 	@Override
 	public void registrarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)
 			throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
-		// TODO Auto-generated method stub
-		
+		Servicio servicio = new Servicio(nombre, descripcion, precio, estadoVigente);
+		this.servicioDao.create(servicio);
 	}
 
 	@Override
 	public void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)
 			throws EntidadNoEncontradaException, ValorInvalidoException {
-		// TODO Auto-generated method stub
 		
+		Servicio servicio = servicioDao.find(nombre);
+		
+		servicio.setDescripcion(descripcion);
+		servicio.setPrecio(precio);
+		servicio.setEstadoVigente(estadoVigente);
+		
+		servicioDao.update(servicio);
 	}
 
 	@Override
 	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
+		Servicio servicio = servicioDao.find(nombre);
 		
+		servicioDao.remove(servicio);
 	}
 
 	@Override
 	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
-		return null;
+		Servicio servicio = servicioDao.find(nombre);		
+		return HotelMapper.aDTO(servicio);
 	}
 
 	@Override
 	public List<ServicioDTO> obtenerListaServicios() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Servicio> servicios = servicioDao.findAll();
+		List<ServicioDTO> serviciosDTO = new ArrayList<>();
+		
+		for (Servicio s : servicios) {
+			serviciosDTO.add(HotelMapper.aDTO(s));
+		}
+		
+		return serviciosDTO;
 	}
 
 	@Override
