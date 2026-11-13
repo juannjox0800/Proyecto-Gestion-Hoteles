@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
@@ -31,7 +32,6 @@ public class ListaPlanes extends JFrame {
 
 
 	public ListaPlanes(IApi api) {
-		List<PlanDTO> listaTemporal = new ArrayList<>(api.obtenerListaPlan());
 		setTitle("Lista de planes ");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 275);
@@ -49,10 +49,9 @@ public class ListaPlanes extends JFrame {
 				"Nombre", "Estado", "Costo"
 			};
 		DefaultTableModel modelo = new DefaultTableModel(null, columnas);
-		List <PlanDTO>ListaPlanes = api.obtenerListaPlan();
-		for (PlanDTO a : ListaPlanes) {
+		for (PlanDTO a : api.obtenerListaPlan()) {
 			String nombre = a.getNombre();
-			int costo = a.getCosto();
+			float costo = a.getCosto();
 			String estado = "Activo";
 			if (a.isEstadoActivo()== false) estado="Inactivo";
 			modelo.addRow(new Object[] {nombre, estado, costo});
@@ -67,29 +66,6 @@ public class ListaPlanes extends JFrame {
 		btnEliminarPlan.setBounds(109, 152, 89, 23);
 		btnEliminarPlan.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				 int filaSeleccionada = jtListaPlanes.getSelectedRow();
-				 if (filaSeleccionada!=-1) {
-					 String nombrePlanSeleccionado = (String) jtListaPlanes.getValueAt(filaSeleccionada, 0);
-			            
-			            PlanDTO planAEliminar = null;
-			            for (PlanDTO plan : listaTemporal) {
-			                if (plan.getNombre().equals(nombrePlanSeleccionado)) {
-			                    planAEliminar = plan;
-			                }
-			            }
-			            if (planAEliminar != null) {
-			                listaTemporal.remove(planAEliminar);
-			                
-			                DefaultTableModel modelo = (DefaultTableModel) jtListaPlanes.getModel();
-			                JOptionPane.showMessageDialog(null, "Plan marcado para eliminar. Pulse Aceptar para guardar cambios.");
-			                modelo.removeRow(filaSeleccionada);
-			            } else {
-			            	JOptionPane.showMessageDialog(null, "el plan seleccionado no existe");
-			            }
-				 }else {
-		                JOptionPane.showMessageDialog(null, "No has seleccionado plan. Selecciona uno.");
-
-				 }
 			}
 		});
 		contentPane.add(btnEliminarPlan);
@@ -98,32 +74,6 @@ public class ListaPlanes extends JFrame {
 		btnModificarPlan.setBounds(10, 152, 89, 23);
 		btnModificarPlan.addActionListener(new ActionListener(){
 		    public void actionPerformed(ActionEvent e) {
-		        int filaSeleccionada = jtListaPlanes.getSelectedRow();
-		        if (filaSeleccionada == -1) {
-		            JOptionPane.showMessageDialog(null, "No has seleccionado plan. Selecciona uno.");
-		            return;
-		        }
-		        String nombrePlanSeleccionado = (String) jtListaPlanes.getValueAt(filaSeleccionada, 0);
-		        PlanDTO planAModificar = null;
-		        for (PlanDTO plan : listaTemporal) {
-		            if (plan.getNombre().equals(nombrePlanSeleccionado)) {
-		                planAModificar = plan;
-		            }
-		        }
-
-		        if (planAModificar == null) {
-		            JOptionPane.showMessageDialog(null, "El plan seleccionado no existe en la lista.");
-		        } else {
-		            RegistrarPlan ventana = new RegistrarPlan(api, planAModificar);
-		            ventana.addWindowListener(new WindowAdapter() {
-		                @Override
-		                public void windowClosed(WindowEvent we) {
-		                    actualizarPlanEnLista(api, listaTemporal, nombrePlanSeleccionado);
-		                    refrescarTabla(listaTemporal);
-		                }
-		            });
-		            ventana.setVisible(true);
-		        }
 		    }
 		});
 		contentPane.add(btnModificarPlan);
@@ -131,18 +81,7 @@ public class ListaPlanes extends JFrame {
 		JButton btnAceptarPlan = new JButton("Aceptar");
 		btnAceptarPlan.setBounds(236, 202, 89, 23);
 		btnAceptarPlan.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e){
-				try {
-					api.guardarListaPLan(listaTemporal);
-					JOptionPane.showMessageDialog(null,"Lista Modificada exitosamente" );
-					dispose();
-				} catch (DatoVacioException e1) {
-					JOptionPane.showMessageDialog(null, "Error al guardar: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				} catch (ValorInvalidoException e2) {
-					JOptionPane.showMessageDialog(null, "Error al guardar: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				
-			}
+			public void actionPerformed(ActionEvent e){}
 		});
 		contentPane.add(btnAceptarPlan);
 		
@@ -157,27 +96,14 @@ public class ListaPlanes extends JFrame {
 		contentPane.add(btnCancelarPlan);
 
 	}
-	private void refrescarTabla(List<PlanDTO>listaTemporal) {
-	    DefaultTableModel modelo = (DefaultTableModel) jtListaPlanes.getModel();
-	    modelo.setRowCount(0); 	    
-	    for (PlanDTO plan : listaTemporal) {
-	        modelo.addRow(new Object[] {
-	            plan.getNombre(),
-	            plan.isEstadoActivo() ? "Activo" : "Inactivo",
-	            plan.getCosto()
-	        });
-	    }
-	    
-	}
-	private void actualizarPlanEnLista(IApi api, List<PlanDTO> listaTemporal, String nombre) {
-	    for (PlanDTO actualizado : api.obtenerListaPlan()) {
-	        if (actualizado.getNombre().equals(nombre)) {
-	            for (int i = 0; i < listaTemporal.size(); i++) {
-	                if (listaTemporal.get(i).getNombre().equals(nombre)) {
-	                    listaTemporal.set(i, actualizado);
-	                }
-	            }
-	        }
-	    }
-	}
+	/*	private void recargarTabla(IApi api) {
+		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+		modelo.setRowCount(0);
+		
+		for (ServicioDTO dto : api.obtenerListaServicios()) {
+			modelo.addRow(new Object[] {
+					dto.getNombre(), "$" + dto.getPrecio(), dto.isEstadoVigente() ? "Activo" : "Inactivo"
+			});
+		}
+	}*/
 }

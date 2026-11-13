@@ -5,11 +5,11 @@ import java.util.List;
 
 public class PlanDTO {
 	private List<ServicioDTO> servicios;
-	private int costo;
+	private float costo;
 	private String nombre;
 	private boolean estadoActivo;
 	
-	public PlanDTO(List<ServicioDTO> servicios, int costo, String nombre,boolean EstadoActivo) {
+	public PlanDTO(List<ServicioDTO> servicios, float costo, String nombre,boolean EstadoActivo) {
 		this.servicios = servicios;
 		this.costo = costo;
 		this.nombre = nombre;
@@ -24,7 +24,7 @@ public class PlanDTO {
 		this.servicios = servicios;
 	}
 
-	public int getCosto() {
+	public float getCosto() {
 		return costo;
 	}
 
