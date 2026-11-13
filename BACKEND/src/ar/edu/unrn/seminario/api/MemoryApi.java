@@ -12,6 +12,7 @@ import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.mapper.HotelMapper;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
@@ -42,21 +43,17 @@ public class MemoryApi implements IApi {
 
 
 	@Override
-	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException {
-		
-		for (Cliente a : this.clientes) {
-			if (a.getDni()== dni) {
-				a.setDni(dni);
-				a.setNombre(nombre);
-				a.setApellido(apellido);
-				a.setContacto(contacto);
-				return;
-			}
-			
-		}
-		throw new EntidadNoEncontradaException ("El cliente a modificar no existe en el sistema");
+	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException,ValorInvalidoException {
+		Cliente cliente = this.clientes.stream()
+	            .filter(c -> c.getDni() == dni)
+	            .findFirst()
+	            .orElseThrow(() -> new EntidadNoEncontradaException("El cliente a modificar no existe en el sistema"));
+	    
+	    
+	    cliente.setNombre(nombre);
+	    cliente.setApellido(apellido);
+	    cliente.setContacto(contacto);
 	}
-	
 	@Override
 	public void eliminarCliente(int dni) throws EntidadNoEncontradaException{
 		if (!existeCliente(dni)) {
