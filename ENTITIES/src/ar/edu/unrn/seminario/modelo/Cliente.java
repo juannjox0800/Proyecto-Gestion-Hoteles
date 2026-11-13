@@ -12,27 +12,24 @@ public class Cliente {
 	private int dni;
 	
 	public Cliente(String nombre, String apellido, String contacto, int dni) throws DatoVacioException, ValorInvalidoException{
-		
-		if (nombre== null || nombre.trim().isEmpty()|| apellido ==null || apellido.trim().isEmpty()) {
-			throw new DatoVacioException("El nombre y el apellido no pueden estar vacios");
-		}
-		if (nombre.matches(".*\\d.*") || apellido.matches(".*\\d.*")) {
-	        throw new ValorInvalidoException("El nombre y el apellido no pueden contener números.");
-	    }
-		if (dni <= 0) {
-            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
-		}
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.contacto = contacto;
-		this.dni = dni;
+		setNombre(nombre);
+        setApellido(apellido);
+        setContacto(contacto);
+        setDni(dni);
 	}
 
 	public String getNombre() {
+		
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(String nombre) throws DatoVacioException, ValorInvalidoException{
+		if (nombre== null || nombre.trim().isEmpty()) {
+			throw new DatoVacioException("El nombre no puede estar vacio");
+		}
+		if (nombre.matches(".*\\d.*")){
+	        throw new ValorInvalidoException("El nombre no puede contener números.");
+	    }
 		this.nombre = nombre;
 	}
 
@@ -40,7 +37,13 @@ public class Cliente {
 		return apellido;
 	}
 
-	public void setApellido(String apellido) {
+	public void setApellido(String apellido) throws DatoVacioException, ValorInvalidoException {
+		if (apellido ==null || apellido.trim().isEmpty()) {
+			throw new DatoVacioException("El apellido no puede estar vacio");
+		}
+		if (apellido.matches(".*\\d.*")) {
+	        throw new ValorInvalidoException("El apellido no puede contener números.");
+	    }
 		this.apellido = apellido;
 	}
 
@@ -56,7 +59,10 @@ public class Cliente {
 		return dni;
 	}
 
-	public void setDni(int dni) {
+	public void setDni(int dni) throws DatoVacioException {
+		if (dni <= 0) {
+            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
+		}
 		this.dni = dni;
 	}
 
