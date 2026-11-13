@@ -18,7 +18,9 @@ import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 
+
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 
 import ar.edu.unrn.seminario.mapper.HotelMapper;
 
@@ -60,27 +62,17 @@ public class MemoryApi implements IApi {
 
 
 	@Override
-	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException {
-		
-		if (nombre== null || nombre.trim().isEmpty()|| apellido ==null || apellido.trim().isEmpty()) {
-			throw new DatoVacioException("El nombre y el apellido no pueden estar vacios");
-		}
-		if (dni <= 0) {
-            throw new DatoVacioException("El DNI no puede estar vacío o ser inválido.");
-		}
-		for (Cliente a : this.clientes) {
-			if (a.getDni()== dni) {
-				a.setDni(dni);
-				a.setNombre(nombre);
-				a.setApellido(apellido);
-				a.setContacto(contacto);
-				return;
-			}
-			
-		}
-		throw new EntidadNoEncontradaException ("El cliente a modificar no existe en el sistema");
+	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException,ValorInvalidoException {
+		Cliente cliente = this.clientes.stream()
+	            .filter(c -> c.getDni() == dni)
+	            .findFirst()
+	            .orElseThrow(() -> new EntidadNoEncontradaException("El cliente a modificar no existe en el sistema"));
+	    
+	    
+	    cliente.setNombre(nombre);
+	    cliente.setApellido(apellido);
+	    cliente.setContacto(contacto);
 	}
-	
 	@Override
 	public void eliminarCliente(int dni) throws EntidadNoEncontradaException{
 		if (!existeCliente(dni)) {

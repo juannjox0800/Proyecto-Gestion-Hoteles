@@ -49,14 +49,14 @@ public class RegistrarCliente extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNombre = new JLabel("Nombre:");
+		JLabel lblNombre = new JLabel("Nombre(*):");
 		lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblNombre.setBounds(59, 44, 59, 20);
+		lblNombre.setBounds(59, 44, 72, 20);
 		contentPane.add(lblNombre);
 		
-		JLabel lblApellido = new JLabel("Apellido:");
+		JLabel lblApellido = new JLabel("Apellido(*):");
 		lblApellido.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblApellido.setBounds(59, 82, 59, 20);
+		lblApellido.setBounds(59, 82, 72, 20);
 		contentPane.add(lblApellido);
 		
 		JLabel lblContacto = new JLabel("Contacto:");
@@ -64,7 +64,7 @@ public class RegistrarCliente extends JFrame {
 		lblContacto.setBounds(59, 123, 72, 20);
 		contentPane.add(lblContacto);
 		
-		JLabel lblDNI = new JLabel("DNI:");
+		JLabel lblDNI = new JLabel("DNI(*):");
 		lblDNI.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDNI.setBounds(59, 161, 46, 17);
 		contentPane.add(lblDNI);
