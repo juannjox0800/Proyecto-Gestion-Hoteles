@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,8 +23,10 @@ import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.*;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -36,45 +40,47 @@ public class RegistrarPlan extends JFrame {
 	private JTextField tFNombre;
 	private JTextField tFCosto;
 	private JTable TableServiciosIncluidos;
+	private JTextField tfABuscar;
+	private float precioRecomendado;
+	private JLabel lblCostoRecomendado;
 
 
-	public RegistrarPlan(IApi api) {this(api,null);}
+	public RegistrarPlan(IApi api)throws DatoVacioException {this(api,null);}
 	
 	
-	/**
-	 * @wbp.parser.constructor
-	 */
-	public RegistrarPlan(IApi api, PlanDTO planExistente) {
+	public RegistrarPlan(IApi api, PlanDTO planExistente) throws DatoVacioException {
 		this.planAEditar=planExistente;
-		
+		if (api.obtenerListaServicios().isEmpty()) {
+		    throw new DatoVacioException( "No hay ningún servicio cargado");
+		}
 		setTitle("Registrar Plan");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 426, 336);
+		setBounds(100, 100, 527, 425);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNombrePlan = new JLabel("Nombre(*)");
-		lblNombrePlan.setBounds(46, 34, 75, 14);
+		lblNombrePlan.setBounds(10, 42, 75, 14);
 		contentPane.add(lblNombrePlan);
 		
 		JLabel lblCostoPlan = new JLabel("Costo(*)");
-		lblCostoPlan.setBounds(46, 59, 75, 14);
+		lblCostoPlan.setBounds(10, 63, 75, 14);
 		contentPane.add(lblCostoPlan);
 		
 		tFNombre = new JTextField();
-		tFNombre.setBounds(127, 31, 195, 20);
+		tFNombre.setBounds(127, 36, 195, 20);
 		contentPane.add(tFNombre);
 		tFNombre.setColumns(10);
 		
 		tFCosto = new JTextField();
 		tFCosto.setColumns(10);
-		tFCosto.setBounds(127, 56, 195, 20);
+		tFCosto.setBounds(127, 60, 195, 20);
 		contentPane.add(tFCosto);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(46, 113, 276, 82);
+		scrollPane.setBounds(155, 167, 278, 90);
 		contentPane.add(scrollPane);
 		
 		TableServiciosIncluidos = new JTable();
@@ -90,27 +96,51 @@ public class RegistrarPlan extends JFrame {
 		TableServiciosIncluidos.getColumnModel().getColumn(0).setPreferredWidth(150);
 		scrollPane.setViewportView(TableServiciosIncluidos);
 		
+		JComboBox cbServicios = new JComboBox();
+		String[] nombres = api.obtenerListaServicios().stream()
+		        .filter(ServicioDTO::isEstadoVigente)
+		        .map(ServicioDTO::getNombre)
+		        .toArray(String[]::new);
+		cbServicios.setModel(new DefaultComboBoxModel<>(nombres));
+		cbServicios.setBounds(10, 167, 135, 22);
+		contentPane.add(cbServicios);
+		
 		JButton btnAgregarServicio = new JButton("Agregar Servicio");
-		btnAgregarServicio.setBounds(191, 203, 131, 23);
+		btnAgregarServicio.setBounds(10, 200, 135, 23);
 		btnAgregarServicio.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				List<ServicioDTO> lista = api.obtenerListaServicios();
-		        if (lista == null || lista.isEmpty()) {
-		            JOptionPane.showMessageDialog(null, "No hay servicios registrados en el sistema. Debe dar de alta al menos uno.","Aviso", JOptionPane.WARNING_MESSAGE);
-		        } else {
-		            VentanaSeleccionarServicio ventanaSeleccion = new VentanaSeleccionarServicio(api, RegistrarPlan.this);
-		            ventanaSeleccion.setVisible(true);
-		        }
-		}
-		});
+			    try {
+			        if (cbServicios.getSelectedIndex() == -1) {
+			            throw new ValorInvalidoException("Selecciona un servicio a agregar");
+			        }
+
+			        ServicioDTO servicioSelec = api.obtenerServicio(cbServicios.getSelectedItem().toString());
+
+			        boolean yaAgregado = serviciosSeleccionados.stream()
+			                .anyMatch(s -> s.getNombre().equalsIgnoreCase(servicioSelec.getNombre()));
+			        if (yaAgregado) {
+			            throw new EntidadDuplicadaException("El servicio ya fue agregado al plan");
+			        }
+
+			        serviciosSeleccionados.add(servicioSelec);
+			        ((DefaultTableModel) TableServiciosIncluidos.getModel())
+			                .addRow(new Object[] { servicioSelec.getNombre() });
+			     actualizarPrecio(api);
+
+			    } catch (ValorInvalidoException | EntidadNoEncontradaException | EntidadDuplicadaException ex) {
+			        JOptionPane.showMessageDialog(null, ex.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
+			    }
+			}});
 		
 		JComboBox cBActivo = new JComboBox<>();
 		cBActivo.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
-		cBActivo.setBounds(127, 84, 195, 22);
+		cBActivo.setBounds(127, 109, 195, 22);
 		contentPane.add(cBActivo);
 		contentPane.add(btnAgregarServicio);
 
 		if(planAEditar!=null) {
+		     actualizarPrecio(api);
+
 			tFNombre.setText(planAEditar.getNombre());
 	        tFNombre.setEditable(false);
 	        tFCosto.setText(String.valueOf(planAEditar.getCosto()));
@@ -119,61 +149,43 @@ public class RegistrarPlan extends JFrame {
 	            for (ServicioDTO servicio : planAEditar.getServicios()) {
 	                serviciosSeleccionados.add(servicio);
 	                DefaultTableModel modeloTabla = (DefaultTableModel) TableServiciosIncluidos.getModel();
-	                modeloTabla.addRow(new Object[] { servicio.getNombre() });
+	                modeloTabla.addRow(new Object[] { servicio.getNombre()
+	                		});
 	            }
 	        }
 		}
 		JButton btnGuardarPlan = new JButton("Guardar");
-		btnGuardarPlan.setBounds(167, 263, 89, 23);
-		btnGuardarPlan.addActionListener(new ActionListener(){
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            if (tFCosto.getText().trim().isEmpty()) {
-		                throw new DatoVacioException("El campo costo no puede estar vacío.");
-		            }
-		            int costo = 0;
-		            try {
-		                costo = Integer.parseInt(tFCosto.getText().trim());
-		            } catch (NumberFormatException exception) {
-		                throw new ValorInvalidoException("El costo solo puede contener números enteros válidos.");
-		            }
-
-		            String nombre = tFNombre.getText();
-		            String estadoSeleccionado = (String) cBActivo.getSelectedItem();
-		            boolean esActivo = "Activo".equals(estadoSeleccionado.toString()); 
-		            if (planAEditar == null) {
-		                api.registrarPlan(serviciosSeleccionados, costo, nombre, esActivo);
-		                JOptionPane.showMessageDialog(null, "Plan registrado con éxito");
-		            } else {
-		                api.modificarPlan(serviciosSeleccionados, costo, nombre,esActivo);
-		                JOptionPane.showMessageDialog(null, "Plan modificado con éxito");
-		            }
-		            
-		            dispose(); 
-
-		        } catch (ValorInvalidoException a) {
-		            JOptionPane.showMessageDialog(null, a.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		        } catch (EntidadDuplicadaException b) {
-		            JOptionPane.showMessageDialog(null, b.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		        } catch (DatoVacioException c) {
-		            JOptionPane.showMessageDialog(null, c.getMessage(), "Atención", JOptionPane.ERROR_MESSAGE);
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		btnGuardarPlan.setBounds(395, 352, 89, 23);
+		btnGuardarPlan.addActionListener(ev -> {
+		    try {
+		        String nombre = tFNombre.getText().trim();
+		        float costo = Float.parseFloat(tFCosto.getText().trim());
+		        boolean activo = "Activo".equals(cBActivo.getSelectedItem());
+		        if (planAEditar == null) {
+		            api.registrarPlan(serviciosSeleccionados, costo, nombre, activo);
+		        } else {
+		            api.modificarPlan(serviciosSeleccionados, costo, nombre, activo);
 		        }
+		        JOptionPane.showMessageDialog(null, "Plan guardado correctamente");
+
+		    } catch (NumberFormatException ex) {
+		        JOptionPane.showMessageDialog(null, "El costo debe ser un número válido", "Aviso", JOptionPane.WARNING_MESSAGE);
+		    } catch (DatoVacioException | ValorInvalidoException | EntidadDuplicadaException | EntidadNoEncontradaException ex) {
+		        JOptionPane.showMessageDialog(null, ex.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
 		    }
 		});
 		contentPane.add(btnGuardarPlan);
-		JButton btnCancelarPlan = new JButton("Cancelar");
-		btnCancelarPlan.setBounds(265, 263, 89, 23);
-		btnCancelarPlan.addActionListener(new ActionListener(){
+		JButton btnSalirPlan = new JButton("Salir");
+		btnSalirPlan.setBounds(299, 352, 89, 23);
+		btnSalirPlan.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 		}
 		});
-		contentPane.add(btnCancelarPlan);
+		contentPane.add(btnSalirPlan);
 		
 		JButton btnEliminarServicio = new JButton("Eliminar Servicio");
-		btnEliminarServicio.setBounds(46, 203, 135, 23);
+		btnEliminarServicio.setBounds(10, 234, 135, 23);
 		btnEliminarServicio.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 		        int filaSeleccionada = TableServiciosIncluidos.getSelectedRow();
@@ -182,30 +194,55 @@ public class RegistrarPlan extends JFrame {
 		            DefaultTableModel modelo = (DefaultTableModel) TableServiciosIncluidos.getModel();
 		            modelo.removeRow(filaSeleccionada);
 		            serviciosSeleccionados.remove(filaSeleccionada);
+				     actualizarPrecio(api);
 		    }
 		});
 		contentPane.add(btnEliminarServicio);
 
 		
 		JLabel lblEstado = new JLabel("Estado");
-		lblEstado.setBounds(46, 88, 71, 14);
+		lblEstado.setBounds(10, 113, 71, 14);
 		contentPane.add(lblEstado);
 		
+		 lblCostoRecomendado = new JLabel("Costo recomendado: 0.0");
+		lblCostoRecomendado.setBounds(10, 88, 195, 14);
+		contentPane.add(lblCostoRecomendado);
+		
+		JLabel lblDatosObligatorios = new JLabel("Datos obligatorios (*)");
+		lblDatosObligatorios.setBounds(10, 14, 107, 14);
+		contentPane.add(lblDatosObligatorios);
 
+		
+		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(ev -> {
+		    String texto = tfABuscar.getText().trim().toLowerCase();
+		    if (texto.isEmpty()) {
+		        JOptionPane.showMessageDialog(null, "Ingrese un nombre a buscar", "Aviso", JOptionPane.WARNING_MESSAGE);
+		        return;
+		    }
+
+		    int fila = IntStream.range(0, serviciosSeleccionados.size())
+		            .filter(i -> serviciosSeleccionados.get(i).getNombre().toLowerCase().contains(texto))
+		            .findFirst()
+		            .orElse(-1);
+
+		    if (fila == -1) {
+		        JOptionPane.showMessageDialog(null, "No se encontró el servicio", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+		        return;
+		    }
+		    TableServiciosIncluidos.setRowSelectionInterval(fila, fila);
+		});
+		btnBuscar.setBounds(344, 264, 89, 23);
+		contentPane.add(btnBuscar);
+		
+		tfABuscar = new JTextField();
+		tfABuscar.setBounds(155, 265, 182, 22);
+		contentPane.add(tfABuscar);
+		tfABuscar.setColumns(10);
+		
+		}
+	private void actualizarPrecio(IApi api) {
+	    precioRecomendado = api.calcPrecioServicios(serviciosSeleccionados);
+	    lblCostoRecomendado.setText("Costo recomendado: " + precioRecomendado);
 	}
-	public void agregarServicioATabla(ServicioDTO servicio) {
-		boolean t= true;
-		for(ServicioDTO a: serviciosSeleccionados) {
-			if (a.getNombre().equals(servicio.getNombre())) {
-				t=false;
-			}
-		}
-		if (t==false) 	JOptionPane.showMessageDialog(null, "Ya se encuentra en la lista");
-		else {
-		serviciosSeleccionados.add(servicio);
-		DefaultTableModel modeloTabla = (DefaultTableModel) TableServiciosIncluidos.getModel();
-		modeloTabla.addRow(new String[] { servicio.getNombre() });
-		}
-		}
-	
 }
