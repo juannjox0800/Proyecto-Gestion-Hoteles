@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.unrn.seminario.accesos.ClienteDAO;
+import ar.edu.unrn.seminario.accesos.ClienteDAOJDBC;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
@@ -16,46 +18,67 @@ import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
+import ar.edu.unrn.seminario.modelo.Cliente;
 
 public class PersistenceApi implements IApi{
+	
+private ClienteDAO clienteDao; 
+public PersistenceApi() {
+	clienteDao = new ClienteDAOJDBC();
+}
 
 	@Override
-	public void registrarCliente(String nombre, String apellido, String contacto, int dni)
-			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
+	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
 		// TODO Auto-generated method stub
+		Cliente cliente=  new Cliente (nombre, apellido,contacto, dni);
+		this.clienteDao.create(cliente);
 		
 	}
 
 	@Override
-	public void modificarCLiente(int dni, String nombre, String apellido, String contacto)
-			throws EntidadNoEncontradaException, DatoVacioException {
+	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException{
 		// TODO Auto-generated method stub
-		
+		Cliente cliente = clienteDao.find(dni);
+		cliente.setApellido(apellido);
+		cliente.setContacto(contacto);
+		cliente.setNombre(nombre);
+		 clienteDao.update(cliente);
 	}
-
+	
 	@Override
 	public void eliminarCliente(int dni) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
+		Cliente cliente = clienteDao.find(dni);
+		clienteDao.remove(cliente);
 		
 	}
 
 	@Override
 	public boolean existeCliente(int dni) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			clienteDao.find(dni);
+			return true;
+		} catch (EntidadNoEncontradaException e) {
+			return false;
+		}	
 	}
 
 	@Override
 	public ClienteDTO obtenerCliente(int dni) throws EntidadNoEncontradaException, FormatoInvalidoException {
-		// TODO Auto-generated method stub
-		return null;
+		Cliente cliente = clienteDao.find(dni);
+		return HotelMapper.aDTO(cliente);
 	}
 
 	@Override
 	public List<ClienteDTO> obtenerListaClientes() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Cliente> clientes = clienteDao.findAll();
+		List<ClienteDTO> clientesDTO = new ArrayList<>();
+		for (Cliente c : clientes) {
+			clientesDTO.add(HotelMapper.aDTO(c));
+		}
+		return clientesDTO;
 	}
+	
 
 	@Override
 	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas)

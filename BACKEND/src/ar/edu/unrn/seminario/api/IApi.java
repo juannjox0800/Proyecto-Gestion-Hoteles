@@ -54,7 +54,7 @@ public interface IApi {
 	
 	
 	void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException;
+	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException;
 	void eliminarCliente(int dni) throws EntidadNoEncontradaException;
 	boolean existeCliente(int dni);
 	ClienteDTO obtenerCliente(int dni)  throws EntidadNoEncontradaException, FormatoInvalidoException;
