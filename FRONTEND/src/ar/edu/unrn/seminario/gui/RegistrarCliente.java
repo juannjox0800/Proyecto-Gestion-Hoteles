@@ -125,8 +125,12 @@ public class RegistrarCliente extends JFrame {
 					}else {
 						api.modificarCLiente(dniOriginal, nombre, apellido, contacto);
 						JOptionPane.showMessageDialog(null, "El cliente se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
 					}
-					setVisible(false);
+					tfNombre.setText("");
+					tfApellido.setText("");
+					tfContacto.setText("");
+					tfDNI.setText("");
 				
 				} catch (DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
@@ -175,10 +179,3 @@ public class RegistrarCliente extends JFrame {
 	
 		}
 }
-
-	
-	
-
-	
-	
-
