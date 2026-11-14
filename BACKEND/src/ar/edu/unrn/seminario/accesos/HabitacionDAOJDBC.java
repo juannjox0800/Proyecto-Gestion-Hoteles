@@ -4,8 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 
@@ -151,18 +156,16 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 				ResultSet resultadoCamas = pstatCama.executeQuery();
 				
 				while(resultadoCamas.next()) {
-					
-					Cama cama = new Cama(resultadoCamas.getString("tipo"));
-					
+
+					Cama cama = new Cama(resultadoCamas.getString("tipo"));	
 					habitacion.getCamas().add(cama);
-					
-				}
-				
-				
+				}			
 			}
-			
-			
+
 		}catch(SQLException e) {
+			
+		} catch (DatoVacioException | ValorInvalidoException e) {
+			JOptionPane.showMessageDialog(null, "Valores invalidos al recuperar datos" + e.toString());
 			
 		}finally {
 			ConnectionManager.disconnect();
@@ -170,5 +173,50 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 		return habitacion;
 	}
 	
-	public List<Habitacion> findAll();
+
+	public List<Habitacion> findAll(){
+		
+		List<Habitacion> habitaciones = new ArrayList<>();
+		
+		try {
+			Connection conexion = ConnectionManager.getConnection();
+			
+			String findAllH = "SELECT * FROM habitacion";
+			PreparedStatement pstatH = conexion.prepareStatement(findAllH);
+			ResultSet resultadoH = pstatH.executeQuery();
+			
+			while(resultadoH.next()) {
+				
+				Habitacion h = new Habitacion(resultadoH.getInt("numero_habitacion"), resultadoH.getString("tipoHabitacion"), resultadoH.getInt("costo"));
+				h.setEstado(resultadoH.getString("estado"));
+				
+				String findCama = "SELECT c.tipo FROM cama c WHERE c.numero_habitacion = ?";
+				PreparedStatement pstatCama = conexion.prepareStatement(findCama);
+				pstatCama.setInt(1, h.getNumero());
+				
+				ResultSet resultadoCama = pstatCama.executeQuery();
+				
+				while(resultadoCama.next()) {
+					
+					Cama cama = new Cama(resultadoCama.getString("tipo"));	
+					h.getCamas().add(cama);
+					
+				}
+				habitaciones.add(h);
+				
+			}
+			
+			
+		}catch(SQLException e) {
+			
+			
+		} catch (DatoVacioException | ValorInvalidoException e) {
+		
+			JOptionPane.showMessageDialog(null, "Valores invalidos al recuperar datos" + e.toString());
+		}finally {
+			ConnectionManager.disconnect();
+		}
+	
+		return habitaciones;
+	}
 }
