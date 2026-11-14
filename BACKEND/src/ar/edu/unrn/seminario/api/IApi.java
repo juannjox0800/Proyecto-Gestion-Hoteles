@@ -1,5 +1,6 @@
 package ar.edu.unrn.seminario.api;
 
+import java.sql.SQLException;
 import java.time.*;
 import java.util.*;
 
@@ -75,12 +76,12 @@ public interface IApi {
 
 	List<ServicioDTO> obtenerListaServicios();
 	
-	void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException,EntidadDuplicadaException;
-	void eliminarPlan(String nombre)throws EntidadNoEncontradaException;
-	PlanDTO obtenerPlan(String nombre)throws EntidadNoEncontradaException;
+	void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, SQLException;
+	void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException,EntidadDuplicadaException, SQLException;
+	void eliminarPlan(String nombre)throws EntidadNoEncontradaException, SQLException, EntidadDuplicadaException, ValorInvalidoException, DatoVacioException;
+	PlanDTO obtenerPlan(String nombre)throws EntidadNoEncontradaException, SQLException, EntidadDuplicadaException, ValorInvalidoException, DatoVacioException;
 	float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios);
-	List<PlanDTO> obtenerListaPlan();
+	List<PlanDTO> obtenerListaPlan() throws SQLException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException;
 	//
 	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
 	void modificarReserva(int numeroReserva);

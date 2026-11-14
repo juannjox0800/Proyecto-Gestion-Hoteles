@@ -322,6 +322,8 @@ public class MemoryApi implements IApi {
 		precioRecom-=precioRecom/10;
 		return precioRecom;
 	}
+	
+	
 	public List<PlanDTO> obtenerListaPlan(){
 		List<PlanDTO> planes = new ArrayList<>();
 		for (Plan a : this.planes) {

@@ -1,9 +1,11 @@
 package ar.edu.unrn.seminario.api;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.unrn.seminario.accesos.PlanDAO;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
@@ -16,9 +18,13 @@ import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
+import ar.edu.unrn.seminario.modelo.Plan;
+import ar.edu.unrn.seminario.modelo.Servicio;
 
 public class PersistenceApi implements IApi{
-
+	private PlanDAO planDao;
+	
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni)
 			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
@@ -120,45 +126,63 @@ public class PersistenceApi implements IApi{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	@Override
-	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo, String nombre, boolean esActivo)
-			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
-		// TODO Auto-generated method stub
-		
+	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException, SQLException, EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
+		Plan plan = planDao.find(nombre);
+		planDao.remove(plan);
+	}
+
+	
+	@Override
+	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException, SQLException, EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
+		Plan plan = planDao.find(nombre);
+		return HotelMapper.aDTO(plan);
+	}
+	/*
+	@Override
+	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException {
+		Servicio servicio = servicioDao.find(nombre);		
+		return HotelMapper.aDTO(servicio);
+	}
+*/
+	
+	@Override
+	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
+			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, SQLException {
+		List <Servicio>servicios= new ArrayList<>();
+		for (ServicioDTO a: listaServicios) {servicios.add(HotelMapper.aModelo(a));}
+		Plan plan = new Plan(servicios, costo, nombre, esActivo);
+		planDao.create(plan);
+	}
+	@Override
+	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
+			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException, SQLException {
+		Plan plan = this.planDao.find(nombre);
+		List <Servicio>servicios= new ArrayList<>();
+		for (ServicioDTO a: listaServicios) {servicios.add(HotelMapper.aModelo(a));}
+		plan.setServicios(servicios);
+		plan.setCosto(costo);
+		plan.setEstadoActivo(esActivo);
+		planDao.update(plan);
+	}
+	@Override
+	public float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios) {
+		float precioRecom=0;
+		for (ServicioDTO a : listaServicios) {
+			precioRecom+=a.getPrecio();
+		}
+		precioRecom-=precioRecom/10;
+		return precioRecom;
 	}
 
 	@Override
-	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo, String nombre, boolean esActivo)
-			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException {
-		// TODO Auto-generated method stub
-		
+	public List<PlanDTO> obtenerListaPlan() throws SQLException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException {
+		List<Plan> planes = planDao.findAll();
+		List<PlanDTO> planesDTO = new ArrayList<>();
+		for (Plan p : planes) {planesDTO.add(HotelMapper.aDTO(p));}
+		return planesDTO;
 	}
-
-	@Override
-	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<PlanDTO> obtenerListaPlan() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void guardarListaPLan(List<PlanDTO> listaNueva) throws DatoVacioException, ValorInvalidoException {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
 			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)
@@ -215,5 +239,5 @@ public class PersistenceApi implements IApi{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+	
 }
