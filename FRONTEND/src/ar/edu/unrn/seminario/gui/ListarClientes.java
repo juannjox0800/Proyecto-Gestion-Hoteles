@@ -53,7 +53,7 @@ public class ListarClientes extends JFrame {
 	public ListarClientes(IApi api) {
 		this.api=api;
 		setTitle("Clientes Registrados");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 539, 376);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -181,7 +181,6 @@ int filaSelec = table.getSelectedRow();
 						});
 						ventanaModificar.setVisible(true);
 						
-						JOptionPane.showMessageDialog(null, "Cliente seleccionado para modificar: " + clienteDTO.getNombre(), "Modificar", JOptionPane.INFORMATION_MESSAGE);
 						
 					} catch (EntidadNoEncontradaException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
