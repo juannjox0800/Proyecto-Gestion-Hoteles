@@ -15,8 +15,10 @@ import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
+
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
@@ -24,40 +26,13 @@ import ar.edu.unrn.seminario.modelo.Reserva;
 import ar.edu.unrn.seminario.modelo.Servicio;
 
 public interface IApi {
-
-	/*void registrarUsuario(String username, String password, String email, String nombre, Integer rol);
-
-	UsuarioDTO obtenerUsuario(String username);
-
-	
-	
-	void eliminarUsuario(String username);
-
-	List<RolDTO> obtenerRoles();
-
-	List<RolDTO> obtenerRolesActivos();
-
-	void guardarRol(Integer codigo, String descripcion, boolean estado); // crear el objeto de dominio �Rol�
-
-	RolDTO obtenerRolPorCodigo(Integer codigo); // recuperar el rol almacenado
-
-	void activarRol(Integer codigo); // recuperar el objeto Rol, implementar el comportamiento de estado.
-
-	void desactivarRol(Integer codigo); // recuperar el objeto Rol, imp
-
-	List<UsuarioDTO> obtenerUsuarios(); // recuperar todos los usuarios
-
-	void activarUsuario(String username); // recuperar el objeto Usuario, implementar el comportamiento de estado.
-
-	void desactivarUsuario(String username); // recuperar el objeto Usuario, implementar el comportamiento de estado.*/
-				//verificar hacemos con el objeto como parametro 
-	
 	
 	void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException;
-	void eliminarCliente(int dni) throws EntidadNoEncontradaException;
+	void modificarCLiente(int dni, String nombre, String apellido, String contacto)throws EntidadNoEncontradaException, DatoVacioException,ValorInvalidoException ;
+	void eliminarCliente(int dni)throws EntidadNoEncontradaException;
 	boolean existeCliente(int dni);
-	ClienteDTO obtenerCliente(int dni)  throws EntidadNoEncontradaException, FormatoInvalidoException;
+	ClienteDTO obtenerCliente(int dni)throws EntidadNoEncontradaException, FormatoInvalidoException ;
+
 	List<ClienteDTO>obtenerListaClientes();
 	
 	
