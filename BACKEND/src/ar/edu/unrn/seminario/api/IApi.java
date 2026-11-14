@@ -62,7 +62,7 @@ public interface IApi {
 	
 	
 	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	boolean modificarHabitacion(int numero, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException;
+	boolean modificarHabitacion(int numero, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException;
 	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException;
 	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException;
 	List <HabitacionDTO>obtenerListaHabitacion();
