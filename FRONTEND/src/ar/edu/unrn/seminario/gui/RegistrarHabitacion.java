@@ -209,6 +209,8 @@ public class RegistrarHabitacion extends JFrame {
 					
 					JOptionPane.showMessageDialog(null, "La habitación se registró correctamente.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
 					
+					limpiarCampos();
+					
 				}else {
 					api.modificarHabitacion(numeroOriginal, numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
 					
@@ -216,7 +218,7 @@ public class RegistrarHabitacion extends JFrame {
 				}
 				
 				
-				limpiarCampos();
+				
 				
 				}catch(DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
