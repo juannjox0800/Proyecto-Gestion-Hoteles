@@ -22,6 +22,6 @@ public interface PlanDAO {
 
 	Plan find(String nombre) throws SQLException, EntidadDuplicadaException, EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;
 
-	List<Plan> findAll();
+	List<Plan> findAll() throws SQLException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException;
 
 }

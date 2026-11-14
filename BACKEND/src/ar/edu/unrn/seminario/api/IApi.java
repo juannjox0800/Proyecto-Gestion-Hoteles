@@ -82,7 +82,7 @@ public interface IApi {
 	float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios);
 	List<PlanDTO> obtenerListaPlan();
 	//
-	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException;
+	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
 	void modificarReserva(int numeroReserva);
 	void cancelarReserva(int numeroReserva);
 	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException;

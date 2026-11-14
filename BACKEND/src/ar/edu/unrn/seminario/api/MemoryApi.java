@@ -333,7 +333,7 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
-			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal) throws DatoVacioException, ValorInvalidoException{
+			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal) throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException{
 		
 				//private boolean estadoCancelacion;		
 		List<Habitacion> habitaciones = new ArrayList<>();
