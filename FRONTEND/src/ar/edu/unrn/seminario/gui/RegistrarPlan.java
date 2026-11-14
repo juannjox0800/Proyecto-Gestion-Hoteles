@@ -143,20 +143,17 @@ public class RegistrarPlan extends JFrame {
 		contentPane.add(btnAgregarServicio);
 
 		if(planAEditar!=null) {
-		     actualizarPrecio(api);
-
 			tFNombre.setText(planAEditar.getNombre());
-	        tFNombre.setEditable(false);
-	        tFCosto.setText(String.valueOf(planAEditar.getCosto()));
-	        cBActivo.setSelectedItem(planAEditar.isEstadoActivo() ? "Activo" : "Inactivo");
-	        if (planAEditar.getServicios() != null) {
-	            for (ServicioDTO servicio : planAEditar.getServicios()) {
-	                serviciosSeleccionados.add(servicio);
-	                DefaultTableModel modeloTabla = (DefaultTableModel) TableServiciosIncluidos.getModel();
-	                modeloTabla.addRow(new Object[] { servicio.getNombre()
-	                		});
-	            }
-	        }
+			tFNombre.setEditable(false);
+			tFCosto.setText(String.valueOf(planAEditar.getCosto()));
+			cBActivo.setSelectedItem(planAEditar.isEstadoActivo() ? "Activo" : "Inactivo");
+			if (planAEditar.getServicios() != null) {
+				for (ServicioDTO servicio : planAEditar.getServicios()) {
+					serviciosSeleccionados.add(servicio);
+					DefaultTableModel modeloTabla = (DefaultTableModel) TableServiciosIncluidos.getModel();
+					modeloTabla.addRow(new Object[] { servicio.getNombre() });
+				}
+			}
 		}
 		JButton btnGuardarPlan = new JButton("Guardar");
 		btnGuardarPlan.setBounds(395, 352, 89, 23);

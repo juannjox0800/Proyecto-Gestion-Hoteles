@@ -187,7 +187,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
 			+ "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
 			+ "FROM plan p "
-			+ "JOIN plan_servicio ps ON p.nombre_plan = ps.nombre_plan "
+			+ "JOIN plan_servicio ps ON p.nombre_plan = ps.plan_nombre "
 			+ "JOIN servicio s ON ps.nombre_servicio = s.nombre_servicio "
 			+ "WHERE p.nombre_plan = ?";
 	Plan plan =null;
@@ -235,7 +235,7 @@ public class PlanDAOJDBC implements PlanDAO {
 		String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
 					  + "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
 					  + "FROM plan p "
-					  + "JOIN plan_servicio ps ON p.nombre_plan = ps.nombre_plan "
+					  + "JOIN plan_servicio ps ON p.nombre_plan = ps.plan_nombre "
 					  + "JOIN servicio s ON ps.nombre_servicio = s.nombre_servicio";
 
 		List<Plan> planes = new ArrayList<>();
