@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
@@ -170,6 +172,13 @@ int filaSelec = table.getSelectedRow();
 						
 						
 						RegistrarCliente ventanaModificar = new RegistrarCliente(api,clienteDTO);
+						
+						ventanaModificar.addWindowListener(new WindowAdapter() {
+							@Override
+							public void windowClosed(WindowEvent w) {
+								cargarTablaCompleta();
+							}
+						});
 						ventanaModificar.setVisible(true);
 						
 						JOptionPane.showMessageDialog(null, "Cliente seleccionado para modificar: " + clienteDTO.getNombre(), "Modificar", JOptionPane.INFORMATION_MESSAGE);
