@@ -3,6 +3,7 @@ package ar.edu.unrn.seminario.api;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ar.edu.unrn.seminario.accesos.HabitacionDao;
 import ar.edu.unrn.seminario.accesos.HabitacionDAOJDBC;
@@ -18,6 +19,7 @@ import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
 import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 
@@ -91,29 +93,61 @@ public class PersistenceApi implements IApi{
 
 	@Override
 	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
+		Habitacion h = habitacionDao.find(numero);
 		
+		if(h!= null) {
+			
+			h.setTipoHabitacion(tipoHabitacion);
+			h.setCosto(costo);
+			h.setEstado(estado);
+			h.getCamas().clear();
+			
+			for(String cama : camas) {
+				h.agregarCama(new Cama(cama));
+			}
+			
+			this.habitacionDao.update(h);
+			return true;
+			
+		} else 
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
 		
-		
-		
-		return false;
 	}
 
 	@Override
 	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
-		return false;
+		Habitacion h = habitacionDao.find(numero);
+		
+		if(h!= null) {
+			
+			habitacionDao.remove(h);
+			return true;
+			
+		} else 
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+			
 	}
 
 	@Override
 	public HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
-		return null;
+		Habitacion h = habitacionDao.find(numero);
+		
+		if(h!= null) {
+			
+			HabitacionDTO dtoH = HotelMapper.aDTO(h);
+			return dtoH;
+			
+		} else
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+		
 	}
 
+	//desde el Dao llamo a findAll y lo paso a stream, de ahi hago el mappeo a DTO y lo devuelvo en forma de lista usando  collect
 	@Override
 	public List<HabitacionDTO> obtenerListaHabitacion() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return this.habitacionDao.findAll().stream().map(HotelMapper::aDTO).collect(Collectors.toList());
+		
 	}
 
 	@Override
