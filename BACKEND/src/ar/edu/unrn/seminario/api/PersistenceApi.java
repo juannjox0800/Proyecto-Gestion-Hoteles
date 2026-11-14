@@ -92,7 +92,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
+	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
 		Habitacion h = habitacionDao.find(numero);
 		
 		if(h!= null) {

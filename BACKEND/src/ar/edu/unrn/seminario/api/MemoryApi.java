@@ -143,12 +143,12 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
+	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {
 			Habitacion h = habitacion.get();
-			h.setNumero(numeroNuevo);
+			
 			h.setTipoHabitacion(tipoHabitacion);
 			h.setEstado(estado);
 			h.setCosto(costo);

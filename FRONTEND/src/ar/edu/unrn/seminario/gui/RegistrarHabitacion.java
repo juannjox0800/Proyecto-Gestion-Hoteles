@@ -194,7 +194,7 @@ public class RegistrarHabitacion extends JFrame {
 					JOptionPane.showMessageDialog(null, "La habitación se registró correctamente.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
 					
 				}else {
-					api.modificarHabitacion(numeroOriginal, numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
+					api.modificarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
 					
 					JOptionPane.showMessageDialog(null, "La habitación se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
 				}
