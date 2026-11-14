@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.swing.JOptionPane;
+
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
@@ -14,7 +16,7 @@ public class Plan {
 	private String nombre;
 	private boolean estadoActivo;
 
-	public Plan(List<Servicio> servicios, float costo, String nombre, boolean estadoActivo)throws ValorInvalidoException,DatoVacioException, EntidadDuplicadaException{
+	public Plan(List<Servicio> servicios, float costo, String nombre, boolean estadoActivo)throws ValorInvalidoException,DatoVacioException{
 		this.setServicios(servicios);
 		this.setCosto(costo);
 		this.setNombre(nombre);
@@ -34,11 +36,13 @@ public class Plan {
 		return servicios;
 	}
 
-	public void setServicios(List<Servicio> servicios)throws ValorInvalidoException, EntidadDuplicadaException {
+	public void setServicios(List<Servicio> servicios)throws ValorInvalidoException{
 		this.servicios = new ArrayList<>();
-		for (Servicio a : servicios) {
-			this.agregarServicio(a);
-		}
+		try {
+			for (Servicio a : servicios) {
+				this.agregarServicio(a);
+			}
+		}catch(EntidadDuplicadaException e) {JOptionPane.showMessageDialog(null,"error"+ e.getMessage());}
 	}
 
 	public float getCosto() {

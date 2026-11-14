@@ -2,6 +2,7 @@ package ar.edu.unrn.seminario.gui;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,7 +16,9 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class ListaPlanes extends JFrame {
 
@@ -95,7 +98,7 @@ public class ListaPlanes extends JFrame {
 					JOptionPane.showMessageDialog(null, "Plan eliminado correctamente");
 				} catch (EntidadNoEncontradaException e) {
 					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				} 
 			}
 		});
 
@@ -117,7 +120,9 @@ public class ListaPlanes extends JFrame {
 				ventana.addWindowListener(new WindowAdapter() {
 					@Override
 					public void windowClosed(WindowEvent w) {
-						recargarTabla(api);
+						
+							recargarTabla(api);
+						
 					}
 				});
 
@@ -125,8 +130,9 @@ public class ListaPlanes extends JFrame {
 
 			} catch (EntidadNoEncontradaException e) {
 				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al modificar el plan", JOptionPane.ERROR_MESSAGE);
-			} catch (DatoVacioException e) {
-				JOptionPane.showMessageDialog(null ,"Error"+ e.getMessage(),  "Error al modificar el plan", JOptionPane.ERROR_MESSAGE);
+			} catch(DatoVacioException e) {
+				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al modificar el plan", JOptionPane.ERROR_MESSAGE);
+
 			}
 		});
 
@@ -135,7 +141,7 @@ public class ListaPlanes extends JFrame {
 		});
 	}
 
-	private void recargarTabla(IApi api) {
+	private void recargarTabla(IApi api)  {
 		DefaultTableModel modelo = (DefaultTableModel) jtListaPlanes.getModel();
 		modelo.setRowCount(0);
 

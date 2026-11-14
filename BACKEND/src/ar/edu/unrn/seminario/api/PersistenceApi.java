@@ -127,28 +127,21 @@ public class PersistenceApi implements IApi{
 		return null;
 	}
 	@Override
-	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException, SQLException, EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
+	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException {
 		Plan plan = planDao.find(nombre);
 		planDao.remove(plan);
 	}
 
 	
 	@Override
-	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException, SQLException, EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
+	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException{
 		Plan plan = planDao.find(nombre);
 		return HotelMapper.aDTO(plan);
 	}
-	/*
-	@Override
-	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException {
-		Servicio servicio = servicioDao.find(nombre);		
-		return HotelMapper.aDTO(servicio);
-	}
-*/
 	
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
-			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, SQLException {
+			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
 		List <Servicio>servicios= new ArrayList<>();
 		for (ServicioDTO a: listaServicios) {servicios.add(HotelMapper.aModelo(a));}
 		Plan plan = new Plan(servicios, costo, nombre, esActivo);
@@ -156,15 +149,16 @@ public class PersistenceApi implements IApi{
 	}
 	@Override
 	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
-			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException, SQLException {
+			throws EntidadNoEncontradaException{
 		Plan plan = this.planDao.find(nombre);
 		List <Servicio>servicios= new ArrayList<>();
-		for (ServicioDTO a: listaServicios) {servicios.add(HotelMapper.aModelo(a));}
-		plan.setServicios(servicios);
-		plan.setCosto(costo);
-		plan.setEstadoActivo(esActivo);
-		planDao.update(plan);
-	}
+		try {
+			for (ServicioDTO a: listaServicios) {servicios.add(HotelMapper.aModelo(a));}
+			plan=new Plan(servicios, costo, nombre, esActivo);
+			planDao.update(plan);
+		}catch(ValorInvalidoException| DatoVacioException e) {}
+		}
+	
 	@Override
 	public float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios) {
 		float precioRecom=0;
@@ -176,7 +170,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public List<PlanDTO> obtenerListaPlan() throws SQLException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException {
+	public List<PlanDTO> obtenerListaPlan()  {
 		List<Plan> planes = planDao.findAll();
 		List<PlanDTO> planesDTO = new ArrayList<>();
 		for (Plan p : planes) {planesDTO.add(HotelMapper.aDTO(p));}

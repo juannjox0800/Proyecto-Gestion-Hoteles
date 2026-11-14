@@ -3,6 +3,7 @@ package ar.edu.unrn.seminario.gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -23,6 +24,8 @@ import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -153,13 +156,15 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem enlistarPlan = new JMenuItem("Enlistar Plan");
 		enlistarPlan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<PlanDTO> planesList = api.obtenerListaPlan();
-
+				List<PlanDTO> planesList=null;;
+					planesList = api.obtenerListaPlan();
 				if (planesList == null || planesList.isEmpty()) {
 				    JOptionPane.showMessageDialog(null,"No hay planes registrados en el sistema para listar, modificar o eliminar.","Aviso",JOptionPane.WARNING_MESSAGE);
 				   
 				}else {
-				ListaPlanes ventana = new ListaPlanes(api);
+				ListaPlanes ventana=null;
+				
+					ventana = new ListaPlanes(api);
 				ventana.setVisible(true);}
 			}
 		});

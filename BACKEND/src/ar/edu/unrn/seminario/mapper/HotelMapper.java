@@ -93,7 +93,7 @@ public class HotelMapper {
 		return new PlanDTO(serviciosDTO, p.getCosto(), p.getNombre(),p.getEstadoActivo());
 	}
 	
-	public static Plan aModelo (PlanDTO p) throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException{
+	public static Plan aModelo (PlanDTO p) throws DatoVacioException, ValorInvalidoException{
 		if (p == null)
 			return null;
 		
@@ -157,7 +157,7 @@ public class HotelMapper {
 								huespedesDTO);
 	}
 	
-	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException{
+	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException{
 		if (r == null)
 			return null;
 		

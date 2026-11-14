@@ -12,16 +12,16 @@ import ar.edu.unrn.seminario.modelo.Plan;
 
 public interface PlanDAO {
 
-	void create(Plan plan) throws EntidadDuplicadaException, SQLException;
+	void create(Plan plan) throws EntidadDuplicadaException;
 
-	void update(Plan plan) throws SQLException, EntidadNoEncontradaException;
+	void update(Plan plan) throws  EntidadNoEncontradaException;
 
-	void remove(Plan plan) throws SQLException, EntidadNoEncontradaException;
+	void remove(Plan plan) throws  EntidadNoEncontradaException;
 
-	void remove(String nombres) throws SQLException, EntidadNoEncontradaException;
+	void remove(String nombres) throws  EntidadNoEncontradaException;
 
-	Plan find(String nombre) throws SQLException, EntidadDuplicadaException, EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;
+	Plan find(String nombre) throws  EntidadNoEncontradaException;
 
-	List<Plan> findAll() throws SQLException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException;
+	List<Plan> findAll();
 
 }

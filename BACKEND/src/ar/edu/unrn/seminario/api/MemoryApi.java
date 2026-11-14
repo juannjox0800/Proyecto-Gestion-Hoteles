@@ -262,58 +262,59 @@ public class MemoryApi implements IApi {
 					.collect(Collectors.toList());
 	}
 
+	
+	
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo,	String nombre, boolean esActivo) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException{
-		boolean existe = this.planes
-				.stream()
-				.anyMatch(s -> s.getNombre().equalsIgnoreCase(nombre));
-
-		if (existe) {
-			throw new EntidadDuplicadaException("Ya existe un plan con el nombre: " + nombre);
-		}
+		boolean existe = this.planes.stream().anyMatch(s -> s.getNombre().
+				equalsIgnoreCase(nombre));
+		if (existe) throw new EntidadDuplicadaException("Ya existe un plan con el nombre: " + nombre);
+		
 		ArrayList<Servicio>servicios=new ArrayList<>();
-		for (ServicioDTO a : listaServicios) {
-			servicios.add(HotelMapper.aModelo(a));
-		}
+		
+		for (ServicioDTO a : listaServicios) servicios.add(HotelMapper.aModelo(a));
+		
 		this.planes.add(new Plan(servicios, costo, nombre, esActivo));
 			
 	}
 	
 	
 	@Override
-	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre,boolean esActivo) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException{
-		Plan plan = this.planes.stream().filter(s-> s.getNombre().equalsIgnoreCase(nombre)).findFirst().orElseThrow(()-> new EntidadNoEncontradaException ("no se encontro el plan" + nombre));
+	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre,boolean esActivo) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException{
+		Plan plan = this.planes.stream().filter(s-> s.getNombre().equalsIgnoreCase(nombre))
+					.findFirst().orElseThrow(()->
+					new EntidadNoEncontradaException ("no se encontro el plan" + nombre));
+		
 		List <Servicio> servicios = new ArrayList<>();
 
-		for (ServicioDTO a : listaServicios) {
-			servicios.add(HotelMapper.aModelo(a));
-		}
+		for (ServicioDTO a : listaServicios) servicios.add(HotelMapper.aModelo(a));
+		
 		plan.setServicios(servicios);
 		plan.setCosto(costo);
 		plan.setNombre(nombre);
 		plan.setEstadoActivo(esActivo);
 
 	}
+	
+	
 	@Override
 	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException{
 			boolean eliminado = this.planes.removeIf(h -> h.getNombre().equalsIgnoreCase(nombre));		
-			if (!eliminado) {
-				throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
-				}
+			if (!eliminado) throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
+				
 	}
 
 	@Override
 	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException{
-		Optional<Plan> plan = planes.stream().filter(h -> h.getNombre().equalsIgnoreCase(nombre)).findFirst();		
-		if(plan.isPresent()) {
-			PlanDTO dto = HotelMapper.aDTO(plan.get());
-			return dto;
-		}else {
-			throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
-		}
+		Optional<Plan> plan = planes.stream().filter(h -> h.getNombre().equalsIgnoreCase(nombre)).findFirst();	
 		
-	
+		if(!plan.isPresent()) throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
+		
+		PlanDTO dto = HotelMapper.aDTO(plan.get());
+		return dto;
 	}
+	
+	
 	public float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios) {
 		float precioRecom=0;
 		for (ServicioDTO a : listaServicios) {
@@ -326,6 +327,7 @@ public class MemoryApi implements IApi {
 	
 	public List<PlanDTO> obtenerListaPlan(){
 		List<PlanDTO> planes = new ArrayList<>();
+		
 		for (Plan a : this.planes) {
 			planes.add(HotelMapper.aDTO(a));
 		}
