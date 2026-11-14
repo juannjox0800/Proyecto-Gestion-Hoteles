@@ -18,6 +18,7 @@ import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 
 public class PersistenceApi implements IApi{
@@ -68,17 +69,32 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas)
-			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
 		Habitacion h = habitacionDao.find(numero);
-		this.habitacionDao.create(h);
+		if(h ==null) {
+			h = new Habitacion(numero, tipoHabitacion, costo);
+			h.setEstado(estado);
+			
+			for(String cama : camas) {
+				h.agregarCama(new Cama(cama));
+			}
+			
+			this.habitacionDao.create(h);
+			//habitaciones.add(h);
+		}
+		else {
+			throw new EntidadDuplicadaException("Ya existe una habitacion con ese numero en el sistema. Intente con otro numero.");
+			
+		}
 		
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo,
-			List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
+	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
+		
+		
+		
+		
 		return false;
 	}
 
