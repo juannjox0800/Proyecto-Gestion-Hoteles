@@ -45,13 +45,17 @@ public class RegistrarPlan extends JFrame {
 	private JLabel lblCostoRecomendado;
 
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public RegistrarPlan(IApi api)throws DatoVacioException {this(api,null);}
 	
 	
 	public RegistrarPlan(IApi api, PlanDTO planExistente) throws DatoVacioException {
 		this.planAEditar=planExistente;
-		if (api.obtenerListaServicios().isEmpty()) {
-		    throw new DatoVacioException( "No hay ningún servicio cargado");
+		List<ServicioDTO> servicios = api.obtenerListaServicios();
+		if (servicios == null || servicios.isEmpty()) {
+			throw new DatoVacioException("No hay ningún servicio cargado");
 		}
 		setTitle("Registrar Plan");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -167,7 +171,15 @@ public class RegistrarPlan extends JFrame {
 		            api.modificarPlan(serviciosSeleccionados, costo, nombre, activo);
 		        }
 		        JOptionPane.showMessageDialog(null, "Plan guardado correctamente");
+		        
+		        
 
+				tFNombre.setText("");
+				tFCosto.setText("");
+				serviciosSeleccionados.clear();                                       
+				((DefaultTableModel) TableServiciosIncluidos.getModel()).setRowCount(0); 
+				actualizarPrecio(api);         		        
+		        
 		    } catch (NumberFormatException ex) {
 		        JOptionPane.showMessageDialog(null, "El costo debe ser un número válido", "Aviso", JOptionPane.WARNING_MESSAGE);
 		    } catch (DatoVacioException | ValorInvalidoException | EntidadDuplicadaException | EntidadNoEncontradaException ex) {

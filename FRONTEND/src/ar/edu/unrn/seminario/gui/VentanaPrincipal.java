@@ -188,10 +188,9 @@ public class VentanaPrincipal extends JFrame {
 		
 		JMenuItem enlistarServicio = new JMenuItem("Enlistar Servicio");
 		enlistarServicio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ListaServicios ventana = new ListaServicios(api);
+			public void actionPerformed(ActionEvent e) {ListaServicios ventana = new ListaServicios(api);
 
-				ventana.setVisible(true);
+			ventana.setVisible(true);
 			}
 		});
 		menuServicio.add(enlistarServicio);

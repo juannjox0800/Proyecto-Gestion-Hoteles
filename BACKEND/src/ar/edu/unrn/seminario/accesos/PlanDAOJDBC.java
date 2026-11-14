@@ -1,5 +1,6 @@
 package ar.edu.unrn.seminario.accesos;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,41 +19,100 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public void create(Plan plan) throws EntidadDuplicadaException{
-		String sql = "INSERT INTO Plan(nombre_plan, costo,  estado_activo) VALUES (?, ?, ?, ?)";
-		
-		try(PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(sql)){
-					statement.setString(1, plan.getNombre());
-					statement.setFloat(2,plan.getCosto());
-					statement.setBoolean(3, plan.isEstadoActivo());
-					statement.executeUpdate();
-					ConnectionManager.disconnect();
-		}catch (SQLException e) {//errorcode 1062 es duplicado
-					if(e.getErrorCode()==1062) throw new EntidadDuplicadaException("Ya existe un plan con el nombre: " + plan.getNombre());
-					throw new RuntimeException("Error al registrar el plan", e);
+	public void create(Plan plan) throws EntidadDuplicadaException {
+		String sql = "INSERT INTO plan(nombre_plan, costo, estado_activo) VALUES (?, ?, ?)";
+
+		Connection conex = ConnectionManager.getConnection();
+
+		try {
+			conex.setAutoCommit(false);                       // transacciones
+
+			try (PreparedStatement statement = conex.prepareStatement(sql)) {
+				statement.setString(1, plan.getNombre());
+				statement.setFloat(2, plan.getCosto());
+				statement.setBoolean(3, plan.isEstadoActivo());
+				statement.executeUpdate();
+			}
+
+			cargarPlan_servicio(plan.getNombre(), plan.getServicios());
+
+			conex.commit();                                   // guarda td junto
+
+		}
+		catch (SQLException e) {
+			try {
+				conex.rollback();                             // si algo falla reinicia td al pingo
+			} 
+			catch (SQLException ex) {ex.printStackTrace();}
+			
+			if (e.getErrorCode() == 1062) throw new EntidadDuplicadaException("Ya existe un plan con el nombre: " + plan.getNombre());
+			
+			throw new RuntimeException("Error al registrar el plan", e);
+		} 
+		finally {
+			try {
+				conex.setAutoCommit(true);
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();//para q vea el error en eclipse si pasa
+			}
+			ConnectionManager.disconnect();
 		}
 	}
-
-	
 	
 	
 	@Override
-	public void update(Plan plan) throws  EntidadNoEncontradaException {
-		String sql =  "UPDATE plan SET costo=?, estado_activo=? WHERE nombre_plan";
-		
-		try(PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(sql))
-		{
-					statement.setFloat(1,plan.getCosto());
-					statement.setBoolean(2, plan.isEstadoActivo());
-					statement.setString(3, plan.getNombre());
-					statement.executeUpdate();
-					
-					int filas= statement.executeUpdate();
-					
-					if(filas==0)throw new EntidadNoEncontradaException("No se encontro el plan: "+plan.getNombre());
-					
-					ConnectionManager.disconnect();
-		}catch(SQLException e) {throw new RuntimeException("Error al modificar el plan", e);
+	public void update(Plan plan) throws EntidadNoEncontradaException {
+		String sql = "UPDATE plan SET costo = ?, estado_activo = ? WHERE nombre_plan = ?";
+
+		Connection conex = ConnectionManager.getConnection();
+
+		try {
+			conex.setAutoCommit(false);                       // empieza la transacción
+
+			try (PreparedStatement statement = conex.prepareStatement(sql)) {
+				statement.setFloat(1, plan.getCosto());
+				statement.setBoolean(2, plan.isEstadoActivo());
+				statement.setString(3, plan.getNombre());
+
+				// Un solo executeUpdate (en tu versión estaba dos veces).
+				int filas = statement.executeUpdate();
+
+				// Si no modificó ninguna fila, el plan no existe.
+				if (filas == 0) {
+					throw new EntidadNoEncontradaException("No se encontró el plan: " + plan.getNombre());
+				}
+			}
+
+			// Se borran los servicios viejos del plan y se cargan los nuevos.
+			borrarPlan_servicio(plan.getNombre());
+			cargarPlan_servicio(plan.getNombre(), plan.getServicios());
+
+			conex.commit();                                   // se guarda todo junto
+
+		} catch (SQLException e) {
+			try {
+				conex.rollback();                             // si algo falló, se deshace todo
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+			throw new RuntimeException("Error al modificar el plan", e);
+
+		} catch (EntidadNoEncontradaException e) {
+			try {
+				conex.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+			throw e;                                          // se vuelve a lanzar para que la atrape la GUI
+
+		} finally {
+			try {
+				conex.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			ConnectionManager.disconnect();
 		}
 	}
 	
@@ -70,19 +130,54 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public void remove(String nombre) throws  EntidadNoEncontradaException {
-		String sql = "DELETE FROM plan where nombre_plan=?";
-		
-		try(PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(sql))
-		{
-			statement.setString(1, nombre);
-			int filas= statement.executeUpdate();
-			if(filas==0)throw new EntidadNoEncontradaException("No se encontro el plan: "+nombre);
-		}catch(SQLException e) {throw new RuntimeException("Error al eliminar el plan", e);
+	public void remove(String nombre) throws EntidadNoEncontradaException {
+		String sql = "DELETE FROM plan WHERE nombre_plan = ?";
 
+		Connection conex = ConnectionManager.getConnection();
+
+		try {
+			conex.setAutoCommit(false);
+
+			// Primero las filas que dependen del plan...
+			borrarPlan_servicio(nombre);
+
+			// ...y después el plan.
+			try (PreparedStatement statement = conex.prepareStatement(sql)) {
+				statement.setString(1, nombre);
+				int filas = statement.executeUpdate();
+
+				if (filas == 0) {
+					throw new EntidadNoEncontradaException("No se encontró el plan: " + nombre);
+				}
+			}
+
+			conex.commit();
+
+		} catch (SQLException e) {
+			try {
+				conex.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+			throw new RuntimeException("Error al eliminar el plan", e);
+
+		} catch (EntidadNoEncontradaException e) {
+			try {
+				conex.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+			throw e;
+
+		} finally {
+			try {
+				conex.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			ConnectionManager.disconnect();
 		}
 	}
-
 	
 	
 	
@@ -92,7 +187,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
 			+ "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
 			+ "FROM plan p "
-			+ "JOIN plan_servicio ps ON p.nombre_plan = ps.plan_nombre "
+			+ "JOIN plan_servicio ps ON p.nombre_plan = ps.nombre_plan "
 			+ "JOIN servicio s ON ps.nombre_servicio = s.nombre_servicio "
 			+ "WHERE p.nombre_plan = ?";
 	Plan plan =null;
@@ -140,7 +235,7 @@ public class PlanDAOJDBC implements PlanDAO {
 		String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
 					  + "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
 					  + "FROM plan p "
-					  + "JOIN plan_servicio ps ON p.nombre_plan = ps.plan_nombre "
+					  + "JOIN plan_servicio ps ON p.nombre_plan = ps.nombre_plan "
 					  + "JOIN servicio s ON ps.nombre_servicio = s.nombre_servicio";
 
 		List<Plan> planes = new ArrayList<>();
@@ -171,4 +266,25 @@ public class PlanDAOJDBC implements PlanDAO {
 	}
 	
 	
+	private void cargarPlan_servicio(String nombre_plan, List<Servicio> servicios) throws SQLException {
+		String sql = "INSERT INTO plan_servicio(plan_nombre, nombre_servicio) VALUES (?, ?)";
+
+		try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(sql)) {
+			for (Servicio servicio : servicios) {
+				statement.setString(1, nombre_plan);
+				statement.setString(2, servicio.getNombre());
+				statement.addBatch();       // acumula el insert
+			}
+			statement.executeBatch();       // manda todos juntos
+		}
+	}
+	
+	private void borrarPlan_servicio(String nombre_plan) throws SQLException {
+		String sql = "DELETE FROM plan_servicio WHERE plan_nombre = ?";
+
+		try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(sql)) {
+			statement.setString(1, nombre_plan);
+			statement.executeUpdate();
+		}
+	}
 }
