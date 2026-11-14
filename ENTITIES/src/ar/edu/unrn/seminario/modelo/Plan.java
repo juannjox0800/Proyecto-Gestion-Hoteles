@@ -19,6 +19,7 @@ public class Plan {
 		this.setCosto(costo);
 		this.setNombre(nombre);
 		this.setServicios(servicios);
+		this.setEstadoActivo(estadoActivo);
 	}
 
 	public Plan(float costo, String nombre, boolean estadoActivo)throws ValorInvalidoException,DatoVacioException {
@@ -26,6 +27,7 @@ public class Plan {
 		this.setNombre(nombre);
 		this.setEstadoActivo(estadoActivo);
 		this.servicios = new ArrayList<Servicio>();
+		this.setEstadoActivo(estadoActivo);
 	}
 
 	public List<Servicio> getServicios() {
