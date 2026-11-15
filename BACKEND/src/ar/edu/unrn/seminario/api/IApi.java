@@ -11,6 +11,7 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
@@ -62,11 +63,11 @@ public interface IApi {
 	List<ClienteDTO>obtenerListaClientes();
 	
 	
-	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	boolean modificarHabitacion(int numero, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException;
-	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, EntidadEnUsoException;
-	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException;
-	List <HabitacionDTO>obtenerListaHabitacion();
+	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	boolean modificarHabitacion(int numero, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException;
+	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, EntidadEnUsoException, AccesoDatosException, DatoVacioException, ValorInvalidoException;
+	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException;
+	List <HabitacionDTO>obtenerListaHabitacion() throws AccesoDatosException, DatoVacioException, ValorInvalidoException;
 
 	
 	void registrarServicio(String nombre,String descripcion, int precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;

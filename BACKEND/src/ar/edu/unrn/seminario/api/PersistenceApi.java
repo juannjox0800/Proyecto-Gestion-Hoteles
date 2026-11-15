@@ -13,6 +13,7 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
@@ -71,7 +72,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
 		Habitacion h = habitacionDao.find(numero);
 		if(h ==null) {
 			h = new Habitacion(numero, tipoHabitacion, costo);
@@ -82,7 +83,7 @@ public class PersistenceApi implements IApi{
 			}
 			
 			this.habitacionDao.create(h);
-			//habitaciones.add(h);
+	
 		}
 		else {
 			throw new EntidadDuplicadaException("Ya existe una habitacion con ese numero en el sistema. Intente con otro numero.");
@@ -92,7 +93,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException {
+	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException {
 		Habitacion h = habitacionDao.find(numero);
 		
 		if(h!= null) {
@@ -115,7 +116,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException {
+	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		Habitacion h = habitacionDao.find(numero);
 		
 		if(h!= null) {
@@ -129,7 +130,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException {
+	public HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		Habitacion h = habitacionDao.find(numero);
 		
 		if(h!= null) {
@@ -144,7 +145,7 @@ public class PersistenceApi implements IApi{
 
 	//desde el Dao llamo a findAll y lo paso a stream, de ahi hago el mappeo a DTO y lo devuelvo en forma de lista usando  collect
 	@Override
-	public List<HabitacionDTO> obtenerListaHabitacion() {
+	public List<HabitacionDTO> obtenerListaHabitacion() throws AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		
 		return this.habitacionDao.findAll().stream().map(HotelMapper::aDTO).collect(Collectors.toList());
 		

@@ -21,9 +21,11 @@ import javax.swing.table.DefaultTableModel;
 
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 
 public class EnlistarHabitación extends JFrame {
@@ -36,7 +38,7 @@ public class EnlistarHabitación extends JFrame {
 	private IApi api;
 	
 
-	public EnlistarHabitación(IApi api) {
+	public EnlistarHabitación(IApi api) throws AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		
 		this.api = api;
 		setTitle("Lista de Habitaciones ");
@@ -103,6 +105,15 @@ public class EnlistarHabitación extends JFrame {
 				
 			}catch(EntidadNoEncontradaException e3) {
 				JOptionPane.showMessageDialog(null,"Esta habitacion no se encuentra en el sistema. Intente de nuevo", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
+			} catch (AccesoDatosException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (DatoVacioException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ValorInvalidoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 				
 			
@@ -133,7 +144,12 @@ public class EnlistarHabitación extends JFrame {
 							ventanaModificar.addWindowListener(new WindowAdapter() {
 								@Override
 								public void windowClosed(WindowEvent e) {
-									recargarTabla(api);
+									try {
+										recargarTabla(api);
+									} catch (AccesoDatosException | DatoVacioException | ValorInvalidoException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
 								}
 								 
 							});
@@ -144,6 +160,15 @@ public class EnlistarHabitación extends JFrame {
 						} catch (EntidadNoEncontradaException e1) {
 							JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
 							
+						} catch (AccesoDatosException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (DatoVacioException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (ValorInvalidoException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
                     }
 					
@@ -186,6 +211,15 @@ public class EnlistarHabitación extends JFrame {
                     	} catch (EntidadEnUsoException e2) {
                     		JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 							
+						} catch (AccesoDatosException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (DatoVacioException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (ValorInvalidoException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
                       }
 					
@@ -231,7 +265,7 @@ public class EnlistarHabitación extends JFrame {
 	}
 	
 
-	private void recargarTabla(IApi api) {
+	private void recargarTabla(IApi api) throws AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 		modelo.setRowCount(0);
 		

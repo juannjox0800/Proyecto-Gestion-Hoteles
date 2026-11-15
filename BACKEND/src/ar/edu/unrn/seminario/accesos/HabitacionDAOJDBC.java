@@ -9,7 +9,10 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Habitacion;
@@ -18,7 +21,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 
 	
 	//como es de creacion voy a usar la sentencia SQL de INSERT, entonces me conviene usar la clase PreparedStatement
-	public void create(Habitacion habitacion) {
+	public void create(Habitacion habitacion) throws EntidadDuplicadaException, AccesoDatosException {
 		
 		try {
 			
@@ -46,6 +49,11 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			}
 			
 		}catch(SQLException e) {
+			if(e.getErrorCode() == 1062) {
+				throw new EntidadDuplicadaException("Ya existe una habitación con ese número. Intente de nuevo.");
+			}else {
+				throw new AccesoDatosException("Error al crear la habitación.", e);
+			}
 			
 			
 		}finally {
@@ -55,11 +63,12 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 		
 	}
 	
-	public void update(Habitacion habitacion) {
-		
+	public void update(Habitacion habitacion) throws EntidadNoEncontradaException, AccesoDatosException {
+		Connection conexion = null;
 		try {
 			
-			Connection conexion = ConnectionManager.getConnection();
+			conexion = ConnectionManager.getConnection();
+			conexion.setAutoCommit(false);
 			
 			String updateH = "UPDATE habitacion SET tipoHabitacion = ?, costo = ?, estado = ? WHERE numero_habitacion = ?";
 			PreparedStatement pstatH = conexion.prepareStatement(updateH);
@@ -77,7 +86,12 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			
 			pstatDeleteCama.setInt(1, habitacion.getNumero());
 			
-			pstatDeleteCama.executeUpdate();
+			int filasAfectadas = pstatDeleteCama.executeUpdate();
+			
+			if(filasAfectadas == 0) {
+				conexion.rollback();
+				throw new EntidadNoEncontradaException("La habitación que quiere modificar no se encuentra en el sistema.");
+			}
 			
 			String insertCama = "INSERT INTO cama(tipo, numero_habitacion) VALUES(?, ?)";
 			PreparedStatement pstatCama = conexion.prepareStatement(insertCama);
@@ -90,21 +104,38 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 				pstatCama.executeUpdate();
 			}
 			
+			conexion.commit();  //indica q todo salio bien
 			
 		}catch(SQLException e) {
 			
+			try {
+				if (conexion != null) conexion.rollback();
+			}catch(SQLException e1) {
+				throw new AccesoDatosException("Error al revertir la transaccion de modificacion.", e1);
+			}
+			throw new AccesoDatosException("Error al intentar modificar la habitacion.", e);
+			
 		}finally {
+			
+			try {
+				if(conexion != null) conexion.setAutoCommit(true);
+				
+			}catch(SQLException e) {
+				throw new AccesoDatosException("Error al restaurar autoCommit", e);
+			}
 			ConnectionManager.disconnect();
 		}
 		
 		
 	}
 	
-	public void remove(int numero) {
+	public void remove(int numero) throws EntidadNoEncontradaException, AccesoDatosException {
 		
+		Connection conexion = null;
 		try {
 			
-			Connection conexion = ConnectionManager.getConnection();
+			conexion = ConnectionManager.getConnection();
+			conexion.setAutoCommit(false);
 			
 			String removeCama = "DELETE FROM cama WHERE numero_habitacion = ?";
 			PreparedStatement pstatCama = conexion.prepareStatement(removeCama);
@@ -114,24 +145,44 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			
 			String removeH = "DELETE FROM habitacion WHERE numero_habitacion = ?";
 			PreparedStatement pstatH = conexion.prepareStatement(removeH);
-			
 			pstatH.setInt(1, numero);
-			pstatH.executeUpdate();
 			
+			int filasAfectadas = pstatH.executeUpdate();
 			
+			if(filasAfectadas == 0) {
+				conexion.rollback();
+				throw new EntidadNoEncontradaException("La habitación que quiere eliminar no se encuentra en el sistema.");
+				
+			}
+			
+			conexion.commit();
+						
 		}catch(SQLException e) {
-			
+			try {
+				if(conexion != null) conexion.rollback();
+			}catch(SQLException e1) {
+				throw new AccesoDatosException("Error al revertir la transaccion de eliminacion.");
+			}
+			if(e.getErrorCode() == 1451) {
+				throw new AccesoDatosException("No se puede eliminar la habitacion.", e);
+			}
+			throw new AccesoDatosException("Error al intentar eliminar la habitacion", e);
 		}finally {
+			try {
+				if(conexion != null) conexion.setAutoCommit(true);
+			}catch(SQLException e) {
+				throw new AccesoDatosException("Error al restaurar autoCommit", e);
+			}
 			ConnectionManager.disconnect();
 		}
 		
 	}
 	
-	public void remove(Habitacion habitacion) {
+	public void remove(Habitacion habitacion) throws EntidadNoEncontradaException, AccesoDatosException {
 		remove(habitacion.getNumero());
 	}
 	
-	public Habitacion find(int numero) {
+	public Habitacion find(int numero) throws AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		Habitacion habitacion = null;
 		try {
 			
@@ -163,10 +214,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			}
 
 		}catch(SQLException e) {
-			
-		} catch (DatoVacioException | ValorInvalidoException e) {
-			JOptionPane.showMessageDialog(null, "Valores invalidos al recuperar datos" + e.toString());
-			
+			throw new AccesoDatosException("Error al intentar encontrar la habitacion.");
 		}finally {
 			ConnectionManager.disconnect();
 		}
@@ -174,7 +222,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 	}
 	
 
-	public List<Habitacion> findAll(){
+	public List<Habitacion> findAll() throws AccesoDatosException, DatoVacioException, ValorInvalidoException{
 		
 		List<Habitacion> habitaciones = new ArrayList<>();
 		
@@ -209,10 +257,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			
 		}catch(SQLException e) {
 			
-			
-		} catch (DatoVacioException | ValorInvalidoException e) {
-		
-			JOptionPane.showMessageDialog(null, "Valores invalidos al recuperar datos" + e.toString());
+			throw new AccesoDatosException("Error al intentar encontrar las habitaciones."); 
 		}finally {
 			ConnectionManager.disconnect();
 		}
