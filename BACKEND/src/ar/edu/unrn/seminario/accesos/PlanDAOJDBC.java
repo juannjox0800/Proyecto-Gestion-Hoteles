@@ -174,7 +174,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public Plan find(String nombre) throws EntidadNoEncontradaException, AccesoDatosException {
+	public Plan find(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException {
 
 	String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
 			+ "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
@@ -193,7 +193,6 @@ public class PlanDAOJDBC implements PlanDAO {
 			boolean activo = false;
 			boolean encontrado = false;
 			List<Servicio> servicios = new ArrayList<>();
-			try {
 					while (rs.next()) {
 						
 						if (!encontrado) {
@@ -211,21 +210,14 @@ public class PlanDAOJDBC implements PlanDAO {
 					} 
 					
 					plan =new Plan(servicios, costo, nombrePlan, activo);
-					
-			}catch(ValorInvalidoException|DatoVacioException e) {
-							JOptionPane.showMessageDialog(null,"error,"+ e.toString());
-					if (!encontrado) {
-						throw new EntidadNoEncontradaException("No se encontró el plan: " + nombre);
-					}
-					
-			}
+				
 		} 
 	}catch(SQLException e) {throw new AccesoDatosException("Error al intentar eliminar el servicio", e);}
 	
 	return plan;
 	}	
 	@Override
-	public List<Plan> findAll()  {
+	public List<Plan> findAll() throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException  {
 		String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
 					  + "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
 					  + "FROM plan p "
@@ -252,9 +244,8 @@ public class PlanDAOJDBC implements PlanDAO {
 					}
 					ConnectionManager.disconnect();
 		} catch(SQLException e) {
-			JOptionPane.showMessageDialog(null,"error al retirar todos los elementos"+ e.toString());
-		}catch( ValorInvalidoException| DatoVacioException| EntidadDuplicadaException e) {	
-			JOptionPane.showMessageDialog(null,"Valores invalidos en datos a retirar"+ e.toString());
+			
+			throw new AccesoDatosException("error al retirar todos los elementos"+ e.toString());
 		}
 		return planes;
 	}

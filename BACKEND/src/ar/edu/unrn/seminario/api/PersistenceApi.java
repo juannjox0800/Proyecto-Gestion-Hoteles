@@ -163,7 +163,7 @@ public class PersistenceApi implements IApi {
 	}
 
 	@Override
-	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException, AccesoDatosException {
+	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		Plan plan = planDao.find(nombre);
 		return HotelMapper.aDTO(plan);
 	}
@@ -203,7 +203,7 @@ public class PersistenceApi implements IApi {
 	}
 
 	@Override
-	public List<PlanDTO> obtenerListaPlan() {
+	public List<PlanDTO> obtenerListaPlan() throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException {
 		List<Plan> planes = planDao.findAll();
 		List<PlanDTO> planesDTO = new ArrayList<>();
 		for (Plan p : planes) {

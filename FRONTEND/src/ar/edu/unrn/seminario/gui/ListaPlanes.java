@@ -150,10 +150,18 @@ public class ListaPlanes extends JFrame {
 		DefaultTableModel modelo = (DefaultTableModel) jtListaPlanes.getModel();
 		modelo.setRowCount(0);
 
-		for (PlanDTO dto : api.obtenerListaPlan()) {
-			modelo.addRow(new Object[] {
-					dto.getNombre(), "$" + dto.getCosto(), dto.isEstadoActivo() ? "Activo" : "Inactivo"
-			});
+		try {
+			for (PlanDTO dto : api.obtenerListaPlan()) {
+				modelo.addRow(new Object[] {
+						dto.getNombre(), "$" + dto.getCosto(), dto.isEstadoActivo() ? "Activo" : "Inactivo"
+				});
+			}
+		} catch (AccesoDatosException e) {
+			JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+
+		} catch (ValorInvalidoException|EntidadDuplicadaException|DatoVacioException e1) {
+			JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+
 		}
 	}
 }

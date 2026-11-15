@@ -56,10 +56,10 @@ public interface IApi {
 	void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
 	void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException;
 	void eliminarPlan(String nombre)throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException;
-	PlanDTO obtenerPlan(String nombre)throws EntidadNoEncontradaException, AccesoDatosException;
+	PlanDTO obtenerPlan(String nombre)throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException;
 	float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios);
 	
-	List<PlanDTO> obtenerListaPlan();
+	List<PlanDTO> obtenerListaPlan() throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException;
 	//
 	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
 	void modificarReserva(int numeroReserva);

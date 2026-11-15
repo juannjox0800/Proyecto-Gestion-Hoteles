@@ -22,8 +22,8 @@ public interface PlanDAO {
 
 	void remove(String nombres) throws  EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException;
 
-	Plan find(String nombre) throws  EntidadNoEncontradaException, AccesoDatosException;
+	Plan find(String nombre) throws  EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException;
 
-	List<Plan> findAll();
+	List<Plan> findAll() throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException;
 
 }

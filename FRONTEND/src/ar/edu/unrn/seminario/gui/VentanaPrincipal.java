@@ -157,8 +157,12 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem enlistarPlan = new JMenuItem("Enlistar Plan");
 		enlistarPlan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<PlanDTO> planesList=null;;
-					planesList = api.obtenerListaPlan();
+				List<PlanDTO> planesList=null;
+					try {
+						planesList = api.obtenerListaPlan();
+					} catch (AccesoDatosException | EntidadDuplicadaException |ValorInvalidoException | DatoVacioException e20) {
+					    JOptionPane.showMessageDialog(null,"Probema al obtener lista","Aviso",JOptionPane.WARNING_MESSAGE);
+					}
 				if (planesList == null || planesList.isEmpty()) {
 				    JOptionPane.showMessageDialog(null,"No hay planes registrados en el sistema para listar, modificar o eliminar.","Aviso",JOptionPane.WARNING_MESSAGE);
 				   
