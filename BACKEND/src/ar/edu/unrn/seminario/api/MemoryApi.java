@@ -13,6 +13,7 @@ import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.mapper.HotelMapper;
@@ -116,8 +117,14 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException
+	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, EntidadEnUsoException
 	{
+		boolean reservada = this.reservas.stream().anyMatch(r-> r.getHabitaciones().stream().anyMatch(h -> h.getNumero() == numero));
+		
+		if(reservada) {
+			throw new EntidadEnUsoException("No se pueden eliminar habitaciones en uso");
+		}
+		
 		boolean eliminado = this.habitaciones.removeIf(h -> h.getNumero() == numero);
 		
 		if (!eliminado) {

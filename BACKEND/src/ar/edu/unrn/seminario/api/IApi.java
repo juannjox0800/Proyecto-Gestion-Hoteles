@@ -13,6 +13,7 @@ import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
@@ -61,7 +62,7 @@ public interface IApi {
 	*/
 	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
 	boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException;
-	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException;
+	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, EntidadEnUsoException;
 	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException;
 	List <HabitacionDTO>obtenerListaHabitacion();
 	/*
