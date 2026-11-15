@@ -270,7 +270,7 @@ public class RegistrarPlan extends JFrame {
 		tfABuscar.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Selecciona servicio:");
-		lblNewLabel.setBounds(10, 107, 107, 14);
+		lblNewLabel.setBounds(10, 107, 135, 14);
 		contentPane.add(lblNewLabel);
 		
 		}
