@@ -24,19 +24,13 @@ public class Plan {
 		this.setEstadoActivo(estadoActivo);
 	}
 
-	public Plan(float costo, String nombre, boolean estadoActivo)throws ValorInvalidoException,DatoVacioException {
-		this.setCosto(costo);
-		this.setNombre(nombre);
-		this.setEstadoActivo(estadoActivo);
-		this.servicios = new ArrayList<Servicio>();
-		this.setEstadoActivo(estadoActivo);
-	}
-
 	public List<Servicio> getServicios() {
 		return servicios;
 	}
 
-	public void setServicios(List<Servicio> servicios)throws ValorInvalidoException{
+	public void setServicios(List<Servicio> servicios)throws ValorInvalidoException, DatoVacioException{
+
+		if (servicios == null || servicios.isEmpty()) throw new DatoVacioException("El plan debe incluir al menos un servicio");
 		this.servicios = new ArrayList<>();
 		try {
 			for (Servicio a : servicios) {
