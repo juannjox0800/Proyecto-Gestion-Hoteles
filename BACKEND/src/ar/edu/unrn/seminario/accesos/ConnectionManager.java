@@ -9,7 +9,7 @@ public class ConnectionManager {
 	private static String URL_DB = "jdbc:mysql://localhost:3306/";//
 	protected static String DB = "gestion_hotel?useSSL=false";//se llama gestion_hotel
 	protected static String user = "root";//elmismo
-	protected static String pass = "1234"; //Pongo mi contraseña cual fue
+	protected static String pass = "xxx"; //Pongo mi contraseña cual fue
 	
 	protected static Connection conn = null;
 
