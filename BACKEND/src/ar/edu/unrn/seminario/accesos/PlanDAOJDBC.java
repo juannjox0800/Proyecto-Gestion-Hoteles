@@ -19,7 +19,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public void create(Plan plan) throws EntidadDuplicadaException {
+	public void create(Plan plan) throws EntidadDuplicadaException, AccesoDatosException {
 		String sql = "INSERT INTO plan(nombre_plan, costo, estado_activo) VALUES (?, ?, ?)";
 
 		Connection conex = ConnectionManager.getConnection();
@@ -47,7 +47,7 @@ public class PlanDAOJDBC implements PlanDAO {
 			
 			if (e.getErrorCode() == 1062) throw new EntidadDuplicadaException("Ya existe un plan con el nombre: " + plan.getNombre());
 			
-			throw new RuntimeException("Error al registrar el plan", e);
+			throw new AccesoDatosException("Error al registrar el plan", e);
 		} 
 		finally {
 			try {
@@ -62,29 +62,26 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public void update(Plan plan) throws EntidadNoEncontradaException {
+	public void update(Plan plan) throws EntidadNoEncontradaException, AccesoDatosException {
 		String sql = "UPDATE plan SET costo = ?, estado_activo = ? WHERE nombre_plan = ?";
 
 		Connection conex = ConnectionManager.getConnection();
 
 		try {
-			conex.setAutoCommit(false);                       // empieza la transacción
+			conex.setAutoCommit(false);                 
 
 			try (PreparedStatement statement = conex.prepareStatement(sql)) {
 				statement.setFloat(1, plan.getCosto());
 				statement.setBoolean(2, plan.isEstadoActivo());
 				statement.setString(3, plan.getNombre());
 
-				// Un solo executeUpdate (en tu versión estaba dos veces).
 				int filas = statement.executeUpdate();
 
-				// Si no modificó ninguna fila, el plan no existe.
 				if (filas == 0) {
 					throw new EntidadNoEncontradaException("No se encontró el plan: " + plan.getNombre());
 				}
 			}
 
-			// Se borran los servicios viejos del plan y se cargan los nuevos.
 			borrarPlan_servicio(plan.getNombre());
 			cargarPlan_servicio(plan.getNombre(), plan.getServicios());
 
@@ -96,15 +93,7 @@ public class PlanDAOJDBC implements PlanDAO {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
-			throw new RuntimeException("Error al modificar el plan", e);
-
-		} catch (EntidadNoEncontradaException e) {
-			try {
-				conex.rollback();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
-			throw e;                                          // se vuelve a lanzar para que la atrape la GUI
+			throw new AccesoDatosException("Error al modificar el plan", e);
 
 		} finally {
 			try {
@@ -120,7 +109,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public void remove(Plan plan) throws  EntidadNoEncontradaException {
+	public void remove(Plan plan) throws  EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException {
 		if(plan==null||plan.getNombre().trim().isEmpty()) 
 					throw new EntidadNoEncontradaException("plan nulo ingresa otro");
 		
@@ -130,7 +119,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public void remove(String nombre) throws EntidadNoEncontradaException {
+	public void remove(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException {
 		String sql = "DELETE FROM plan WHERE nombre_plan = ?";
 
 		Connection conex = ConnectionManager.getConnection();
@@ -154,12 +143,15 @@ public class PlanDAOJDBC implements PlanDAO {
 			conex.commit();
 
 		} catch (SQLException e) {
+			if (e.getErrorCode() == 1451) {
+				throw new EntidadEnUsoException("No se puede eliminar el Plan '" + nombre + "' porque pertenece a una reserva");
+			}
 			try {
 				conex.rollback();
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
-			throw new RuntimeException("Error al eliminar el plan", e);
+			throw new AccesoDatosException("Error al eliminar el plan", e);
 
 		} catch (EntidadNoEncontradaException e) {
 			try {
@@ -182,7 +174,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	
 	@Override
-	public Plan find(String nombre) throws EntidadNoEncontradaException {
+	public Plan find(String nombre) throws EntidadNoEncontradaException, AccesoDatosException {
 
 	String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
 			+ "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
@@ -202,32 +194,34 @@ public class PlanDAOJDBC implements PlanDAO {
 			boolean encontrado = false;
 			List<Servicio> servicios = new ArrayList<>();
 			try {
-			while (rs.next()) {
-				
-				if (!encontrado) {
-					nombrePlan = rs.getString("nombre_plan");
-					costo = rs.getFloat("costo");
-					activo = rs.getBoolean("estado_activo");
-					encontrado = true;
-				} 
-				
-				servicios.add(new Servicio(
-						rs.getString("nombre_servicio"),
-						rs.getString("descripcion"),
-						rs.getFloat("precio"),
-						rs.getBoolean("estado_vigente")));
-			} 
-			plan =new Plan(servicios, costo, nombrePlan, activo);
-				}catch(ValorInvalidoException|DatoVacioException e) {
-					JOptionPane.showMessageDialog(null,"error,"+ e.toString());
-			if (!encontrado) {
-				throw new EntidadNoEncontradaException("No se encontró el plan: " + nombre);
+					while (rs.next()) {
+						
+						if (!encontrado) {
+							nombrePlan = rs.getString("nombre_plan");
+							costo = rs.getFloat("costo");
+							activo = rs.getBoolean("estado_activo");
+							encontrado = true;
+						} 
+						
+						servicios.add(new Servicio(
+								rs.getString("nombre_servicio"),
+								rs.getString("descripcion"),
+								rs.getFloat("precio"),
+								rs.getBoolean("estado_vigente")));
+					} 
+					
+					plan =new Plan(servicios, costo, nombrePlan, activo);
+					
+			}catch(ValorInvalidoException|DatoVacioException e) {
+							JOptionPane.showMessageDialog(null,"error,"+ e.toString());
+					if (!encontrado) {
+						throw new EntidadNoEncontradaException("No se encontró el plan: " + nombre);
+					}
+					
 			}
-			
-		}
-		} }catch(SQLException e) {
-			
-		}
+		} 
+	}catch(SQLException e) {throw new AccesoDatosException("Error al intentar eliminar el servicio", e);}
+	
 	return plan;
 	}	
 	@Override

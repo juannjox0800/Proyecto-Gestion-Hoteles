@@ -15,8 +15,10 @@ import javax.swing.table.DefaultTableModel;
 
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
@@ -98,7 +100,11 @@ public class ListaPlanes extends JFrame {
 					JOptionPane.showMessageDialog(null, "Plan eliminado correctamente");
 				} catch (EntidadNoEncontradaException e) {
 					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				} 
+				} catch(AccesoDatosException ex2){
+			        JOptionPane.showMessageDialog(null, ex2.getMessage(), "Problema", JOptionPane.WARNING_MESSAGE);
+			    } catch (EntidadEnUsoException e1) {
+			        JOptionPane.showMessageDialog(null, e1.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 
@@ -128,12 +134,11 @@ public class ListaPlanes extends JFrame {
 
 				ventana.setVisible(true);
 
-			} catch (EntidadNoEncontradaException e) {
+			} catch (DatoVacioException|ValorInvalidoException|EntidadNoEncontradaException e) {
 				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al modificar el plan", JOptionPane.ERROR_MESSAGE);
-			} catch(DatoVacioException e) {
-				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al modificar el plan", JOptionPane.ERROR_MESSAGE);
-
-			}
+			}  catch (AccesoDatosException ex) {		
+				JOptionPane.showMessageDialog(null, ex.getMessage(), "Problema", JOptionPane.WARNING_MESSAGE);
+			} 
 		});
 
 		btnSalirPlan.addActionListener((actionEvent) -> {

@@ -23,6 +23,7 @@ import javax.swing.JMenuItem;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
@@ -176,7 +177,7 @@ public class VentanaPrincipal extends JFrame {
 				try {
 				    RegistrarPlan ventana = new RegistrarPlan(api);
 				    ventana.setVisible(true);
-				} catch (DatoVacioException ex) {
+				} catch (ValorInvalidoException|DatoVacioException ex) {
 				    JOptionPane.showMessageDialog(null, ex.getMessage());
 				}
 			}

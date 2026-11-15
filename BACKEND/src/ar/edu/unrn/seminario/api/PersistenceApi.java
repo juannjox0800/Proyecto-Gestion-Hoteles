@@ -157,20 +157,20 @@ public class PersistenceApi implements IApi {
 	// -------------------------------------------------------------------- PLANES
 
 	@Override
-	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException {
+	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException {
 		// remove(String) ya lanza EntidadNoEncontradaException si el plan no existe
 		planDao.remove(nombre);
 	}
 
 	@Override
-	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException {
+	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException, AccesoDatosException {
 		Plan plan = planDao.find(nombre);
 		return HotelMapper.aDTO(plan);
 	}
 
 	@Override
 	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
-			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
+			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
 		List<Servicio> servicios = new ArrayList<>();
 		for (ServicioDTO a : listaServicios) {
 			servicios.add(HotelMapper.aModelo(a));
@@ -181,7 +181,7 @@ public class PersistenceApi implements IApi {
 
 	@Override
 	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
-			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException {
+			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException {
 
 		planDao.find(nombre); // lanza EntidadNoEncontradaException si el plan no existe
 

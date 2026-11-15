@@ -70,10 +70,12 @@ public class Plan {
 
 	public void agregarServicio(Servicio servicio) throws ValorInvalidoException, EntidadDuplicadaException {
 		boolean yaAgregado = servicios.stream().anyMatch(s -> s.getNombre().equalsIgnoreCase(servicio.getNombre()));	
+		
 		if (yaAgregado) throw new EntidadDuplicadaException("ya se encuentra ese servicio en el plan");
-		if ( servicio.getNombre()== null ||servicio.getNombre().trim().isEmpty() ||servicio.getPrecio()<0 || servicio.isEstadoVigente()==false) {
+		
+		if ( servicio.getNombre()== null ||servicio.getNombre().trim().isEmpty() ||servicio.getPrecio()<0) 
 			throw new ValorInvalidoException("intentaste ingresar servicios invalidos, chequealos y vuelve a intentar");
-		}
+		
 		servicios.add(servicio);
 		
 	}

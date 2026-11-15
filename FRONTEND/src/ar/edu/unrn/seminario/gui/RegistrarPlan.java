@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
@@ -46,14 +47,22 @@ public class RegistrarPlan extends JFrame {
 
 
 	/**
+	 * @throws AccesoDatosException 
+	 * @throws ValorInvalidoException 
 	 * @wbp.parser.constructor
 	 */
-	public RegistrarPlan(IApi api)throws DatoVacioException {this(api,null);}
+	public RegistrarPlan(IApi api)throws DatoVacioException, ValorInvalidoException {this(api,null);}
 	
 	
-	public RegistrarPlan(IApi api, PlanDTO planExistente) throws DatoVacioException {
+	public RegistrarPlan(IApi api, PlanDTO planExistente) throws DatoVacioException, ValorInvalidoException {
 		this.planAEditar=planExistente;
-		List<ServicioDTO> servicios = api.obtenerListaServicios();
+
+		List<ServicioDTO> servicios = null;
+		try {
+		servicios = api.obtenerListaServicios();
+		} catch (AccesoDatosException ex) {
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "Problema", JOptionPane.WARNING_MESSAGE);
+		}
 		if (servicios == null || servicios.isEmpty()) {
 			throw new DatoVacioException("No hay ningún servicio cargado");
 		}
@@ -101,7 +110,7 @@ public class RegistrarPlan extends JFrame {
 		scrollPane.setViewportView(TableServiciosIncluidos);
 		
 		JComboBox cbServicios = new JComboBox();
-		String[] nombres = api.obtenerListaServicios().stream()
+		String[] nombres = servicios.stream()
 		        .filter(ServicioDTO::isEstadoVigente)
 		        .map(ServicioDTO::getNombre)
 		        .toArray(String[]::new);
@@ -131,7 +140,7 @@ public class RegistrarPlan extends JFrame {
 			                .addRow(new Object[] { servicioSelec.getNombre() });
 			     actualizarPrecio(api);
 
-			    } catch (ValorInvalidoException | EntidadNoEncontradaException | EntidadDuplicadaException ex) {
+			    } catch (ValorInvalidoException | EntidadNoEncontradaException | EntidadDuplicadaException | DatoVacioException | AccesoDatosException ex) {
 			        JOptionPane.showMessageDialog(null, ex.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
 			    }
 			}});
@@ -181,6 +190,8 @@ public class RegistrarPlan extends JFrame {
 		        JOptionPane.showMessageDialog(null, "El costo debe ser un número válido", "Aviso", JOptionPane.WARNING_MESSAGE);
 		    } catch (DatoVacioException | ValorInvalidoException | EntidadDuplicadaException | EntidadNoEncontradaException ex) {
 		        JOptionPane.showMessageDialog(null, ex.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
+		    }catch(AccesoDatosException ex2){
+		        JOptionPane.showMessageDialog(null, ex2.getMessage(), "Problema", JOptionPane.WARNING_MESSAGE);
 		    }
 		});
 		contentPane.add(btnGuardarPlan);

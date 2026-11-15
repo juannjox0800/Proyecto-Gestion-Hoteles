@@ -297,7 +297,12 @@ public class MemoryApi implements IApi {
 	
 	
 	@Override
-	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException{
+	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException, EntidadEnUsoException{
+		boolean enUso = this.reservas.stream()
+				.anyMatch(p -> p.getPlan().getNombre().equalsIgnoreCase(nombre));
+		if (enUso) {
+		throw new EntidadEnUsoException("No se puede eliminar el servicio '" + nombre + "' porque esta incluido en un plan");
+		}
 			boolean eliminado = this.planes.removeIf(h -> h.getNombre().equalsIgnoreCase(nombre));		
 			if (!eliminado) throw new EntidadNoEncontradaException("No se ha encontrado el plan.");
 				
@@ -429,7 +434,6 @@ public class MemoryApi implements IApi {
 		for (Plan p : planes) {
 	        if (p.getNombre().equals(nombrePlan)) {
 	            plan = HotelMapper.aDTO(p);
-	            break;
 	            }
 	        } 
 		
