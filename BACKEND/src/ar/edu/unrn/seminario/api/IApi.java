@@ -13,6 +13,7 @@ import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
@@ -45,7 +46,7 @@ public interface IApi {
 	
 	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
 	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException;
-	void eliminarServicio(String nombre)throws EntidadNoEncontradaException;
+	void eliminarServicio(String nombre)throws EntidadNoEncontradaException, EntidadEnUsoException;
 	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException;
 
 	List<ServicioDTO> obtenerListaServicios();
