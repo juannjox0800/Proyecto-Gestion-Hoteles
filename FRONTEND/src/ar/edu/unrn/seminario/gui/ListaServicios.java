@@ -100,7 +100,7 @@ public class ListaServicios extends JFrame {
 				} catch (EntidadNoEncontradaException e) {
 					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al buscar servicio", JOptionPane.ERROR_MESSAGE);
 				} catch (EntidadEnUsoException e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), "No se puede eliminar", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Atencion", JOptionPane.WARNING_MESSAGE);
 				} catch (AccesoDatosException e) {
 					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error inesperado", JOptionPane.ERROR_MESSAGE);
 				}
