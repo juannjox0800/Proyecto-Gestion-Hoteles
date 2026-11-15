@@ -49,12 +49,12 @@ public class RegistrarCliente extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNombre = new JLabel("Nombre(*):");
+		JLabel lblNombre = new JLabel("(*) Nombre:");
 		lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblNombre.setBounds(59, 44, 72, 20);
 		contentPane.add(lblNombre);
 		
-		JLabel lblApellido = new JLabel("Apellido(*):");
+		JLabel lblApellido = new JLabel("(*) Apellido:");
 		lblApellido.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblApellido.setBounds(59, 82, 72, 20);
 		contentPane.add(lblApellido);
@@ -64,9 +64,9 @@ public class RegistrarCliente extends JFrame {
 		lblContacto.setBounds(59, 123, 72, 20);
 		contentPane.add(lblContacto);
 		
-		JLabel lblDNI = new JLabel("DNI(*):");
+		JLabel lblDNI = new JLabel("(*) DNI:");
 		lblDNI.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblDNI.setBounds(59, 161, 46, 17);
+		lblDNI.setBounds(59, 161, 72, 20);
 		contentPane.add(lblDNI);
 		
 		tfNombre = new JTextField();
@@ -89,8 +89,9 @@ public class RegistrarCliente extends JFrame {
 		contentPane.add(tfDNI);
 		tfDNI.setColumns(10);
 		
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.addActionListener(new ActionListener() {
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String nombre = tfNombre.getText();
@@ -104,8 +105,12 @@ public class RegistrarCliente extends JFrame {
 					}else {
 						api.modificarCLiente(dniOriginal, nombre, apellido, contacto);
 						JOptionPane.showMessageDialog(null, "El cliente se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
 					}
-					setVisible(false);
+					tfNombre.setText("");
+					tfApellido.setText("");
+					tfContacto.setText("");
+					tfDNI.setText("");
 				
 				} catch (DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
@@ -124,19 +129,25 @@ public class RegistrarCliente extends JFrame {
 			}
 			}
 		});
-		btnAceptar.setBounds(234, 246, 101, 23);
-		contentPane.add(btnAceptar);
+		btnGuardar.setBounds(357, 241, 101, 23);
+		contentPane.add(btnGuardar);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				dispose();
 			}
 		});
 	
 
-		btnCancelar.setBounds(355, 246, 101, 23);
-		contentPane.add(btnCancelar);
+		btnSalir.setBounds(233, 241, 101, 23);
+		contentPane.add(btnSalir);
+		
+		JLabel lblDatosObligatorios = new JLabel("Datos Obligatorios (*)");
+		lblDatosObligatorios.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblDatosObligatorios.setBounds(59, 14, 156, 20);
+		contentPane.add(lblDatosObligatorios);
 		
 		if (clienteDTO != null) {
 			tfNombre.setText(clienteDTO.getNombre());
@@ -148,10 +159,3 @@ public class RegistrarCliente extends JFrame {
 	
 		}
 }
-
-	
-	
-
-	
-	
-
