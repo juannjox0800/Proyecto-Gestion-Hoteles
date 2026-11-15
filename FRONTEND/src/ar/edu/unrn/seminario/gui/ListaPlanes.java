@@ -68,11 +68,11 @@ public class ListaPlanes extends JFrame {
 		recargarTabla(api);
 
 		JButton btnModificarPlan = new JButton("Modificar");
-		btnModificarPlan.setBounds(10, 152, 89, 23);
+		btnModificarPlan.setBounds(117, 152, 89, 23);
 		contentPane.add(btnModificarPlan);
 
 		JButton btnEliminarPlan = new JButton("Eliminar");
-		btnEliminarPlan.setBounds(109, 152, 89, 23);
+		btnEliminarPlan.setBounds(216, 152, 89, 23);
 		contentPane.add(btnEliminarPlan);
 
 		JButton btnSalirPlan = new JButton("Salir");

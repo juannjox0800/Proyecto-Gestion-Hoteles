@@ -66,7 +66,7 @@ public class RegistrarPlan extends JFrame {
 		if (servicios == null || servicios.isEmpty()) {
 			throw new DatoVacioException("No hay ningún servicio cargado");
 		}
-		setTitle("Registrar Plan");
+		setTitle(planAEditar == null ? "Registrar Plan" : "Modificar Plan");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 527, 425);
 		contentPane = new JPanel();
@@ -74,12 +74,12 @@ public class RegistrarPlan extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNombrePlan = new JLabel("Nombre(*)");
-		lblNombrePlan.setBounds(10, 42, 75, 14);
+		JLabel lblNombrePlan = new JLabel("(*)Nombre");
+		lblNombrePlan.setBounds(10, 39, 75, 14);
 		contentPane.add(lblNombrePlan);
 		
-		JLabel lblCostoPlan = new JLabel("Costo(*)");
-		lblCostoPlan.setBounds(10, 63, 75, 14);
+		JLabel lblCostoPlan = new JLabel("(*)Costo");
+		lblCostoPlan.setBounds(10, 275, 75, 14);
 		contentPane.add(lblCostoPlan);
 		
 		tFNombre = new JTextField();
@@ -89,11 +89,11 @@ public class RegistrarPlan extends JFrame {
 		
 		tFCosto = new JTextField();
 		tFCosto.setColumns(10);
-		tFCosto.setBounds(127, 60, 195, 20);
+		tFCosto.setBounds(155, 272, 195, 20);
 		contentPane.add(tFCosto);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(155, 167, 278, 90);
+		scrollPane.setBounds(155, 107, 278, 112);
 		contentPane.add(scrollPane);
 		
 		TableServiciosIncluidos = new JTable();
@@ -115,11 +115,11 @@ public class RegistrarPlan extends JFrame {
 		        .map(ServicioDTO::getNombre)
 		        .toArray(String[]::new);
 		cbServicios.setModel(new DefaultComboBoxModel<>(nombres));
-		cbServicios.setBounds(10, 167, 135, 22);
+		cbServicios.setBounds(10, 134, 135, 22);
 		contentPane.add(cbServicios);
 		
 		JButton btnAgregarServicio = new JButton("Agregar Servicio");
-		btnAgregarServicio.setBounds(10, 200, 135, 23);
+		btnAgregarServicio.setBounds(10, 167, 135, 23);
 		btnAgregarServicio.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 			    try {
@@ -147,7 +147,7 @@ public class RegistrarPlan extends JFrame {
 		
 		JComboBox cBActivo = new JComboBox<>();
 		cBActivo.setModel(new DefaultComboBoxModel(new String[] {"Activo", "Inactivo"}));
-		cBActivo.setBounds(127, 109, 195, 22);
+		cBActivo.setBounds(127, 67, 195, 22);
 		contentPane.add(cBActivo);
 		contentPane.add(btnAgregarServicio);
 
@@ -177,7 +177,16 @@ public class RegistrarPlan extends JFrame {
 		            api.modificarPlan(serviciosSeleccionados, costo, nombre, activo);
 		        }
 		        JOptionPane.showMessageDialog(null, "Plan guardado correctamente");
-		        
+
+		        if (planAEditar == null) {
+		        	tFNombre.setText("");
+		        	tFCosto.setText("");
+		        	serviciosSeleccionados.clear();
+		        	((DefaultTableModel) TableServiciosIncluidos.getModel()).setRowCount(0);
+		        	actualizarPrecio(api);
+		        } else {
+		        	dispose();
+		        }		        
 		        
 
 				tFNombre.setText("");
@@ -205,7 +214,7 @@ public class RegistrarPlan extends JFrame {
 		contentPane.add(btnSalirPlan);
 		
 		JButton btnEliminarServicio = new JButton("Eliminar Servicio");
-		btnEliminarServicio.setBounds(10, 234, 135, 23);
+		btnEliminarServicio.setBounds(10, 196, 135, 23);
 		btnEliminarServicio.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 		        int filaSeleccionada = TableServiciosIncluidos.getSelectedRow();
@@ -220,12 +229,12 @@ public class RegistrarPlan extends JFrame {
 		contentPane.add(btnEliminarServicio);
 
 		
-		JLabel lblEstado = new JLabel("Estado");
-		lblEstado.setBounds(10, 113, 71, 14);
+		JLabel lblEstado = new JLabel("     Estado");
+		lblEstado.setBounds(10, 71, 81, 14);
 		contentPane.add(lblEstado);
 		
 		 lblCostoRecomendado = new JLabel("Costo recomendado: 0.0");
-		lblCostoRecomendado.setBounds(10, 88, 195, 14);
+		lblCostoRecomendado.setBounds(155, 298, 195, 14);
 		contentPane.add(lblCostoRecomendado);
 		
 		JLabel lblDatosObligatorios = new JLabel("Datos obligatorios (*)");
@@ -252,13 +261,17 @@ public class RegistrarPlan extends JFrame {
 		    }
 		    TableServiciosIncluidos.setRowSelectionInterval(fila, fila);
 		});
-		btnBuscar.setBounds(344, 264, 89, 23);
+		btnBuscar.setBounds(344, 230, 89, 23);
 		contentPane.add(btnBuscar);
 		
 		tfABuscar = new JTextField();
-		tfABuscar.setBounds(155, 265, 182, 22);
+		tfABuscar.setBounds(155, 230, 182, 22);
 		contentPane.add(tfABuscar);
 		tfABuscar.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Selecciona servicio:");
+		lblNewLabel.setBounds(10, 107, 107, 14);
+		contentPane.add(lblNewLabel);
 		
 		}
 	private void actualizarPrecio(IApi api) {
