@@ -14,8 +14,10 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
@@ -112,15 +114,14 @@ public class PersistenceApi implements IApi {
 
 	@Override
 	public void registrarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)
-			throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
+			throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException, AccesoDatosException {
 		Servicio servicio = new Servicio(nombre, descripcion, precio, estadoVigente);
 		this.servicioDao.create(servicio);
 	}
 
 	@Override
-	public void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)
-			throws EntidadNoEncontradaException, ValorInvalidoException {
-
+	public void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) 
+			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException {
 		Servicio servicio = servicioDao.find(nombre);
 
 		servicio.setDescripcion(descripcion);
@@ -131,20 +132,18 @@ public class PersistenceApi implements IApi {
 	}
 
 	@Override
-	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException {
-		Servicio servicio = servicioDao.find(nombre);
-
-		servicioDao.remove(servicio);
+	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException{
+		servicioDao.remove(nombre);
 	}
 
 	@Override
-	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException {
-		Servicio servicio = servicioDao.find(nombre);
+	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
+		Servicio servicio = servicioDao.find(nombre);		
 		return HotelMapper.aDTO(servicio);
 	}
 
 	@Override
-	public List<ServicioDTO> obtenerListaServicios() {
+	public List<ServicioDTO> obtenerListaServicios() throws DatoVacioException, ValorInvalidoException, AccesoDatosException {
 		List<Servicio> servicios = servicioDao.findAll();
 		List<ServicioDTO> serviciosDTO = new ArrayList<>();
 

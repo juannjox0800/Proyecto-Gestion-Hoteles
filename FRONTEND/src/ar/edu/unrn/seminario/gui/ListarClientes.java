@@ -19,8 +19,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class ListarClientes extends JFrame {
 
@@ -68,15 +71,17 @@ public class ListarClientes extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JLabel lblBuscar = new JLabel("Buscar por DNI:");
-		lblBuscar.setBounds(28, 25, 88, 14);
+		lblBuscar.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblBuscar.setBounds(28, 25, 110, 18);
 		contentPane.add(lblBuscar);
 		
 		textField = new JTextField();
-		textField.setBounds(126, 22, 119, 20);
+		textField.setBounds(148, 23, 119, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -105,10 +110,11 @@ public class ListarClientes extends JFrame {
 			}
 			
 		});
-		btnBuscar.setBounds(255, 21, 89, 23);
+		btnBuscar.setBounds(303, 21, 89, 23);
 		contentPane.add(btnBuscar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
               int filaSelec = table.getSelectedRow();
@@ -137,10 +143,11 @@ public class ListarClientes extends JFrame {
 				
 			
 		});
-		btnEliminar.setBounds(424, 239, 89, 23);
+		btnEliminar.setBounds(275, 239, 89, 23);
 		contentPane.add(btnEliminar);
 		
 		JButton btnModificar = new JButton("Modificar");
+		btnModificar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 int filaSelec = table.getSelectedRow();
@@ -152,9 +159,15 @@ int filaSelec = table.getSelectedRow();
 						
 						
 						RegistrarCliente ventanaModificar = new RegistrarCliente(api,clienteDTO);
+						
+						ventanaModificar.addWindowListener(new WindowAdapter() {
+							@Override
+							public void windowClosed(WindowEvent w) {
+								cargarTablaCompleta();
+							}
+						});
 						ventanaModificar.setVisible(true);
 						
-						JOptionPane.showMessageDialog(null, "Cliente seleccionado para modificar: " + clienteDTO.getNombre(), "Modificar", JOptionPane.INFORMATION_MESSAGE);
 						
 					} catch (EntidadNoEncontradaException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
@@ -167,17 +180,19 @@ int filaSelec = table.getSelectedRow();
 			
 			}
 		});
-		btnModificar.setBounds(325, 239, 89, 23);
+		btnModificar.setBounds(148, 239, 89, 23);
 		contentPane.add(btnModificar);
 		
-		JButton btnCerrar = new JButton("Cerrar");
-		btnCerrar.addActionListener(new ActionListener() {
+		JButton btnSalir = new JButton("Salir");
+		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				dispose();
+				
 			}
 		});
-		btnCerrar.setBounds(27, 295, 89, 23);
-		contentPane.add(btnCerrar);
+		btnSalir.setBounds(418, 295, 89, 23);
+		contentPane.add(btnSalir);
 
 		cargarTablaCompleta();
 	}
