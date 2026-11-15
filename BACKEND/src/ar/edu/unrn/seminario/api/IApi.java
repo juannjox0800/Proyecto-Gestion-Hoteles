@@ -11,6 +11,7 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
@@ -44,12 +45,12 @@ public interface IApi {
 	List <HabitacionDTO>obtenerListaHabitacion();
 
 	
-	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
-	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;
-	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException;
-	void eliminarServicio(String nombre)throws EntidadNoEncontradaException, EntidadEnUsoException;
+	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException, AccesoDatosException ;
+	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException;
+	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	void eliminarServicio(String nombre)throws EntidadNoEncontradaException, EntidadEnUsoException, AccesoDatosException;
 
-	List<ServicioDTO> obtenerListaServicios() throws DatoVacioException, ValorInvalidoException;
+	List<ServicioDTO> obtenerListaServicios() throws DatoVacioException, ValorInvalidoException, AccesoDatosException;
 	
 	void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
 	void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo)throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;

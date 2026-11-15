@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
@@ -97,9 +98,11 @@ public class ListaServicios extends JFrame {
 					
 					JOptionPane.showMessageDialog(null, "Servicio eliminado correctamente");
 				} catch (EntidadNoEncontradaException e) {
-					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al buscar servicio", JOptionPane.ERROR_MESSAGE);
 				} catch (EntidadEnUsoException e) {
-					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al intentar eliminar el servicio", JOptionPane.ERROR_MESSAGE);
+				} catch (AccesoDatosException e) {
+					JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error inesperado", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -130,6 +133,8 @@ public class ListaServicios extends JFrame {
 				
 			} catch (EntidadNoEncontradaException | ValorInvalidoException | DatoVacioException e) {
 				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al modificar el servicio", JOptionPane.ERROR_MESSAGE);
+			} catch (AccesoDatosException e) {
+				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error inesperado", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		
@@ -150,6 +155,8 @@ public class ListaServicios extends JFrame {
 			}
 		} catch (ValorInvalidoException | DatoVacioException e ) {
 			JOptionPane.showMessageDialog(null, "Error al cargar los servicios: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (AccesoDatosException e) {
+			JOptionPane.showMessageDialog(null, "Error Inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

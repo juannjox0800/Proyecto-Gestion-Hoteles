@@ -7,8 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Servicio;
@@ -16,7 +18,7 @@ import ar.edu.unrn.seminario.modelo.Servicio;
 public class ServicioDAOJDBC implements ServicioDAO{
 
 	@Override
-	public void create(Servicio servicio) throws EntidadDuplicadaException {
+	public void create(Servicio servicio) throws EntidadDuplicadaException, AccesoDatosException {
 		try {
 			Connection conex = ConnectionManager.getConnection();
 			
@@ -32,7 +34,7 @@ public class ServicioDAOJDBC implements ServicioDAO{
 			if (e.getErrorCode() == 1062)
 				throw new EntidadDuplicadaException("Ya existe un servicio con el nombre: " + servicio.getNombre());
 			
-			System.out.println("Excepcion propia create");
+			throw new AccesoDatosException("Error al intentar crear el servicio", e);
 		} finally {
 			ConnectionManager.disconnect();
 		}
@@ -40,7 +42,7 @@ public class ServicioDAOJDBC implements ServicioDAO{
 	}
 
 	@Override
-	public void update(Servicio servicio) throws EntidadNoEncontradaException {
+	public void update(Servicio servicio) throws EntidadNoEncontradaException, AccesoDatosException {
 		try {
 			Connection conex = ConnectionManager.getConnection();
 			
@@ -57,14 +59,14 @@ public class ServicioDAOJDBC implements ServicioDAO{
 				throw new EntidadNoEncontradaException("No se encontro el servicio: " + servicio.getNombre());
 			
 		} catch (SQLException e) {
-			System.out.println("Excepcion propia update");
+			throw new AccesoDatosException("Error al intentar modificar el servicio", e);
 		} finally {
 			ConnectionManager.disconnect();
 		}
 	}
 
 	@Override
-	public void remove(String nombre) throws EntidadNoEncontradaException{
+	public void remove(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException{
 		try {
 			Connection conex = ConnectionManager.getConnection();
 			
@@ -77,23 +79,22 @@ public class ServicioDAOJDBC implements ServicioDAO{
 				throw new EntidadNoEncontradaException("No se encontro el servicio a eliminar: " + nombre);
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1451) {
-				System.out.println("no se puede eliminar pq pertenece a un plan");
-				throw new RuntimeException ("Error", e);
+				throw new EntidadEnUsoException("No se puede eliminar el servicio '" + nombre + "' porque pertenece a un plan");
 			}
-			System.out.println("Excepcion propia remove");
+			throw new AccesoDatosException("Error al intentar eliminar el servicio", e);
 		} finally {
 			ConnectionManager.disconnect();
 		}
 	}
 
 	@Override
-	public void remove(Servicio servicio) throws EntidadNoEncontradaException{
+	public void remove(Servicio servicio) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException{
 		if (servicio != null)
 			this.remove(servicio.getNombre());
 	}
 	
 	@Override
-	public Servicio find(String nombre) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException {
+	public Servicio find(String nombre) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException {
 		Servicio servicio = null;
 		
 		try {
@@ -112,7 +113,7 @@ public class ServicioDAOJDBC implements ServicioDAO{
 				throw new EntidadNoEncontradaException("No se encontro el servicio: " + nombre);
 			}
 		} catch (SQLException e) {
-			System.out.println("Excepcion propia find");
+			throw new AccesoDatosException("Error al intentar encontrar el servicio", e);
 		} finally {
 			ConnectionManager.disconnect();
 		}
@@ -121,7 +122,7 @@ public class ServicioDAOJDBC implements ServicioDAO{
 	}
 	
 	@Override
-	public List<Servicio> findAll() throws ValorInvalidoException, DatoVacioException{
+	public List<Servicio> findAll() throws ValorInvalidoException, DatoVacioException, AccesoDatosException{
 		List<Servicio> servicios = new ArrayList<Servicio>();
 		
 		try {
@@ -135,7 +136,7 @@ public class ServicioDAOJDBC implements ServicioDAO{
 				servicios.add(new Servicio(rs.getString("nombre_servicio"), rs.getString("descripcion"), rs.getFloat("precio"), rs.getBoolean("estado_vigente")));
 			}
 		} catch (SQLException e) {
-			System.out.println("Excepcion propia findAll");
+			throw new AccesoDatosException("Error al intentar encontrar los servicios", e);
 		} finally {
 			ConnectionManager.disconnect();
 		}
