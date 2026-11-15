@@ -76,6 +76,10 @@ public class ServicioDAOJDBC implements ServicioDAO{
 			if (filasAfectadas == 0)
 				throw new EntidadNoEncontradaException("No se encontro el servicio a eliminar: " + nombre);
 		} catch (SQLException e) {
+			if (e.getErrorCode() == 1451) {
+				System.out.println("no se puede eliminar pq pertenece a un plan");
+				throw new RuntimeException ("Error", e);
+			}
 			System.out.println("Excepcion propia remove");
 		} finally {
 			ConnectionManager.disconnect();
