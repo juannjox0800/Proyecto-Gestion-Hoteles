@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 
 
@@ -118,6 +119,10 @@ public class EnlistarHabitación extends JFrame {
 				
 				if(filaSelec != -1) {
 						
+					int verificacion = JOptionPane.showConfirmDialog(null, "¿Estás segura que deseas modificar esta habitación?", "Confirmar modificación.", JOptionPane.YES_NO_OPTION);
+					
+                    if(verificacion == JOptionPane.YES_OPTION) {
+					
 						try {
 							
 							int numHabitacion = (int) table.getValueAt(filaSelec, 0);
@@ -140,6 +145,7 @@ public class EnlistarHabitación extends JFrame {
 							JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
 							
 						}
+                    }
 					
 				}else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione una habitación de la tabla para modificar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
@@ -176,7 +182,11 @@ public class EnlistarHabitación extends JFrame {
                             
                     	}catch(EntidadNoEncontradaException e1) {
                     		JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    	}
+                    		
+                    	} catch (EntidadEnUsoException e2) {
+                    		JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							
+						}
                       }
 					
 				}else {

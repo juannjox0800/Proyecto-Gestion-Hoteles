@@ -49,8 +49,7 @@ public class RegistrarHabitacion extends JFrame {
 
 	public RegistrarHabitacion(IApi api, HabitacionDTO dtoH) {
 		setTitle("Registrar Habitacion");
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 582, 460);
 
 		contentPane = new JPanel();
@@ -193,6 +192,8 @@ public class RegistrarHabitacion extends JFrame {
 					
 					JOptionPane.showMessageDialog(null, "La habitación se registró correctamente.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
 					
+					limpiarCampos();
+					
 				}else {
 					api.modificarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
 					
@@ -200,7 +201,7 @@ public class RegistrarHabitacion extends JFrame {
 				}
 				
 				
-				limpiarCampos();
+				
 				
 				}catch(DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);

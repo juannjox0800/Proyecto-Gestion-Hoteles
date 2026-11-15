@@ -9,19 +9,19 @@ public class Cama {
 	
 	public Cama(String tipo) throws DatoVacioException
 	{
-		if(tipo.isEmpty()) {
-			throw new DatoVacioException("No a seleccionado una cama. Por favor, intente de nuevo.");
-		}
-		
-		this.setTipo(tipo);	
+		setTipo(tipo);
 	}
 
 	public String getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setTipo(String tipo) throws DatoVacioException {
+		if(tipo.isEmpty()) {
+			throw new DatoVacioException("No a seleccionado una cama. Por favor, intente de nuevo.");
+		}
+		
+		this.setTipo(tipo);	
 	}
 
 	@Override
