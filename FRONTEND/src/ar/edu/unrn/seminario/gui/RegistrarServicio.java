@@ -132,6 +132,11 @@ public class RegistrarServicio extends JFrame {
 					api.registrarServicio(nombre, descripcion, precio, estadoVigente);
 					JOptionPane.showMessageDialog(null, "Servicio Registrado Correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
 				} else {
+					int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que quiere guardar los cambios?", "Confirmar cambios", JOptionPane.YES_NO_OPTION);
+					
+					if (confirmacion != JOptionPane.YES_OPTION)
+						return;
+					
 					api.modificarServicio(nombreOriginal, descripcion, precio, estadoVigente);
 					JOptionPane.showMessageDialog(null, "Servicio Modificado Correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
 					dispose();
