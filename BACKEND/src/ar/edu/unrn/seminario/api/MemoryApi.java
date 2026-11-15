@@ -16,6 +16,7 @@ import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 
 
@@ -224,21 +225,19 @@ public class MemoryApi implements IApi {
 		servicio.setEstadoVigente(estadoVigente);	}
 
 	@Override
-	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException{
+	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException, EntidadEnUsoException{
 		boolean enUso = this.planes.stream()
 							.anyMatch(p -> p.getServicios().stream()
 											.anyMatch(s -> s.getNombre().equalsIgnoreCase(nombre)));
 		
 		if (enUso) {
-			System.out.println("Esta en uso");
-			throw new RuntimeException();
+			throw new EntidadEnUsoException("No se puede eliminar el servicio '" + nombre + "' porque esta incluido en un plan");
 		}
 		
 		boolean fueEliminado = this.servicios.removeIf(s -> s.getNombre().equalsIgnoreCase(nombre));
 		if (!fueEliminado) {
 			throw new EntidadNoEncontradaException("No se encontro el servicio '" + nombre + "' para eliminar");
 		}
-
 	}
 
 	@Override
