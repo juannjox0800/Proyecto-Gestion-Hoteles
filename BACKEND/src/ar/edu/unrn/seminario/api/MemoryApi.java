@@ -225,8 +225,16 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException{
-		boolean fueEliminado = this.servicios.removeIf(s -> s.getNombre().equalsIgnoreCase(nombre));
+		boolean enUso = this.planes.stream()
+							.anyMatch(p -> p.getServicios().stream()
+											.anyMatch(s -> s.getNombre().equalsIgnoreCase(nombre)));
 		
+		if (enUso) {
+			System.out.println("Esta en uso");
+			throw new RuntimeException();
+		}
+		
+		boolean fueEliminado = this.servicios.removeIf(s -> s.getNombre().equalsIgnoreCase(nombre));
 		if (!fueEliminado) {
 			throw new EntidadNoEncontradaException("No se encontro el servicio '" + nombre + "' para eliminar");
 		}
