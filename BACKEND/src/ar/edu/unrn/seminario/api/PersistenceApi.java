@@ -108,7 +108,7 @@ public class PersistenceApi implements IApi{
 
 	@Override
 	public void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)
-			throws EntidadNoEncontradaException, ValorInvalidoException {
+			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException {
 		
 		Servicio servicio = servicioDao.find(nombre);
 		
@@ -120,20 +120,18 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException {
-		Servicio servicio = servicioDao.find(nombre);
-		
-		servicioDao.remove(servicio);
+	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException{
+		servicioDao.remove(nombre);
 	}
 
 	@Override
-	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException {
+	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException {
 		Servicio servicio = servicioDao.find(nombre);		
 		return HotelMapper.aDTO(servicio);
 	}
 
 	@Override
-	public List<ServicioDTO> obtenerListaServicios() {
+	public List<ServicioDTO> obtenerListaServicios() throws DatoVacioException, ValorInvalidoException {
 		List<Servicio> servicios = servicioDao.findAll();
 		List<ServicioDTO> serviciosDTO = new ArrayList<>();
 		

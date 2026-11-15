@@ -17,7 +17,9 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class ListaServicios extends JFrame {
 
@@ -123,8 +125,8 @@ public class ListaServicios extends JFrame {
 				
 				ventana.setVisible(true);
 				
-			} catch (EntidadNoEncontradaException e) {
-				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al registrar el servicio", JOptionPane.ERROR_MESSAGE);
+			} catch (EntidadNoEncontradaException | ValorInvalidoException | DatoVacioException e) {
+				JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error al modificar el servicio", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		
@@ -137,10 +139,15 @@ public class ListaServicios extends JFrame {
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 		modelo.setRowCount(0);
 		
-		for (ServicioDTO dto : api.obtenerListaServicios()) {
-			modelo.addRow(new Object[] {
-					dto.getNombre(), "$" + dto.getPrecio(), dto.isEstadoVigente() ? "Activo" : "Inactivo"
-			});
+		try {
+			for (ServicioDTO dto : api.obtenerListaServicios()) {
+				modelo.addRow(new Object[] {
+						dto.getNombre(), "$" + dto.getPrecio(), dto.isEstadoVigente() ? "Activo" : "Inactivo"
+				});
+			}
+		} catch (ValorInvalidoException | DatoVacioException e ) {
+			JOptionPane.showMessageDialog(null, "Error al cargar los servicios: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
+

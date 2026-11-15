@@ -29,8 +29,10 @@ public class ServicioDAOJDBC implements ServicioDAO{
 			
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new EntidadDuplicadaException("Ya existe un servicio con el nombre: " + servicio.getNombre());
+			if (e.getErrorCode() == 1062)
+				throw new EntidadDuplicadaException("Ya existe un servicio con el nombre: " + servicio.getNombre());
 			
+			System.out.println("Excepcion propia create");
 		} finally {
 			ConnectionManager.disconnect();
 		}
@@ -38,7 +40,7 @@ public class ServicioDAOJDBC implements ServicioDAO{
 	}
 
 	@Override
-	public void update(Servicio servicio) {
+	public void update(Servicio servicio) throws EntidadNoEncontradaException {
 		try {
 			Connection conex = ConnectionManager.getConnection();
 			
@@ -49,39 +51,45 @@ public class ServicioDAOJDBC implements ServicioDAO{
 			statement.setBoolean(3, servicio.isEstadoVigente());
 			statement.setString(4, servicio.getNombre());
 			
-			statement.executeUpdate();
+			int filasAfectadas = statement.executeUpdate();
+			
+			if (filasAfectadas == 0)
+				throw new EntidadNoEncontradaException("No se encontro el servicio: " + servicio.getNombre());
+			
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.out.println("Excepcion propia update");
 		} finally {
 			ConnectionManager.disconnect();
 		}
 	}
 
 	@Override
-	public void remove(String nombre) {
+	public void remove(String nombre) throws EntidadNoEncontradaException{
 		try {
 			Connection conex = ConnectionManager.getConnection();
 			
 			PreparedStatement statement = conex.prepareStatement("DELETE FROM servicio WHERE nombre_servicio = ?");
-			
 			statement.setString(1, nombre);
 			
-			statement.executeUpdate();
+			int filasAfectadas = statement.executeUpdate();
+			
+			if (filasAfectadas == 0)
+				throw new EntidadNoEncontradaException("No se encontro el servicio a eliminar: " + nombre);
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.out.println("Excepcion propia remove");
 		} finally {
 			ConnectionManager.disconnect();
 		}
 	}
 
 	@Override
-	public void remove(Servicio servicio) {
+	public void remove(Servicio servicio) throws EntidadNoEncontradaException{
 		if (servicio != null)
 			this.remove(servicio.getNombre());
 	}
 	
 	@Override
-	public Servicio find(String nombre) throws EntidadNoEncontradaException {
+	public Servicio find(String nombre) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException {
 		Servicio servicio = null;
 		
 		try {
@@ -95,14 +103,12 @@ public class ServicioDAOJDBC implements ServicioDAO{
 			ResultSet rs = statement.executeQuery();
 			
 			if (rs.next()) {
-				try {
 				servicio = new Servicio(rs.getString("nombre_servicio"), rs.getString("descripcion"), rs.getFloat("precio"),rs.getBoolean("estado_vigente"));
-				} catch (ValorInvalidoException | DatoVacioException e) {
-					
-				}
+			} else {
+				throw new EntidadNoEncontradaException("No se encontro el servicio: " + nombre);
 			}
 		} catch (SQLException e) {
-			throw new EntidadNoEncontradaException("No se encontro el servicio: " + nombre);
+			System.out.println("Excepcion propia find");
 		} finally {
 			ConnectionManager.disconnect();
 		}
@@ -111,7 +117,7 @@ public class ServicioDAOJDBC implements ServicioDAO{
 	}
 	
 	@Override
-	public List<Servicio> findAll() {
+	public List<Servicio> findAll() throws ValorInvalidoException, DatoVacioException{
 		List<Servicio> servicios = new ArrayList<Servicio>();
 		
 		try {
@@ -122,14 +128,10 @@ public class ServicioDAOJDBC implements ServicioDAO{
 			ResultSet rs = statement.executeQuery();
 			
 			while (rs.next()) {
-				try {
-					servicios.add(new Servicio(rs.getString("nombre_servicio"), rs.getString("descripcion"), rs.getFloat("precio"), rs.getBoolean("estado_vigente")));
-				} catch (ValorInvalidoException | DatoVacioException e) {
-					// TODO: handle exception
-				}
+				servicios.add(new Servicio(rs.getString("nombre_servicio"), rs.getString("descripcion"), rs.getFloat("precio"), rs.getBoolean("estado_vigente")));
 			}
 		} catch (SQLException e) {
-			// TODO: handle exception
+			System.out.println("Excepcion propia findAll");
 		} finally {
 			ConnectionManager.disconnect();
 		}

@@ -69,11 +69,11 @@ public interface IApi {
 
 	
 	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
-	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException;
+	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;
 	void eliminarServicio(String nombre)throws EntidadNoEncontradaException;
-	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException;
+	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException;
 
-	List<ServicioDTO> obtenerListaServicios();
+	List<ServicioDTO> obtenerListaServicios() throws DatoVacioException, ValorInvalidoException;
 	
 	void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
 	void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo)throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;
