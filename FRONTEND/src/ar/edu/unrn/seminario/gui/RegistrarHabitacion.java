@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.CamaDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
@@ -70,7 +71,7 @@ public class RegistrarHabitacion extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		JLabel tipoHabitacion = new JLabel("(*) Tipo Habitacion:");
-		tipoHabitacion.setBounds(24, 214, 90, 25);
+		tipoHabitacion.setBounds(24, 214, 147, 25);
 		contentPane.add(tipoHabitacion);
 		
 		tfNumHabitacion = new JTextField();
@@ -182,27 +183,24 @@ public class RegistrarHabitacion extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 				
-				int numero = Integer.parseInt(tfNumHabitacion.getText());
-				String tipoHabitacion = cbTipoHabitacion.getSelectedItem().toString();
-				String estado = comboBox_1.getSelectedItem().toString();
-				int costo = Integer.parseInt(tfCostoHabitacion.getText());
-				
-				if(numeroOriginal == null) {
-					api.registrarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
+					int numero = Integer.parseInt(tfNumHabitacion.getText());
+					String tipoHabitacion = cbTipoHabitacion.getSelectedItem().toString();
+					String estado = comboBox_1.getSelectedItem().toString();
+					int costo = Integer.parseInt(tfCostoHabitacion.getText());
 					
-					JOptionPane.showMessageDialog(null, "La habitación se registró correctamente.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+					if(numeroOriginal == null) {
+						api.registrarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
 					
-					limpiarCampos();
+						JOptionPane.showMessageDialog(null, "La habitación se registró correctamente.", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
 					
-				}else {
-					api.modificarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
+						limpiarCampos();
 					
-					JOptionPane.showMessageDialog(null, "La habitación se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
-				}
-				
-				
-				
-				
+					}else {
+						api.modificarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
+						JOptionPane.showMessageDialog(null, "La habitación se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
+					}
+					
 				}catch(DatoVacioException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Faltan datos", JOptionPane.WARNING_MESSAGE);
 				
@@ -211,10 +209,16 @@ public class RegistrarHabitacion extends JFrame {
 				
 				}catch(NumberFormatException e3) {
 					JOptionPane.showMessageDialog(null,"Error al ingresar el número de la habitación o el costo.", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
+					
 				}catch(EntidadNoEncontradaException e4) {
-					JOptionPane.showMessageDialog(null, e4.getMessage(), "Habitacion no encontrada.", JOptionPane.ERROR_MESSAGE);	
+					JOptionPane.showMessageDialog(null, e4.getMessage(), "Habitacion no encontrada.", JOptionPane.ERROR_MESSAGE);
+					
 				}catch(EntidadDuplicadaException e5) {
 					JOptionPane.showMessageDialog(null, e5.getMessage(), "Esta habitacion ya se encuentra en el sistema.", JOptionPane.WARNING_MESSAGE);	
+					
+				} catch (AccesoDatosException e1) {
+					JOptionPane.showMessageDialog(null, "Error al comunicarse con la base de datos." + e1.getMessage(), "Error de conexion" , JOptionPane.ERROR_MESSAGE) ;
+					
 				}
 				
 			}

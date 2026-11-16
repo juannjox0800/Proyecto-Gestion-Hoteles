@@ -59,7 +59,7 @@ public class Habitacion {
 	}
 
 	public void setCosto(int costo) throws ValorInvalidoException {
-		if(numero <= 0) {
+		if(costo <= 0) {
 			throw new ValorInvalidoException("Valor inválido. Por favor, ingrese la información correctamente.");	
 		}
 	

@@ -21,7 +21,7 @@ public class Cama {
 			throw new DatoVacioException("No a seleccionado una cama. Por favor, intente de nuevo.");
 		}
 		
-		this.setTipo(tipo);	
+		this.tipo = tipo;	
 	}
 
 	@Override
