@@ -43,7 +43,7 @@ public class RegistrarCliente extends JFrame {
 			this.dniOriginal = clienteDTO.getDni(); 
 		}	
 		setTitle("Registrar Cliente");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 482, 326);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -104,6 +104,10 @@ public class RegistrarCliente extends JFrame {
 
 					JOptionPane.showMessageDialog(null, "Cliente registrado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 					}else {
+						int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que quiere guardar los cambios?", "Confirmar cambios", JOptionPane.YES_NO_OPTION);
+						
+						if (confirmacion != JOptionPane.YES_OPTION)
+							return;
 						api.modificarCLiente(dniOriginal, nombre, apellido, contacto);
 						JOptionPane.showMessageDialog(null, "El cliente se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
 						dispose();
