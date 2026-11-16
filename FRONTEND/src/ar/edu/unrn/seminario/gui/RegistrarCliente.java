@@ -51,22 +51,18 @@ public class RegistrarCliente extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNombre = new JLabel("(*) Nombre:");
-		lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblNombre.setBounds(59, 44, 72, 20);
 		contentPane.add(lblNombre);
 		
 		JLabel lblApellido = new JLabel("(*) Apellido:");
-		lblApellido.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblApellido.setBounds(59, 82, 72, 20);
 		contentPane.add(lblApellido);
 		
 		JLabel lblContacto = new JLabel("Contacto:");
-		lblContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblContacto.setBounds(59, 123, 72, 20);
 		contentPane.add(lblContacto);
 		
 		JLabel lblDNI = new JLabel("(*) DNI:");
-		lblDNI.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDNI.setBounds(59, 161, 72, 20);
 		contentPane.add(lblDNI);
 		
@@ -91,7 +87,6 @@ public class RegistrarCliente extends JFrame {
 		tfDNI.setColumns(10);
 		
 		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -142,7 +137,6 @@ public class RegistrarCliente extends JFrame {
 		contentPane.add(btnGuardar);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -154,7 +148,6 @@ public class RegistrarCliente extends JFrame {
 		contentPane.add(btnSalir);
 		
 		JLabel lblDatosObligatorios = new JLabel("Datos Obligatorios (*)");
-		lblDatosObligatorios.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDatosObligatorios.setBounds(59, 14, 156, 20);
 		contentPane.add(lblDatosObligatorios);
 		

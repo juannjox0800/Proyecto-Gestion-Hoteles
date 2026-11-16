@@ -75,7 +75,6 @@ public class ListarClientes extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JLabel lblBuscar = new JLabel("Buscar por DNI:");
-		lblBuscar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblBuscar.setBounds(28, 25, 110, 18);
 		contentPane.add(lblBuscar);
 		
@@ -85,7 +84,6 @@ public class ListarClientes extends JFrame {
 		textField.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -124,7 +122,6 @@ public class ListarClientes extends JFrame {
 		contentPane.add(btnBuscar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
               int filaSelec = table.getSelectedRow();
@@ -159,7 +156,6 @@ public class ListarClientes extends JFrame {
 		contentPane.add(btnEliminar);
 		
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 int filaSelec = table.getSelectedRow();
@@ -197,7 +193,6 @@ int filaSelec = table.getSelectedRow();
 		contentPane.add(btnModificar);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
