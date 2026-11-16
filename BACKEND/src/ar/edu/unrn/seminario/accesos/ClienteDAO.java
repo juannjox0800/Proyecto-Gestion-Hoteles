@@ -2,20 +2,25 @@ package ar.edu.unrn.seminario.accesos;
 
 import java.util.List;
 
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 
 public interface ClienteDAO {
-void create (Cliente cliente) throws EntidadDuplicadaException;
 	
-	void update (Cliente cliente) throws EntidadNoEncontradaException;
+    void create (Cliente cliente) throws EntidadDuplicadaException, AccesoDatosException;
 	
-	void remove (int dni);
+	void update (Cliente cliente) throws EntidadNoEncontradaException, AccesoDatosException;
 	
-	void remove (Cliente cliente);
+	void remove (int dni) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException;
 	
-	Cliente find (int dni) throws EntidadNoEncontradaException;
+	void remove (Cliente cliente) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException;
 	
-	List<Cliente> findAll();
+	Cliente find (int dni) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	
+	List<Cliente> findAll() throws ValorInvalidoException, DatoVacioException, AccesoDatosException;
 }

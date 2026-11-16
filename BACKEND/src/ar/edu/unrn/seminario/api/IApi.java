@@ -11,6 +11,7 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
@@ -28,15 +29,12 @@ import ar.edu.unrn.seminario.modelo.Servicio;
 
 public interface IApi {
 	
-	void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-
-	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException;
-	void eliminarCliente(int dni) throws EntidadNoEncontradaException;
-
-	boolean existeCliente(int dni);
-	ClienteDTO obtenerCliente(int dni)throws EntidadNoEncontradaException, FormatoInvalidoException ;
-
-	List<ClienteDTO>obtenerListaClientes();
+	void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	void eliminarCliente(int dni) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException;
+	boolean existeCliente(int dni) throws DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	ClienteDTO obtenerCliente(int dni)throws EntidadNoEncontradaException, FormatoInvalidoException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	List<ClienteDTO>obtenerListaClientes()throws DatoVacioException, ValorInvalidoException, AccesoDatosException;
 	
 	
 	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
