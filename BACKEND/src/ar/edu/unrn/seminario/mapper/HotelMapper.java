@@ -153,7 +153,7 @@ public class HotelMapper {
 								HotelMapper.aDTO(r.getCliente()),
 								r.getFechaEntrada(), r.getFechaSalida(),
 								HotelMapper.aDTO(r.getPagoSeña()),
-								huespedesDTO);
+								huespedesDTO, r.getNumeroReserva(), r.isEstadoCancelacion(), r.getCostoTotal());
 	}
 	
 	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException{
