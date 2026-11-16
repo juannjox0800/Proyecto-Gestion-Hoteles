@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
@@ -121,12 +122,16 @@ public class RegistrarCliente extends JFrame {
 				} catch (NumberFormatException e3) {
 					JOptionPane.showMessageDialog(null, "El DNI debe ser un número entero válido.", "Datos inválidos", JOptionPane.ERROR_MESSAGE);
 					
-				}catch (ValorInvalidoException e2) {
-		            JOptionPane.showMessageDialog(null, e2.getMessage(), "Datos erróneos.", JOptionPane.ERROR_MESSAGE);
+				}catch (ValorInvalidoException e4) {
+		            JOptionPane.showMessageDialog(null, e4.getMessage(), "Datos erróneos.", JOptionPane.ERROR_MESSAGE);
 			}
-				catch (EntidadNoEncontradaException e3) { 
-		            JOptionPane.showMessageDialog(null, e3.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				catch (EntidadNoEncontradaException e5) { 
+		            JOptionPane.showMessageDialog(null, e5.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
+				catch (AccesoDatosException e6) {
+					 JOptionPane.showMessageDialog(null, e6.getMessage(), "Error Inesperado", JOptionPane.ERROR_MESSAGE);
+
+				}
 			}
 		});
 		btnGuardar.setBounds(357, 241, 101, 23);
