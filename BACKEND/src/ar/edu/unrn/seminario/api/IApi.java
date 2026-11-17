@@ -12,46 +12,27 @@ import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
-import ar.edu.unrn.seminario.exception.FechaInvalidaException;
-import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
+import ar.edu.unrn.seminario.exception.FechaInvalidaException;
+import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
+
+import ar.edu.unrn.seminario.modelo.Cliente;
+import ar.edu.unrn.seminario.modelo.Habitacion;
+import ar.edu.unrn.seminario.modelo.Plan;
+import ar.edu.unrn.seminario.modelo.Reserva;
+import ar.edu.unrn.seminario.modelo.Servicio;
+
 public interface IApi {
-
-	/*void registrarUsuario(String username, String password, String email, String nombre, Integer rol);
-
-	UsuarioDTO obtenerUsuario(String username);
-
-
-
-	void eliminarUsuario(String username);
-
-	List<RolDTO> obtenerRoles();
-
-	List<RolDTO> obtenerRolesActivos();
-
-	void guardarRol(Integer codigo, String descripcion, boolean estado); // crear el objeto de dominio �Rol�
-
-	RolDTO obtenerRolPorCodigo(Integer codigo); // recuperar el rol almacenado
-
-	void activarRol(Integer codigo); // recuperar el objeto Rol, implementar el comportamiento de estado.
-
-	void desactivarRol(Integer codigo); // recuperar el objeto Rol, imp
-
-	List<UsuarioDTO> obtenerUsuarios(); // recuperar todos los usuarios
-
-	void activarUsuario(String username); // recuperar el objeto Usuario, implementar el comportamiento de estado.
-
-	void desactivarUsuario(String username); // recuperar el objeto Usuario, implementar el comportamiento de estado.*/
-				//verificar hacemos con el objeto como parametro
-
-
+	
 	void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException;
-	void eliminarCliente(int dni) throws EntidadNoEncontradaException;
+	void modificarCLiente(int dni, String nombre, String apellido, String contacto)throws EntidadNoEncontradaException, DatoVacioException,ValorInvalidoException ;
+	void eliminarCliente(int dni)throws EntidadNoEncontradaException;
 	boolean existeCliente(int dni);
-	ClienteDTO obtenerCliente(int dni)  throws EntidadNoEncontradaException, FormatoInvalidoException;
+	ClienteDTO obtenerCliente(int dni)throws EntidadNoEncontradaException, FormatoInvalidoException ;
+
 	List<ClienteDTO>obtenerListaClientes();
 
 
@@ -64,7 +45,7 @@ public interface IApi {
 
 	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
 	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException;
-	void eliminarServicio(String nombre)throws EntidadNoEncontradaException;
+	void eliminarServicio(String nombre)throws EntidadNoEncontradaException, EntidadEnUsoException;
 	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException;
 
 	List<ServicioDTO> obtenerListaServicios();
