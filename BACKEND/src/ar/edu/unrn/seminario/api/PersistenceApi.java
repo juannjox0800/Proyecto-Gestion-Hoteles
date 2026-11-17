@@ -1,0 +1,281 @@
+package ar.edu.unrn.seminario.api;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import ar.edu.unrn.seminario.accesos.HabitacionDao;
+import ar.edu.unrn.seminario.accesos.HabitacionDAOJDBC;
+import ar.edu.unrn.seminario.dto.ClienteDTO;
+import ar.edu.unrn.seminario.dto.HabitacionDTO;
+import ar.edu.unrn.seminario.dto.PagoDTO;
+import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.dto.ReservaDTO;
+import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.FechaInvalidaException;
+import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.mapper.HotelMapper;
+import ar.edu.unrn.seminario.modelo.Cama;
+import ar.edu.unrn.seminario.modelo.Habitacion;
+
+public class PersistenceApi implements IApi{
+	
+	private HabitacionDao habitacionDao;
+	
+
+	public PersistenceApi() {
+		habitacionDao = new HabitacionDAOJDBC();
+	}
+	
+	@Override
+	public void registrarCliente(String nombre, String apellido, String contacto, int dni)
+			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modificarCLiente(int dni, String nombre, String apellido, String contacto)
+			throws EntidadNoEncontradaException, DatoVacioException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminarCliente(int dni) throws EntidadNoEncontradaException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean existeCliente(int dni) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ClienteDTO obtenerCliente(int dni) throws EntidadNoEncontradaException, FormatoInvalidoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ClienteDTO> obtenerListaClientes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
+		Habitacion h = habitacionDao.find(numero);
+		if(h ==null) {
+			h = new Habitacion(numero, tipoHabitacion, costo);
+			h.setEstado(estado);
+			
+			for(String cama : camas) {
+				h.agregarCama(new Cama(cama));
+			}
+			
+			this.habitacionDao.create(h);
+	
+		}
+		else {
+			throw new EntidadDuplicadaException("Ya existe una habitacion con ese numero en el sistema. Intente con otro numero.");
+			
+		}
+		
+	}
+
+	@Override
+	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException {
+		Habitacion h = habitacionDao.find(numero);
+		
+		if(h!= null) {
+			
+			h.setTipoHabitacion(tipoHabitacion);
+			h.setCosto(costo);
+			h.setEstado(estado);
+			h.getCamas().clear();
+			
+			for(String cama : camas) {
+				h.agregarCama(new Cama(cama));
+			}
+			
+			this.habitacionDao.update(h);
+			return true;
+			
+		} else 
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+		
+	}
+
+	@Override
+	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException {
+		Habitacion h = habitacionDao.find(numero);
+		
+		if(h!= null) {
+			
+			habitacionDao.remove(h);
+			return true;
+			
+		} else 
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+			
+	}
+
+	@Override
+	public HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException {
+		Habitacion h = habitacionDao.find(numero);
+		
+		if(h!= null) {
+			
+			HabitacionDTO dtoH = HotelMapper.aDTO(h);
+			return dtoH;
+			
+		} else
+			throw new EntidadNoEncontradaException("No se ha encontrado la habitación.");
+		
+	}
+
+	//desde el Dao llamo a findAll y lo paso a stream, de ahi hago el mappeo a DTO y lo devuelvo en forma de lista usando  collect
+	@Override
+	public List<HabitacionDTO> obtenerListaHabitacion() throws AccesoDatosException, DatoVacioException, ValorInvalidoException {
+		
+		return this.habitacionDao.findAll().stream().map(HotelMapper::aDTO).collect(Collectors.toList());
+		
+	}
+
+	@Override
+	public void registrarServicio(String nombre, String descripcion, int precio, boolean estadoVigente)
+			throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modificarServicio(String nombre, String descripcion, int precio, boolean estadoVigente)
+			throws EntidadNoEncontradaException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminarServicio(String nombre) throws EntidadNoEncontradaException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ServicioDTO> obtenerListaServicios() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo, String nombre, boolean esActivo)
+			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo, String nombre, boolean esActivo)
+			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminarPlan(String nombre) throws EntidadNoEncontradaException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public PlanDTO obtenerPlan(String nombre) throws EntidadNoEncontradaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<PlanDTO> obtenerListaPlan() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void guardarListaPLan(List<PlanDTO> listaNueva) throws DatoVacioException, ValorInvalidoException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
+			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)
+			throws DatoVacioException, ValorInvalidoException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void modificarReserva(int numeroReserva) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cancelarReserva(int numeroReserva) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ReservaDTO> obtenerListaReserva() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida)
+			throws FechaInvalidaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int calcularSeña(int costoHabitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

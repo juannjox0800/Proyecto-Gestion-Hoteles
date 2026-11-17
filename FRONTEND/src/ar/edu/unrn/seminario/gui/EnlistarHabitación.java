@@ -21,8 +21,11 @@ import javax.swing.table.DefaultTableModel;
 
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 
 public class EnlistarHabitación extends JFrame {
@@ -35,7 +38,7 @@ public class EnlistarHabitación extends JFrame {
 	private IApi api;
 	
 
-	public EnlistarHabitación(IApi api) {
+	public EnlistarHabitación(IApi api){
 		
 		this.api = api;
 		setTitle("Lista de Habitaciones ");
@@ -58,7 +61,16 @@ public class EnlistarHabitación extends JFrame {
 			new String[] {
 				"Numero", "Cantidad camas", "Tipo", "Estado", "Cantidad huespedes", "Costo"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.getColumnModel().getColumn(3).setPreferredWidth(76);
+		table.getColumnModel().getColumn(4).setPreferredWidth(96);
 		scrollPane.setViewportView(table);
 		
 		JLabel lblBuscar = new JLabel("Buscar Habitacion:");
@@ -97,14 +109,15 @@ public class EnlistarHabitación extends JFrame {
 						});
 					}
 				
-			}catch(NumberFormatException e2) {
+			}catch(NumberFormatException e1) {
 				JOptionPane.showMessageDialog(null,"Error al ingresar el número de la habitación o el costo.", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
 				
-			}catch(EntidadNoEncontradaException e3) {
+			}catch(EntidadNoEncontradaException e2) {
 				JOptionPane.showMessageDialog(null,"Esta habitacion no se encuentra en el sistema. Intente de nuevo", "Datos inválidos.", JOptionPane.ERROR_MESSAGE);
-			}
 				
-			
+			}catch(AccesoDatosException | DatoVacioException | ValorInvalidoException e2) {
+				JOptionPane.showMessageDialog(null, e2.getMessage(), "Error al procesar los datos.", JOptionPane.ERROR_MESSAGE );
+			}		
 			
 			}});
 		
@@ -128,18 +141,24 @@ public class EnlistarHabitación extends JFrame {
 							ventanaModificar.addWindowListener(new WindowAdapter() {
 								@Override
 								public void windowClosed(WindowEvent e) {
-									recargarTabla(api);
+									try {
+										recargarTabla(api);
+									} catch (AccesoDatosException | DatoVacioException | ValorInvalidoException e1) {
+										JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al procesar los datos.", JOptionPane.ERROR_MESSAGE );
+									}
 								}
 								 
 							});
 							
 							ventanaModificar.setVisible(true);
-							
-							
+								
 						} catch (EntidadNoEncontradaException e1) {
 							JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
 							
-						}
+						}catch(AccesoDatosException | DatoVacioException | ValorInvalidoException e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error al procesar los datos.", JOptionPane.ERROR_MESSAGE );
+						}		
+                    
 					
 				}else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione una habitación de la tabla para modificar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
@@ -176,7 +195,14 @@ public class EnlistarHabitación extends JFrame {
                             
                     	}catch(EntidadNoEncontradaException e1) {
                     		JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    	}
+                    		
+                    	} catch (EntidadEnUsoException e2) {
+                    		JOptionPane.showMessageDialog(null, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							
+						}catch(AccesoDatosException | DatoVacioException | ValorInvalidoException e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error al procesar los datos.", JOptionPane.ERROR_MESSAGE );
+						}		
+						
                       }
 					
 				}else {
@@ -198,30 +224,18 @@ public class EnlistarHabitación extends JFrame {
 		});
 
 	
-		
-		recargarTabla(this.api);
-		//recorro lista y agrego filas
-		/**
-		 * List<HabitacionDTO> listadoCompleto = api.obtenerListaHabitacion();
-		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-		modelo.setRowCount(0);
-		 * for(HabitacionDTO dtoH : listadoCompleto) {
-			modelo.addRow( new Object[] {
-				dtoH.getNumero(),
-				dtoH.cantCamas(),
-				dtoH.getTipoHabitacion(),
-				dtoH.getEstado(),
-				dtoH.cantHuespedes(),
-				dtoH.getCosto()
-				
-			});
+		try {
+			recargarTabla(this.api);
+		}catch(AccesoDatosException | DatoVacioException | ValorInvalidoException e) {
+			JOptionPane.showMessageDialog(null, "Error al cargar el listado de habitaciones." + e.getMessage(), "Error de carga", JOptionPane.ERROR_MESSAGE);
+			
 		}
-
-		**/
+		
+		
 	}
 	
 
-	private void recargarTabla(IApi api) {
+	private void recargarTabla(IApi api) throws AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 		modelo.setRowCount(0);
 		

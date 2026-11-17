@@ -116,7 +116,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
 	{
 		boolean existe = this.habitaciones.stream().anyMatch(h -> h.getNumero() == numero);
 		
@@ -136,12 +136,12 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, int numeroNuevo, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException {
+	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {
 			Habitacion h = habitacion.get();
-			h.setNumero(numeroNuevo);
+			
 			h.setTipoHabitacion(tipoHabitacion);
 			h.setEstado(estado);
 			h.setCosto(costo);
@@ -158,8 +158,14 @@ public class MemoryApi implements IApi {
 }
 
 	@Override
-	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException
+	public boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, EntidadEnUsoException
 	{
+		boolean reservada = this.reservas.stream().anyMatch(r-> r.getHabitaciones().stream().anyMatch(h -> h.getNumero() == numero));
+		
+		if(reservada) {
+			throw new EntidadEnUsoException("No se pueden eliminar habitaciones en uso");
+		}
+		
 		boolean eliminado = this.habitaciones.removeIf(h -> h.getNumero() == numero);
 		
 		if (!eliminado) {

@@ -8,11 +8,11 @@ public class HabitacionDTO {
 	private int numero;
 	private String tipoHabitacion;
 	private String estado;
-	private int costo;
+	private float costo;
 	private List <CamaDTO> camas = new ArrayList<CamaDTO>();
 	
 	
-	public HabitacionDTO(int numero, String tipoHabitacion, int costo) {
+	public HabitacionDTO(int numero, String tipoHabitacion, float costo) {
 		this.numero = numero;
 		this.tipoHabitacion = tipoHabitacion;
 		this.costo = costo;
@@ -49,12 +49,12 @@ public class HabitacionDTO {
 	}
 
 
-	public int getCosto() {
+	public float getCosto() {
 		return costo;
 	}
 
 
-	public void setCosto(int costo) {
+	public void setCosto(float costo) {
 		this.costo = costo;
 	}
 

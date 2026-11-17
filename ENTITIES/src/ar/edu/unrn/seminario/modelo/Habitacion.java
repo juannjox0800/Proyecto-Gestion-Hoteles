@@ -8,25 +8,16 @@ public class Habitacion {
 	private int numero;
 	private String tipoHabitacion;
 	private String estado;
-	private int costo;
+	private float costo;
 	private List <Cama> camas = new ArrayList<Cama>();
 	
 	
-	public Habitacion(int numero, String tipoHabitacion, int costo) throws DatoVacioException, ValorInvalidoException
+	public Habitacion(int numero, String tipoHabitacion, float costo) throws DatoVacioException, ValorInvalidoException
 	{ 
 		
-		if(tipoHabitacion.isEmpty()) {
-			throw new DatoVacioException("No pueden existir campos vacíos. Por favor, ingrese la información restante.");
-		}
-		
-		if(numero <= 0  || costo <= 0 ) {
-			throw new ValorInvalidoException("Valores inválidos. Por favor, ingrese la información correctamente.");
-			
-		}
-		
-		this.numero = numero;
-		this.tipoHabitacion = tipoHabitacion;
-		this.costo = costo;
+		setNumero(numero);
+		setTipoHabitacion(tipoHabitacion);
+		setCosto(costo);
 		
 	}
 
@@ -34,7 +25,11 @@ public class Habitacion {
 		return numero;
 	}
 
-	public void setNumero(int numero) {
+	public void setNumero(int numero) throws ValorInvalidoException{
+		if(numero <= 0) {
+			throw new ValorInvalidoException("Valor inválido. Por favor, ingrese la información correctamente.");	
+		}
+		
 		this.numero = numero;
 	}
 
@@ -42,7 +37,12 @@ public class Habitacion {
 		return tipoHabitacion;
 	}
 
-	public void setTipoHabitacion(String tipoHabitacion) {
+	public void setTipoHabitacion(String tipoHabitacion) throws DatoVacioException {
+		
+		if(tipoHabitacion.isEmpty()) {
+			throw new DatoVacioException("No pueden existir campos vacíos. Por favor, ingrese la información restante.");
+		}
+		
 		this.tipoHabitacion = tipoHabitacion;
 	}
 
@@ -54,11 +54,15 @@ public class Habitacion {
 		this.estado = estado;
 	}
 
-	public int getCosto() {
+	public float getCosto() {
 		return costo;
 	}
 
-	public void setCosto(int costo) {
+	public void setCosto(float costo) throws ValorInvalidoException {
+		if(costo <= 0) {
+			throw new ValorInvalidoException("Valor inválido. Por favor, ingrese la información correctamente.");	
+		}
+	
 		this.costo = costo;
 	}
 
