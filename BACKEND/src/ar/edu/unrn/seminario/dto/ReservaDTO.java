@@ -15,8 +15,8 @@ public class ReservaDTO {
 	private boolean estadoCancelacion;
 	private int numeroReserva;
 	private List<HuespedDTO> huespedes;
-	
-	
+
+
 	public ReservaDTO(List<HabitacionDTO> habitaciones, PlanDTO plan, ClienteDTO cliente, LocalDate fechaEntrada,
 			LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes, int numeroReserva,  boolean estadoCancelacion, int costoTotal) {
 		this.habitaciones = habitaciones;
@@ -140,6 +140,6 @@ public class ReservaDTO {
 	public void setHuespedes(List<HuespedDTO> huespedes) {
 		this.huespedes = huespedes;
 	}
-	
+
 
 }
