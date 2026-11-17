@@ -52,53 +52,52 @@ public class listarReservas extends JFrame {
 	 * Create the frame.
 	 */
 	public listarReservas(IApi api) {
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setTitle("Lista de Reservas");
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 627, 301);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 24, 402, 139);
+		scrollPane.setBounds(0, 24, 611, 139);
 		contentPane.add(scrollPane);
 
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(
-				new Object[][] {
-				},
-				new String[] {
-					"Reserva N.º", "Cliente", "Habitacaiones", "Entrada", "Salida"
-				}
-			) {
-				boolean[] columnEditables = new boolean[] {
-					false, false, false, false
-				};
-				@Override
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
-				}
-			});
-
-			table.getColumnModel().getColumn(0).setResizable(false);
-			table.getColumnModel().getColumn(1).setResizable(false);
-			table.getColumnModel().getColumn(2).setResizable(false);
-			table.getColumnModel().getColumn(3).setResizable(false);
-			table.getColumnModel().getColumn(4).setResizable(false);
+			new Object[][] {
+			},
+			new String[] {
+				"N\u00BA Reserva", "Cliente", "Habitaciones", "Entrada", "Salida"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getColumnModel().getColumn(1).setResizable(false);
+		table.getColumnModel().getColumn(2).setResizable(false);
+		table.getColumnModel().getColumn(3).setResizable(false);
+		table.getColumnModel().getColumn(4).setResizable(false);
 
 			recargarTabla(api);
 
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setBounds(106, 174, 89, 23);
+		btnModificar.setBounds(189, 174, 89, 23);
 		contentPane.add(btnModificar);
 
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(218, 174, 89, 23);
+		btnEliminar.setBounds(301, 174, 89, 23);
 		contentPane.add(btnEliminar);
 
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setBounds(335, 227, 89, 23);
+		btnSalir.setBounds(512, 228, 89, 23);
 		contentPane.add(btnSalir);
 
 

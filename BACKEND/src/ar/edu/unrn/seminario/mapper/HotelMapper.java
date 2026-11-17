@@ -117,7 +117,10 @@ public class HotelMapper {
 		if (p == null) {
 			return null;
 		}
-		return new PagoDTO(p.getTipoPago(), p.getMonto(), p.getFechaPago(), p.getIdPago());
+		PagoDTO pagoDto = new PagoDTO(p.getTipoPago(), p.getMonto(), p.getFechaPago());
+		pagoDto.setIdPago(p.getIdPago());
+		return pagoDto;
+		
 	}
 
 	public static Pago aModelo (PagoDTO p) {

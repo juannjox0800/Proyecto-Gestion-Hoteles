@@ -17,8 +17,8 @@ import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
-
-
+import ar.edu.unrn.seminario.exception.FechaInvalidaException;
+import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 
@@ -40,7 +40,8 @@ public class MemoryApi implements IApi {
 	private List<Reserva> reservas = new ArrayList<>();
 	private List<Servicio> servicios = new ArrayList<>();
 
-    private int contReservas = 0;
+    private int contReservas = 1;
+    private int ultimoIdPago = 1;
 
 
 	@Override
@@ -369,6 +370,7 @@ public class MemoryApi implements IApi {
 		Plan planModelo = HotelMapper.aModelo(plan);
 		Cliente clienteModelo = HotelMapper.aModelo(cliente);
 		Pago pagoModelo = HotelMapper.aModelo(pagoSeña);
+		pagoModelo.setIdPago(ultimoIdPago);
 
 		int numeroReserva = contReservas;
 		contReservas ++;
@@ -388,8 +390,8 @@ public class MemoryApi implements IApi {
 		Reserva reservaEncontrada = null;
 		for (Reserva r : reservas) {
 			if (r.getNumeroReserva() == reserva.getNumeroReserva()) {
-			reservaEncontrada = r;
-			break;
+				reservaEncontrada = r;
+				break;
 			}
 		}
 		// siempre se va a encontrar pq se selecciona de la lista de reservas
@@ -416,7 +418,7 @@ public class MemoryApi implements IApi {
 			if (reserva.getPlan().getCosto() <= reservaEncontrada.getPlan().getCosto()) {
 				throw new ValorInvalidoException ("El plan selecionado debe ser de mayor precio que el plan actual.");
 			}
-			reservaEncontrada.setCostoTotal(reservaEncontrada.getCostoTotal() +  (reserva.getPlan().getCosto() - reservaEncontrada.getPlan().getCosto()));
+			reservaEncontrada.setCostoTotal(reservaEncontrada.getCostoTotal());
 			reservaEncontrada.setPlan(HotelMapper.aModelo(reserva.getPlan()));
 		}// TERMINO
 		else {
@@ -434,7 +436,7 @@ public class MemoryApi implements IApi {
 				reserva.cambiarEstadoCancelacion();
 			}
 				break;
-			}
+		}
 	}
 
 	@Override
@@ -444,7 +446,7 @@ public class MemoryApi implements IApi {
 		    }
 		for (Reserva reserva : reservas) {
 			if (reserva.getNumeroReserva() == numeroReserva) {
-				return HotelMapper.aDTO(reserva);
+					return HotelMapper.aDTO(reserva);
 				}
 		    }
 		 throw new EntidadNoEncontradaException("No se encontro la reserva");
@@ -480,26 +482,6 @@ public class MemoryApi implements IApi {
 			   									  .collect(Collectors.toList());
 
 	   return habitacionesDisponibles;
-	}
-
-	@Override
-	public PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException {
-	    PlanDTO plan = null;
-		for (Plan p : planes) {
-	        if (p.getNombre().equals(nombrePlan)) {
-	            plan = HotelMapper.aDTO(p);
-	            break;
-	            }
-	        }
-
-		if (plan == null) {
-			throw new EntidadNoEncontradaException("Plan no encontrado");
-			}
-
-		if (!plan.isEstadoActivo()) {
-			throw new EntidadNoEncontradaException("el plan no esta activo");
-			}
-		return plan;
 	}
 
 	@Override

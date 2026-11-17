@@ -8,11 +8,10 @@ public class PagoDTO {
 	private LocalDate fechaPago;
 	private int idPago;
 	
-	public PagoDTO(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
+	public PagoDTO(String tipoPago, int monto, LocalDate fechaPago) {
 		this.tipoPago = tipoPago;
 		this.monto = monto;
 		this.fechaPago = fechaPago;
-		this.idPago = idPago;
 	}
 
 	public String getTipoPago() {

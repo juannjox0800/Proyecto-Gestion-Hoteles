@@ -65,7 +65,6 @@ public interface IApi {
 	List<ReservaDTO> obtenerListaReserva();
 	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException;
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
-	PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException;
 	int calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan);
 
 
