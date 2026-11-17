@@ -63,9 +63,14 @@ private ClienteDAO clienteDao;
 
 	@Override
 	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException{
-		// TODO Auto-generated method stub
+			// TODO Auto-generated method stub
+			Cliente cliente = clienteDao.find(dni);
+			cliente.setApellido(apellido);
+			cliente.setContacto(contacto);
+			cliente.setNombre(nombre);
+			 clienteDao.update(cliente);
+		}
 
-	}
 
 	@Override
 	public void eliminarCliente(int dni) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException {
