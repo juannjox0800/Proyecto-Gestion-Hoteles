@@ -14,6 +14,8 @@ import ar.edu.unrn.seminario.accesos.PlanDAOJDBC;
 import ar.edu.unrn.seminario.accesos.ServicioDAO;
 import ar.edu.unrn.seminario.accesos.ServicioDAOJDBC;
 
+import ar.edu.unrn.seminario.accesos.ClienteDAO;
+import ar.edu.unrn.seminario.accesos.ClienteDAOJDBC;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
@@ -29,9 +31,13 @@ import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.mapper.HotelMapper;
+import ar.edu.unrn.seminario.modelo.Cliente;
+
 
 import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Habitacion;
+import ar.edu.unrn.seminario.modelo.Plan;
+import ar.edu.unrn.seminario.modelo.Servicio;
 
 public class PersistenceApi implements IApi{
 	
@@ -39,54 +45,66 @@ public class PersistenceApi implements IApi{
 	private PlanDAO planDao;
 	private ServicioDAO servicioDao;
 
+private ClienteDAO clienteDao; 
+
 	public PersistenceApi() {
 		planDao = new PlanDAOJDBC();
 		servicioDao = new ServicioDAOJDBC();
 		habitacionDao = new HabitacionDAOJDBC();
+		clienteDao = new ClienteDAOJDBC();
 	}
 	
 	@Override
-	public void registrarCliente(String nombre, String apellido, String contacto, int dni)
-			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
+	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
+
+		Cliente cliente=  new Cliente (nombre, apellido,contacto, dni);
+		this.clienteDao.create(cliente);
+	}
+
+	@Override
+	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void modificarCLiente(int dni, String nombre, String apellido, String contacto)
-			throws EntidadNoEncontradaException, DatoVacioException {
-		// TODO Auto-generated method stub
+	public void eliminarCliente(int dni) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException {
+		clienteDao.remove(dni);
+		
+	}
+
+	@Override
+	public boolean existeCliente(int dni) throws DatoVacioException, ValorInvalidoException, AccesoDatosException {
+		try {
+			clienteDao.find(dni);
+			return true;
+		} catch (EntidadNoEncontradaException e) {
+			return false;
+		}	
 
 	}
 
 	@Override
-	public void eliminarCliente(int dni) throws EntidadNoEncontradaException {
-		// TODO Auto-generated method stub
-
+	public ClienteDTO obtenerCliente(int dni) throws EntidadNoEncontradaException, FormatoInvalidoException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
+		Cliente cliente = clienteDao.find(dni);
+		return HotelMapper.aDTO(cliente);
 	}
 
 	@Override
-	public boolean existeCliente(int dni) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public List<ClienteDTO> obtenerListaClientes() throws ValorInvalidoException, DatoVacioException, AccesoDatosException {
+		List<Cliente> clientes = clienteDao.findAll();
+		List<ClienteDTO> clientesDTO = new ArrayList<>();
+		for (Cliente c : clientes) {
+			clientesDTO.add(HotelMapper.aDTO(c));
+		}
+		return clientesDTO;
 
-	@Override
-	public ClienteDTO obtenerCliente(int dni) throws EntidadNoEncontradaException, FormatoInvalidoException {
-		// TODO Auto-generated method stub
-		return null;
 	}
-
-	@Override
-	public List<ClienteDTO> obtenerListaClientes() {
-		// TODO Reemplazar por la consulta al DAO. Mientras tanto, lista vacia (nunca null).
-		return new ArrayList<>();
-	}
+	
 
 	// ------------------------------------------------------------- HABITACIONES
 
 	@Override
-
 	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
 		Habitacion h = habitacionDao.find(numero);
 		if(h ==null) {
@@ -104,7 +122,7 @@ public class PersistenceApi implements IApi{
 			throw new EntidadDuplicadaException("Ya existe una habitacion con ese numero en el sistema. Intente con otro numero.");
 			
 		}
-		
+	}
 
 	@Override
 	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException {
@@ -163,6 +181,7 @@ public class PersistenceApi implements IApi{
 	public List<HabitacionDTO> obtenerListaHabitacion() throws AccesoDatosException, DatoVacioException, ValorInvalidoException {
 		
 		return this.habitacionDao.findAll().stream().map(HotelMapper::aDTO).collect(Collectors.toList());
+	}
 		
 	@Override
 	public void registrarServicio(String nombre, String descripcion, float precio, boolean estadoVigente)

@@ -11,8 +11,12 @@ import javax.swing.table.DefaultTableModel;
 
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -71,7 +75,6 @@ public class ListarClientes extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JLabel lblBuscar = new JLabel("Buscar por DNI:");
-		lblBuscar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblBuscar.setBounds(28, 25, 110, 18);
 		contentPane.add(lblBuscar);
 		
@@ -81,7 +84,6 @@ public class ListarClientes extends JFrame {
 		textField.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -100,13 +102,19 @@ public class ListarClientes extends JFrame {
 					
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "El DNI a buscar debe ser numérico.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+					
 				} catch (FormatoInvalidoException ex) {
 					JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "El formato no es correcto", JOptionPane.ERROR_MESSAGE);
 				}
 				catch (EntidadNoEncontradaException ex) {
 					JOptionPane.showMessageDialog(null, ex.getMessage(), "No encontrado", JOptionPane.WARNING_MESSAGE);
 					cargarTablaCompleta();
-				}
+				
+			} catch (ValorInvalidoException | DatoVacioException ex) {
+				JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Datos inválidos", JOptionPane.ERROR_MESSAGE);
+			} catch (AccesoDatosException ex) {
+				JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error inesperado", JOptionPane.ERROR_MESSAGE);
+			}
 			}
 			
 		});
@@ -114,7 +122,6 @@ public class ListarClientes extends JFrame {
 		contentPane.add(btnBuscar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
               int filaSelec = table.getSelectedRow();
@@ -127,27 +134,28 @@ public class ListarClientes extends JFrame {
 							int dni = Integer.parseInt(table.getValueAt(filaSelec, 2).toString());
 							api.eliminarCliente(dni);
 							
-							DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-							modelo.removeRow(filaSelec);
+							cargarTablaCompleta();
 							
 							JOptionPane.showMessageDialog(null, "Cliente eliminado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 							
 						} catch (EntidadNoEncontradaException e1) {
 							JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						} catch (EntidadEnUsoException e2) {
+							JOptionPane.showMessageDialog(null, e2.getMessage(), "Atencion", JOptionPane.WARNING_MESSAGE);
+						} catch (AccesoDatosException e3) {
+							JOptionPane.showMessageDialog(null, "Error: " + e3.getMessage(), "Error inesperado", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione un cliente de la tabla para eliminar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
 				}
 			}
-				
-			
+
 		});
 		btnEliminar.setBounds(275, 239, 89, 23);
 		contentPane.add(btnEliminar);
 		
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 int filaSelec = table.getSelectedRow();
@@ -169,11 +177,12 @@ int filaSelec = table.getSelectedRow();
 						ventanaModificar.setVisible(true);
 						
 						
-					} catch (EntidadNoEncontradaException e1) {
+					} catch (EntidadNoEncontradaException | FormatoInvalidoException | ValorInvalidoException | DatoVacioException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
-					} catch (FormatoInvalidoException e2) {
-						JOptionPane.showMessageDialog(null, e2.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
-					}
+						
+						} catch (AccesoDatosException e2) {
+					JOptionPane.showMessageDialog(null, "Error: " + e2.getMessage(), "Error inesperado", JOptionPane.ERROR_MESSAGE);
+				}
 				} else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione un cliente de la tabla para modificar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
 				}
@@ -184,7 +193,6 @@ int filaSelec = table.getSelectedRow();
 		contentPane.add(btnModificar);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -200,6 +208,7 @@ private void cargarTablaCompleta() {
 	DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 	modelo.setRowCount(0); 
 	if (api!=null) {
+		try {
 	List<ClienteDTO> clientes = api.obtenerListaClientes();
 	for (ClienteDTO c : clientes) {
 		modelo.addRow(new Object[] {
@@ -208,7 +217,14 @@ private void cargarTablaCompleta() {
 			c.getDni(),
 			c.getContacto()
 		});
+		
 	}
+}
+		catch (ValorInvalidoException | DatoVacioException e) {
+			JOptionPane.showMessageDialog(null, "Error al cargar los clientes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (AccesoDatosException e) {
+			JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error inesperado", JOptionPane.ERROR_MESSAGE);
+		}
 }
 }
 }

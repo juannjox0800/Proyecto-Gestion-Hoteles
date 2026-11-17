@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ClienteDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
@@ -42,7 +43,7 @@ public class RegistrarCliente extends JFrame {
 			this.dniOriginal = clienteDTO.getDni(); 
 		}	
 		setTitle("Registrar Cliente");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 482, 326);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -50,22 +51,18 @@ public class RegistrarCliente extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNombre = new JLabel("(*) Nombre:");
-		lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblNombre.setBounds(59, 44, 72, 20);
 		contentPane.add(lblNombre);
 		
 		JLabel lblApellido = new JLabel("(*) Apellido:");
-		lblApellido.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblApellido.setBounds(59, 82, 72, 20);
 		contentPane.add(lblApellido);
 		
 		JLabel lblContacto = new JLabel("Contacto:");
-		lblContacto.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblContacto.setBounds(59, 123, 72, 20);
 		contentPane.add(lblContacto);
 		
 		JLabel lblDNI = new JLabel("(*) DNI:");
-		lblDNI.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDNI.setBounds(59, 161, 72, 20);
 		contentPane.add(lblDNI);
 		
@@ -90,7 +87,6 @@ public class RegistrarCliente extends JFrame {
 		tfDNI.setColumns(10);
 		
 		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -103,6 +99,10 @@ public class RegistrarCliente extends JFrame {
 
 					JOptionPane.showMessageDialog(null, "Cliente registrado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 					}else {
+						int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que quiere guardar los cambios?", "Confirmar cambios", JOptionPane.YES_NO_OPTION);
+						
+						if (confirmacion != JOptionPane.YES_OPTION)
+							return;
 						api.modificarCLiente(dniOriginal, nombre, apellido, contacto);
 						JOptionPane.showMessageDialog(null, "El cliente se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
 						dispose();
@@ -121,19 +121,22 @@ public class RegistrarCliente extends JFrame {
 				} catch (NumberFormatException e3) {
 					JOptionPane.showMessageDialog(null, "El DNI debe ser un número entero válido.", "Datos inválidos", JOptionPane.ERROR_MESSAGE);
 					
-				}catch (ValorInvalidoException e2) {
-		            JOptionPane.showMessageDialog(null, e2.getMessage(), "Datos erróneos.", JOptionPane.ERROR_MESSAGE);
+				}catch (ValorInvalidoException e4) {
+		            JOptionPane.showMessageDialog(null, e4.getMessage(), "Datos erróneos.", JOptionPane.ERROR_MESSAGE);
 			}
-				catch (EntidadNoEncontradaException e3) { 
-		            JOptionPane.showMessageDialog(null, e3.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				catch (EntidadNoEncontradaException e5) { 
+		            JOptionPane.showMessageDialog(null, e5.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
+				catch (AccesoDatosException e6) {
+					 JOptionPane.showMessageDialog(null, e6.getMessage(), "Error Inesperado", JOptionPane.ERROR_MESSAGE);
+
+				}
 			}
 		});
 		btnGuardar.setBounds(357, 241, 101, 23);
 		contentPane.add(btnGuardar);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -145,7 +148,6 @@ public class RegistrarCliente extends JFrame {
 		contentPane.add(btnSalir);
 		
 		JLabel lblDatosObligatorios = new JLabel("Datos Obligatorios (*)");
-		lblDatosObligatorios.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDatosObligatorios.setBounds(59, 14, 156, 20);
 		contentPane.add(lblDatosObligatorios);
 		
