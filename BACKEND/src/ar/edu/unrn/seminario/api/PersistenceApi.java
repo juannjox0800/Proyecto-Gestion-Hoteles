@@ -168,7 +168,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void modificarReserva(int numeroReserva) {
+	public void modificarReserva(ReservaDTO reserva) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -211,7 +211,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public int calcularSeña(int costoHabitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
+	public int calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
