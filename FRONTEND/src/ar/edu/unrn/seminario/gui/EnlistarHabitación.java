@@ -61,7 +61,14 @@ public class EnlistarHabitación extends JFrame {
 			new String[] {
 				"Numero", "Cantidad camas", "Tipo", "Estado", "Cantidad huespedes", "Costo"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
 		table.getColumnModel().getColumn(3).setPreferredWidth(76);
 		table.getColumnModel().getColumn(4).setPreferredWidth(96);
 		scrollPane.setViewportView(table);
