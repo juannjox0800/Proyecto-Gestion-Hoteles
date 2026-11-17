@@ -261,6 +261,7 @@ public class RealizarReserva extends JFrame {
 					JOptionPane.showMessageDialog (RealizarReserva.this, e5.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
 				}
 				
+				
 				limpiarCampos();
 				dispose(); // cierra la ventana 
 			}

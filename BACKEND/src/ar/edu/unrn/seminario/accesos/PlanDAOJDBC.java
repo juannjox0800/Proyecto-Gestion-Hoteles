@@ -20,7 +20,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	@Override
 	public void create(Plan plan) throws EntidadDuplicadaException, AccesoDatosException {
-		String sql = "INSERT INTO plan(nombre_plan, costo, estado_activo) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO plan(plan_nombre, costo, estado_activo) VALUES (?, ?, ?)";
 
 		Connection conex = ConnectionManager.getConnection();
 
@@ -63,7 +63,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	@Override
 	public void update(Plan plan) throws EntidadNoEncontradaException, AccesoDatosException {
-		String sql = "UPDATE plan SET costo = ?, estado_activo = ? WHERE nombre_plan = ?";
+		String sql = "UPDATE plan SET costo = ?, estado_activo = ? WHERE plan_nombre = ?";
 
 		Connection conex = ConnectionManager.getConnection();
 
@@ -176,12 +176,12 @@ public class PlanDAOJDBC implements PlanDAO {
 	@Override
 	public Plan find(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException {
 
-	String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
+	String sql = "SELECT p.plan_nombre, p.costo, p.estado_activo, "
 			+ "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
 			+ "FROM plan p "
-			+ "JOIN plan_servicio ps ON p.nombre_plan = ps.plan_nombre "
+			+ "JOIN plan_servicio ps ON p.plan_nombre = ps.plan_nombre "
 			+ "JOIN servicio s ON ps.nombre_servicio = s.nombre_servicio "
-			+ "WHERE p.nombre_plan = ?";
+			+ "WHERE p.plan_nombre = ?";
 	Plan plan =null;
 
 	try (PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(sql)) {
@@ -196,7 +196,7 @@ public class PlanDAOJDBC implements PlanDAO {
 					while (rs.next()) {
 						
 						if (!encontrado) {
-							nombrePlan = rs.getString("nombre_plan");
+							nombrePlan = rs.getString("plan_nombre");
 							costo = rs.getFloat("costo");
 							activo = rs.getBoolean("estado_activo");
 							encontrado = true;
@@ -218,10 +218,10 @@ public class PlanDAOJDBC implements PlanDAO {
 	}	
 	@Override
 	public List<Plan> findAll() throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException  {
-		String sql = "SELECT p.nombre_plan, p.costo, p.estado_activo, "
+		String sql = "SELECT p.plan_nombre, p.costo, p.estado_activo, "
 					  + "s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente "
 					  + "FROM plan p "
-					  + "JOIN plan_servicio ps ON p.nombre_plan = ps.plan_nombre "
+					  + "JOIN plan_servicio ps ON p.plan_nombre = ps.plan_nombre "
 					  + "JOIN servicio s ON ps.nombre_servicio = s.nombre_servicio";
 
 		List<Plan> planes = new ArrayList<>();
@@ -230,7 +230,7 @@ public class PlanDAOJDBC implements PlanDAO {
 		{
 					while (rs.next())
 					{
-							String nombrePlan = rs.getString("nombre_plan");
+							String nombrePlan = rs.getString("plan_nombre");
 							Servicio servicio = new Servicio(rs.getString("nombre_servicio"),
 							rs.getString("descripcion"),rs.getFloat("precio"),rs.getBoolean("estado_vigente"));
 							
