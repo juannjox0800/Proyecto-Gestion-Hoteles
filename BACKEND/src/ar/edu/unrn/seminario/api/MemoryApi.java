@@ -124,7 +124,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException     
 	{
 		boolean existe = this.habitaciones.stream().anyMatch(h -> h.getNumero() == numero);
 		
@@ -144,7 +144,7 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException {
+	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException {
 		Optional<Habitacion> habitacion = habitaciones.stream().filter(h -> h.getNumero() == numero ).findFirst();
 		
 		if(habitacion.isPresent()) {

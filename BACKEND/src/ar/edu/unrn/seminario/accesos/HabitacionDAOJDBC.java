@@ -31,7 +31,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			
 			pstat.setInt(1, habitacion.getNumero());
 			pstat.setString(2, habitacion.getTipoHabitacion());
-			pstat.setInt(3, habitacion.getCosto());
+			pstat.setFloat(3, habitacion.getCosto());
 			pstat.setString(4, habitacion.getEstado());
 			
 			pstat.executeUpdate();
@@ -74,7 +74,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			PreparedStatement pstatH = conexion.prepareStatement(updateH);
 			
 			pstatH.setString(1, habitacion.getTipoHabitacion());
-			pstatH.setInt(2, habitacion.getCosto());
+			pstatH.setFloat(2, habitacion.getCosto());
 			pstatH.setString(3, habitacion.getEstado());
 			pstatH.setInt(4, habitacion.getNumero());
 			
@@ -196,7 +196,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			ResultSet resultado = pstatH.executeQuery();
 			
 			if(resultado.next()) {
-				habitacion = new Habitacion(resultado.getInt("numero_habitacion"), resultado.getString("tipoHabitacion"), resultado.getInt("costo"));
+				habitacion = new Habitacion(resultado.getInt("numero_habitacion"), resultado.getString("tipoHabitacion"), resultado.getFloat("costo"));
 				habitacion.setEstado(resultado.getString("estado"));
 				
 				
@@ -235,7 +235,7 @@ public class HabitacionDAOJDBC implements HabitacionDao{
 			
 			while(resultadoH.next()) {
 				
-				Habitacion h = new Habitacion(resultadoH.getInt("numero_habitacion"), resultadoH.getString("tipoHabitacion"), resultadoH.getInt("costo"));
+				Habitacion h = new Habitacion(resultadoH.getInt("numero_habitacion"), resultadoH.getString("tipoHabitacion"), resultadoH.getFloat("costo"));
 				h.setEstado(resultadoH.getString("estado"));
 				
 				String findCama = "SELECT c.tipo FROM cama c WHERE c.numero_habitacion = ?";

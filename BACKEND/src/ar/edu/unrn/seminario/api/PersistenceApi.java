@@ -72,7 +72,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
+	public void registrarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
 		Habitacion h = habitacionDao.find(numero);
 		if(h ==null) {
 			h = new Habitacion(numero, tipoHabitacion, costo);
@@ -93,7 +93,7 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException {
+	public boolean modificarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException {
 		Habitacion h = habitacionDao.find(numero);
 		
 		if(h!= null) {

@@ -63,8 +63,8 @@ public interface IApi {
 	List<ClienteDTO>obtenerListaClientes();
 	
 	
-	void registrarHabitacion(int numero, String tipoHabitacion, String estado, int costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
-	boolean modificarHabitacion(int numero, String tipoHabitacion, String estado,int costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException;
+	void registrarHabitacion(int numero, String tipoHabitacion, String estado, float costo, List<String> camas) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	boolean modificarHabitacion(int numero, String tipoHabitacion, String estado,float costo, List<String> camas) throws DatoVacioException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException;
 	boolean eliminarHabitacion(int numero) throws EntidadNoEncontradaException, EntidadEnUsoException, AccesoDatosException, DatoVacioException, ValorInvalidoException;
 	HabitacionDTO obtenerHabitacion(int numero) throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException;
 	List <HabitacionDTO>obtenerListaHabitacion() throws AccesoDatosException, DatoVacioException, ValorInvalidoException;

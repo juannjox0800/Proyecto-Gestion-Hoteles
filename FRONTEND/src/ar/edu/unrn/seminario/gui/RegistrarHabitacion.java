@@ -186,7 +186,7 @@ public class RegistrarHabitacion extends JFrame {
 					int numero = Integer.parseInt(tfNumHabitacion.getText());
 					String tipoHabitacion = cbTipoHabitacion.getSelectedItem().toString();
 					String estado = comboBox_1.getSelectedItem().toString();
-					int costo = Integer.parseInt(tfCostoHabitacion.getText());
+					float costo = Float.parseFloat(tfCostoHabitacion.getText());
 					
 					if(numeroOriginal == null) {
 						api.registrarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
@@ -196,9 +196,14 @@ public class RegistrarHabitacion extends JFrame {
 						limpiarCampos();
 					
 					}else {
+						int verificacion = JOptionPane.showConfirmDialog(null, "¿Estás segura que deseas modificar esta habitación?", "Confirmar modificación.", JOptionPane.YES_NO_OPTION);
+						
+	                    if(verificacion == JOptionPane.YES_OPTION) {
+						
 						api.modificarHabitacion(numero, tipoHabitacion, estado, costo, listadoCamasTemporal);
 						JOptionPane.showMessageDialog(null, "La habitación se modificó correctamente.", "Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
 						dispose();
+	                    }
 					}
 					
 				}catch(DatoVacioException e1) {

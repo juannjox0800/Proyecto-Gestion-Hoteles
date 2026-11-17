@@ -8,11 +8,11 @@ public class Habitacion {
 	private int numero;
 	private String tipoHabitacion;
 	private String estado;
-	private int costo;
+	private float costo;
 	private List <Cama> camas = new ArrayList<Cama>();
 	
 	
-	public Habitacion(int numero, String tipoHabitacion, int costo) throws DatoVacioException, ValorInvalidoException
+	public Habitacion(int numero, String tipoHabitacion, float costo) throws DatoVacioException, ValorInvalidoException
 	{ 
 		
 		setNumero(numero);
@@ -54,11 +54,11 @@ public class Habitacion {
 		this.estado = estado;
 	}
 
-	public int getCosto() {
+	public float getCosto() {
 		return costo;
 	}
 
-	public void setCosto(int costo) throws ValorInvalidoException {
+	public void setCosto(float costo) throws ValorInvalidoException {
 		if(costo <= 0) {
 			throw new ValorInvalidoException("Valor inválido. Por favor, ingrese la información correctamente.");	
 		}

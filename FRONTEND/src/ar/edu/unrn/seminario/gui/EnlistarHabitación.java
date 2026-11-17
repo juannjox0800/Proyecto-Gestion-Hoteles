@@ -131,10 +131,6 @@ public class EnlistarHabitación extends JFrame {
 				
 				if(filaSelec != -1) {
 						
-					int verificacion = JOptionPane.showConfirmDialog(null, "¿Estás segura que deseas modificar esta habitación?", "Confirmar modificación.", JOptionPane.YES_NO_OPTION);
-					
-                    if(verificacion == JOptionPane.YES_OPTION) {
-					
 						try {
 							
 							int numHabitacion = (int) table.getValueAt(filaSelec, 0);
@@ -155,15 +151,14 @@ public class EnlistarHabitación extends JFrame {
 							});
 							
 							ventanaModificar.setVisible(true);
-							
-							
+								
 						} catch (EntidadNoEncontradaException e1) {
 							JOptionPane.showMessageDialog(null, e1.getMessage(), "Error al modificar.", JOptionPane.ERROR_MESSAGE);
 							
 						}catch(AccesoDatosException | DatoVacioException | ValorInvalidoException e2) {
 							JOptionPane.showMessageDialog(null, e2.getMessage(), "Error al procesar los datos.", JOptionPane.ERROR_MESSAGE );
 						}		
-                    }
+                    
 					
 				}else {
 					JOptionPane.showMessageDialog(null, "Por favor, seleccione una habitación de la tabla para modificar.", "Fila no seleccionada", JOptionPane.WARNING_MESSAGE);
