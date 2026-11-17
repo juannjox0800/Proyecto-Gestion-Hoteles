@@ -3,46 +3,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.swing.JOptionPane;
+
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class Plan {
 	private List<Servicio> servicios;
-	private int costo;
+	private float costo;
 	private String nombre;
 	private boolean estadoActivo;
 
-	public Plan(List<Servicio> servicios, int costo, String nombre, boolean estadoActivo) throws DatoVacioException, ValorInvalidoException{
-		if (nombre==null||nombre.trim().isEmpty())  throw new DatoVacioException("coloca un nombre");
-		if(servicios==null||servicios.isEmpty())throw new DatoVacioException("selecciona almenos un servicio");
-		if (costo<0) throw new ValorInvalidoException("valor invalido de costo");
-		
-		this.servicios = servicios;
-		this.costo = costo;
-		this.nombre = nombre;
-		this.estadoActivo = estadoActivo;
-	}
-
-	public Plan(int costo, String nombre, boolean estadoActivo) {
-		this.costo = costo;
-		this.nombre = nombre;
-		this.estadoActivo = estadoActivo;
-		this.servicios = new ArrayList<Servicio>();
+	public Plan(List<Servicio> servicios, float costo, String nombre, boolean estadoActivo)throws ValorInvalidoException,DatoVacioException{
+		this.setServicios(servicios);
+		this.setCosto(costo);
+		this.setNombre(nombre);
+		this.setServicios(servicios);
+		this.setEstadoActivo(estadoActivo);
 	}
 
 	public List<Servicio> getServicios() {
 		return servicios;
 	}
 
-	public void setServicios(List<Servicio> servicios) {
-		this.servicios = servicios;
+	public void setServicios(List<Servicio> servicios)throws ValorInvalidoException, DatoVacioException{
+
+		if (servicios == null || servicios.isEmpty()) throw new DatoVacioException("El plan debe incluir al menos un servicio");
+		this.servicios = new ArrayList<>();
+		try {
+			for (Servicio a : servicios) {
+				this.agregarServicio(a);
+			}
+		}catch(EntidadDuplicadaException e) {JOptionPane.showMessageDialog(null,"error"+ e.getMessage());}
 	}
 
-	public int getCosto() {
+	public float getCosto() {
 		return costo;
 	}
 
-	public void setCosto(int costo) {
+	public void setCosto(float costo) throws ValorInvalidoException{
+		if (costo<0) throw new ValorInvalidoException("costo invalido, vuelve a escribir uno");
 		this.costo = costo;
 	}
 
@@ -50,7 +52,8 @@ public class Plan {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(String nombre) throws DatoVacioException{
+		if (nombre.trim().isEmpty()|| nombre==null) throw new DatoVacioException("nombre vacio, escribe un nombre para el plan");
 		this.nombre = nombre;
 	}
 
@@ -65,12 +68,23 @@ public class Plan {
 		return estadoActivo;
 	}
 
-	public void agregarServicio(Servicio servicio) {
+	public void agregarServicio(Servicio servicio) throws ValorInvalidoException, EntidadDuplicadaException {
+		boolean yaAgregado = servicios.stream().anyMatch(s -> s.getNombre().equalsIgnoreCase(servicio.getNombre()));	
+		
+		if (yaAgregado) throw new EntidadDuplicadaException("ya se encuentra ese servicio en el plan");
+		
+		if ( servicio.getNombre()== null ||servicio.getNombre().trim().isEmpty() ||servicio.getPrecio()<0) 
+			throw new ValorInvalidoException("intentaste ingresar servicios invalidos, chequealos y vuelve a intentar");
+		
 		servicios.add(servicio);
+		
 	}
 
-	public void eliminarServicio(Servicio servicio) {
-    	servicios.remove(servicio);
+	public void eliminarServicio(Servicio servicio) throws EntidadNoEncontradaException {
+		boolean eliminado = this.servicios.removeIf(h -> h.getNombre()==nombre);		
+		if (!eliminado) {
+			throw new EntidadNoEncontradaException("No se ha encontrado el servicio.");
+			}
 	}
 
 	@Override

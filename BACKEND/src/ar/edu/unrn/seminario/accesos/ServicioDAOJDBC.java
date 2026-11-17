@@ -1,0 +1,146 @@
+package ar.edu.unrn.seminario.accesos;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
+import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.modelo.Servicio;
+
+public class ServicioDAOJDBC implements ServicioDAO{
+
+	@Override
+	public void create(Servicio servicio) throws EntidadDuplicadaException, AccesoDatosException {
+		try {
+			Connection conex = ConnectionManager.getConnection();
+			
+			PreparedStatement statement = conex.prepareStatement("INSERT INTO servicio(nombre_servicio, descripcion, precio, estado_vigente) " + "VALUES (?, ?, ?, ?)");
+			
+			statement.setString(1, servicio.getNombre());
+			statement.setString(2, servicio.getDescripcion());
+			statement.setFloat(3, servicio.getPrecio());
+			statement.setBoolean(4, servicio.isEstadoVigente());
+			
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1062)
+				throw new EntidadDuplicadaException("Ya existe un servicio con el nombre: " + servicio.getNombre());
+			
+			throw new AccesoDatosException("Error al intentar crear el servicio", e);
+		} finally {
+			ConnectionManager.disconnect();
+		}
+		
+	}
+
+	@Override
+	public void update(Servicio servicio) throws EntidadNoEncontradaException, AccesoDatosException {
+		try {
+			Connection conex = ConnectionManager.getConnection();
+			
+			PreparedStatement statement = conex.prepareStatement("UPDATE servicio SET descripcion = ?, precio = ?, estado_vigente = ? WHERE nombre_servicio = ?");
+			
+			statement.setString(1, servicio.getDescripcion());
+			statement.setFloat(2, servicio.getPrecio());
+			statement.setBoolean(3, servicio.isEstadoVigente());
+			statement.setString(4, servicio.getNombre());
+			
+			int filasAfectadas = statement.executeUpdate();
+			
+			if (filasAfectadas == 0)
+				throw new EntidadNoEncontradaException("No se encontro el servicio: " + servicio.getNombre());
+			
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Error al intentar modificar el servicio", e);
+		} finally {
+			ConnectionManager.disconnect();
+		}
+	}
+
+	@Override
+	public void remove(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException{
+		try {
+			Connection conex = ConnectionManager.getConnection();
+			
+			PreparedStatement statement = conex.prepareStatement("DELETE FROM servicio WHERE nombre_servicio = ?");
+			statement.setString(1, nombre);
+			
+			int filasAfectadas = statement.executeUpdate();
+			
+			if (filasAfectadas == 0)
+				throw new EntidadNoEncontradaException("No se encontro el servicio a eliminar: " + nombre);
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1451) {
+				throw new EntidadEnUsoException("No se puede eliminar el servicio '" + nombre + "' porque pertenece a un plan");
+			}
+			throw new AccesoDatosException("Error al intentar eliminar el servicio", e);
+		} finally {
+			ConnectionManager.disconnect();
+		}
+	}
+
+	@Override
+	public void remove(Servicio servicio) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException{
+		if (servicio != null)
+			this.remove(servicio.getNombre());
+	}
+	
+	@Override
+	public Servicio find(String nombre) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException {
+		Servicio servicio = null;
+		
+		try {
+			Connection conex = ConnectionManager.getConnection();
+			
+			PreparedStatement statement = conex.prepareStatement("SELECT s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente " +
+																"FROM servicio s " + "WHERE s.nombre_servicio = ?");
+			
+			statement.setString(1, nombre);
+			
+			ResultSet rs = statement.executeQuery();
+			
+			if (rs.next()) {
+				servicio = new Servicio(rs.getString("nombre_servicio"), rs.getString("descripcion"), rs.getFloat("precio"),rs.getBoolean("estado_vigente"));
+			} else {
+				throw new EntidadNoEncontradaException("No se encontro el servicio: " + nombre);
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Error al intentar encontrar el servicio", e);
+		} finally {
+			ConnectionManager.disconnect();
+		}
+		
+		return servicio;
+	}
+	
+	@Override
+	public List<Servicio> findAll() throws ValorInvalidoException, DatoVacioException, AccesoDatosException{
+		List<Servicio> servicios = new ArrayList<Servicio>();
+		
+		try {
+			Connection conex = ConnectionManager.getConnection();
+			
+			PreparedStatement statement = conex.prepareStatement("SELECT s.nombre_servicio, s.descripcion, s.precio, s.estado_vigente " +
+																"FROM servicio s");
+			ResultSet rs = statement.executeQuery();
+			
+			while (rs.next()) {
+				servicios.add(new Servicio(rs.getString("nombre_servicio"), rs.getString("descripcion"), rs.getFloat("precio"), rs.getBoolean("estado_vigente")));
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Error al intentar encontrar los servicios", e);
+		} finally {
+			ConnectionManager.disconnect();
+		}
+		return servicios;
+	}
+
+}

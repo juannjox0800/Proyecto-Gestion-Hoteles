@@ -13,6 +13,7 @@ import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
@@ -156,7 +157,7 @@ public class HotelMapper {
 								huespedesDTO);
 	}
 	
-	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException{
+	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException{
 		if (r == null)
 			return null;
 		

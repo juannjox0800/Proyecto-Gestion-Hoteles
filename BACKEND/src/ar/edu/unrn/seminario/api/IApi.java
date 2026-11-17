@@ -1,5 +1,6 @@
 package ar.edu.unrn.seminario.api;
 
+import java.sql.SQLException;
 import java.time.*;
 import java.util.*;
 
@@ -45,22 +46,22 @@ public interface IApi {
 	List <HabitacionDTO>obtenerListaHabitacion() throws AccesoDatosException, DatoVacioException, ValorInvalidoException;
 
 	
-	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException ;
-	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException;
-	void eliminarServicio(String nombre)throws EntidadNoEncontradaException, EntidadEnUsoException;
-	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException;
+	void registrarServicio(String nombre,String descripcion, float precio, boolean estadoVigente)throws EntidadDuplicadaException, ValorInvalidoException, DatoVacioException, AccesoDatosException ;
+	void modificarServicio(String nombre, String descripcion, float precio, boolean estadoVigente) throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException;
+	ServicioDTO obtenerServicio(String nombre) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	void eliminarServicio(String nombre)throws EntidadNoEncontradaException, EntidadEnUsoException, AccesoDatosException;
 
-	List<ServicioDTO> obtenerListaServicios();
+	List<ServicioDTO> obtenerListaServicios() throws DatoVacioException, ValorInvalidoException, AccesoDatosException;
 	
-	void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException;
-	void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo,String nombre, boolean esActivo)throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;
-	void eliminarPlan(String nombre)throws EntidadNoEncontradaException;
-	PlanDTO obtenerPlan(String nombre)throws EntidadNoEncontradaException;
-	List<PlanDTO> obtenerListaPlan();
-	void guardarListaPLan(List <PlanDTO> listaNueva) throws DatoVacioException, ValorInvalidoException;
-
+	void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException;
+	void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo,String nombre, boolean esActivo)throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException, AccesoDatosException;
+	void eliminarPlan(String nombre)throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException;
+	PlanDTO obtenerPlan(String nombre)throws EntidadNoEncontradaException, AccesoDatosException, DatoVacioException, ValorInvalidoException;
+	float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios);
+	
+	List<PlanDTO> obtenerListaPlan() throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException;
 	//
-	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException;
+	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
 	void modificarReserva(int numeroReserva);
 	void cancelarReserva(int numeroReserva);
 	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException;

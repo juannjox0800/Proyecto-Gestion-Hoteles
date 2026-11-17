@@ -3,6 +3,7 @@ package ar.edu.unrn.seminario.gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -22,6 +23,10 @@ import javax.swing.JMenuItem;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
+import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -152,13 +157,19 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem enlistarPlan = new JMenuItem("Enlistar Plan");
 		enlistarPlan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<PlanDTO> planesList = api.obtenerListaPlan();
-
+				List<PlanDTO> planesList=null;
+					try {
+						planesList = api.obtenerListaPlan();
+					} catch (AccesoDatosException | EntidadDuplicadaException |ValorInvalidoException | DatoVacioException e20) {
+					    JOptionPane.showMessageDialog(null,"Probema al obtener lista","Aviso",JOptionPane.WARNING_MESSAGE);
+					}
 				if (planesList == null || planesList.isEmpty()) {
 				    JOptionPane.showMessageDialog(null,"No hay planes registrados en el sistema para listar, modificar o eliminar.","Aviso",JOptionPane.WARNING_MESSAGE);
 				   
 				}else {
-				ListaPlanes ventana = new ListaPlanes(api);
+				ListaPlanes ventana=null;
+				
+					ventana = new ListaPlanes(api);
 				ventana.setVisible(true);}
 			}
 		});
@@ -167,8 +178,12 @@ public class VentanaPrincipal extends JFrame {
 		JMenuItem registrarPlan = new JMenuItem("Registrar Plan");
 		registrarPlan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarPlan ventana = new RegistrarPlan(api);
-				ventana.setVisible(true);
+				try {
+				    RegistrarPlan ventana = new RegistrarPlan(api);
+				    ventana.setVisible(true);
+				} catch (ValorInvalidoException|DatoVacioException ex) {
+				    JOptionPane.showMessageDialog(null, ex.getMessage());
+				}
 			}
 		});
 		menuPlan.add(registrarPlan);
@@ -178,10 +193,9 @@ public class VentanaPrincipal extends JFrame {
 		
 		JMenuItem enlistarServicio = new JMenuItem("Enlistar Servicio");
 		enlistarServicio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ListaServicios ventana = new ListaServicios(api);
+			public void actionPerformed(ActionEvent e) {ListaServicios ventana = new ListaServicios(api);
 
-				ventana.setVisible(true);
+			ventana.setVisible(true);
 			}
 		});
 		menuServicio.add(enlistarServicio);
