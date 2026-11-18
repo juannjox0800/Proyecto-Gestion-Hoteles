@@ -10,8 +10,8 @@ import ar.edu.unrn.seminario.gui.VentanaPrincipal;
 
 public class Main {
 	public static void main(String[] args) {
-		//IApi api = new MemoryApi();
-		IApi api = new PersistenceApi();
+		IApi api = new MemoryApi();
+		//IApi api = new PersistenceApi();
 
 		
 		EventQueue.invokeLater(new Runnable() {
