@@ -12,8 +12,7 @@ public class Reserva {
 	private LocalDate fechaSalida;
 	private Pago pagoSeña;
 	private Pago pagoFinal;
-	private int costoTotal;
-	private boolean estadoCancelacion = false;
+	private float costoTotal;
 	private int numeroReserva;
 	private List<Huesped> huespedes;
 
@@ -26,9 +25,6 @@ public class Reserva {
 		this.fechaSalida = fechaSalida;
 		this.pagoSeña = pagoSeña;
 		this.numeroReserva = numeroReserva;
-	
-		
-		this.estadoCancelacion = false;
 		this.costoTotal = 0;
 	}
 
@@ -82,21 +78,14 @@ public class Reserva {
 		this.pagoFinal = pagoFinal;
 	}
 
-	public int getCostoTotal() {
+	public float getCostoTotal() {
 		return costoTotal;
 	}
 
-	public void setCostoTotal(int costoTotal) {
+	public void setCostoTotal(float costoTotal) {
 		this.costoTotal = costoTotal;
 	}
 
-	public boolean isEstadoCancelacion() {
-		return estadoCancelacion;
-	}
-
-	public void cambiarEstadoCancelacion() {
-		this.estadoCancelacion = !estadoCancelacion;
-	}
 
 	public int getNumeroReserva() {
 		return numeroReserva;
@@ -153,7 +142,7 @@ public class Reserva {
 	public String toString() {
 		return "Reserva [habitaciones=" + habitaciones + ", plan=" + plan + ", cliente=" + cliente + ", fechaEntrada="
 				+ fechaEntrada + ", fechaSalida=" + fechaSalida + ", pagoSeña=" + pagoSeña + ", pagoFinal=" + pagoFinal
-				+ ", costoTotal=" + costoTotal + ", estadoCancelacion=" + estadoCancelacion + ", numeroReserva="
+				+ ", costoTotal=" + costoTotal + ", numeroReserva="
 				+ numeroReserva + ", huespedes=" + huespedes + "]";
 	}
 	
