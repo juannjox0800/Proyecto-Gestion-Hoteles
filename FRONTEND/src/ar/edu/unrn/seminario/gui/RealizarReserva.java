@@ -27,6 +27,7 @@ import ar.edu.unrn.seminario.dto.HabitacionDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
@@ -292,7 +293,7 @@ public class RealizarReserva extends JFrame {
 						}
 					}
 				}
-			} catch (FechaInvalidaException e2) {
+			} catch (FechaInvalidaException | AccesoDatosException e2) {
 				JOptionPane.showMessageDialog(RealizarReserva.this, e2.getMessage(), "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
