@@ -50,14 +50,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 	        statement.close();
 
 	        // reserva_habitacion
-	        statement = conex.prepareStatement("INSERT INTO Reserva_Habitacion(numero_habitacion, numero_reserva) VALUES (?, ?)");
-
-	        for (Habitacion a : reserva.getHabitaciones()) {
-	            statement.setInt(1, a.getNumero());
-	            statement.setInt(2, reserva.getNumeroReserva());
-	            statement.executeUpdate();
-	        }
-	        statement.close();
+	        insertarHabitaciones(conex, reserva);
 
 	        // pago seña
 	        insertarPago(conex, reserva.getPagoSeña(), reserva.getNumeroReserva(), "seña");
@@ -102,7 +95,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 			
 			  Pago pagoFinal = reserva.getPagoFinal();
 		      if (pagoFinal != null)
-		          insertarPago(conex, pagoFinal, reserva.getNumeroReserva(), "check out");
+		          insertarPago(conex, pagoFinal, reserva.getNumeroReserva(), "final");
         
 		} catch (SQLException e) {
 			throw new AccesoDatosException("Error al intentar modificar la reserva", e);
@@ -249,7 +242,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 	        rs.close();
 	        statement.close();
 	    }  catch (SQLException e) {
-			throw new AccesoDatosException("Error al intentar encontrar los servicios", e);
+			throw new AccesoDatosException("Error al intentar encontrar las reservas", e);
 		} finally {
 			ConnectionManager.disconnect();
 		}
@@ -269,8 +262,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 	}
 	
 	private void insertarHabitaciones(Connection conex, Reserva reserva) throws SQLException {
-	    PreparedStatement statement = conex.prepareStatement(
-	            "INSERT INTO Reserva_Habitacion(numero_habitacion, numero_reserva) VALUES (?, ?)");
+	    PreparedStatement statement = conex.prepareStatement("INSERT INTO Reserva_Habitacion(numero_habitacion, numero_reserva) VALUES (?, ?)");
 
 	    for (Habitacion h : reserva.getHabitaciones()) {
 	        statement.setInt(1, h.getNumero());
@@ -285,8 +277,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 	    if (pago == null)
 	        return;
 
-	    PreparedStatement statement = conex.prepareStatement(
-	            "INSERT INTO pago(monto, fecha_pago, tipo_pago, motivo, numero_reserva) VALUES (?, ?, ?, ?, ?)",
+	    PreparedStatement statement = conex.prepareStatement("INSERT INTO pago(monto, fecha_pago, tipo_pago, motivo, numero_reserva) VALUES (?, ?, ?, ?, ?)",
 	            Statement.RETURN_GENERATED_KEYS);
 
 	    statement.setInt(1, pago.getMonto());
