@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
+import ar.edu.unrn.seminario.exception.DatoVacioException;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -172,8 +173,12 @@ public class VentanaPrincipal extends JFrame {
 		registrarPlan.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				RegistrarPlan ventana = new RegistrarPlan(api);
-				ventana.setVisible(true);
+				try {
+				    RegistrarPlan ventana = new RegistrarPlan(api);
+				    ventana.setVisible(true);
+				} catch (DatoVacioException ex) {
+				    JOptionPane.showMessageDialog(null, ex.getMessage());
+				}
 			}
 		});
 		menuPlan.add(registrarPlan);

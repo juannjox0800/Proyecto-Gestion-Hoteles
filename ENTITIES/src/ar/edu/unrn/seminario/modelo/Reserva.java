@@ -12,7 +12,7 @@ public class Reserva {
 	private LocalDate fechaSalida;
 	private Pago pagoSeña;
 	private Pago pagoFinal;
-	private int costoTotal;
+	private float costoTotal;
 	private boolean estadoCancelacion = false;
 	private int numeroReserva;
 	private List<Huesped> huespedes;
@@ -82,11 +82,11 @@ public class Reserva {
 		this.pagoFinal = pagoFinal;
 	}
 
-	public int getCostoTotal() {
+	public float getCostoTotal() {
 		return costoTotal;
 	}
 
-	public void setCostoTotal(int costoTotal) {
+	public void setCostoTotal(float costoTotal) {
 		this.costoTotal = costoTotal;
 	}
 

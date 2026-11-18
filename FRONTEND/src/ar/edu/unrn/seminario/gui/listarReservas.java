@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,53 +53,54 @@ public class listarReservas extends JFrame {
 	 * Create the frame.
 	 */
 	public listarReservas(IApi api) {
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setTitle("Lista de Reservas");
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 711, 362);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 24, 402, 139);
+		scrollPane.setBounds(0, 24, 695, 184);
 		contentPane.add(scrollPane);
 
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(
-				new Object[][] {
-				},
-				new String[] {
-					"Reserva N.º", "Cliente", "Habitacaiones", "Entrada", "Salida"
-				}
-			) {
-				boolean[] columnEditables = new boolean[] {
-					false, false, false, false
-				};
-				@Override
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
-				}
-			});
-
-			table.getColumnModel().getColumn(0).setResizable(false);
-			table.getColumnModel().getColumn(1).setResizable(false);
-			table.getColumnModel().getColumn(2).setResizable(false);
-			table.getColumnModel().getColumn(3).setResizable(false);
-			table.getColumnModel().getColumn(4).setResizable(false);
+			new Object[][] {
+			},
+			new String[] {
+				"N\u00B0 Reserva", "Cliente", "Habitaciones", "Plan", "Entrada", "Salida", "Costo total"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getColumnModel().getColumn(1).setResizable(false);
+		table.getColumnModel().getColumn(2).setResizable(false);
+		table.getColumnModel().getColumn(3).setResizable(false);
+		table.getColumnModel().getColumn(4).setResizable(false);
+		table.getColumnModel().getColumn(5).setResizable(false);
+		table.getColumnModel().getColumn(6).setResizable(false);
 
 			recargarTabla(api);
 
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setBounds(106, 174, 89, 23);
+		btnModificar.setBounds(228, 219, 89, 23);
 		contentPane.add(btnModificar);
 
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(218, 174, 89, 23);
+		btnEliminar.setBounds(340, 219, 89, 23);
 		contentPane.add(btnEliminar);
 
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setBounds(335, 227, 89, 23);
+		btnSalir.setBounds(596, 289, 89, 23);
 		contentPane.add(btnSalir);
 
 
@@ -175,13 +177,20 @@ public class listarReservas extends JFrame {
 	private void recargarTabla(IApi api) {
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 		modelo.setRowCount(0);
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yy");
+		
 		List<ReservaDTO> reservasDisponibles = api.obtenerListaReserva();
 		for (ReservaDTO reserva : reservasDisponibles) {
 			if(!reserva.isEstadoCancelacion()) {
 				modelo.addRow(new Object[] {
-					reserva.getNumeroReserva(), reserva.getCliente().getNombre() + " " + reserva.getCliente().getApellido(),
-					reserva.getHabitaciones().stream().map(habitacion -> String.valueOf(habitacion.getNumero())).collect(Collectors.joining(" , ")),
-					reserva.getFechaEntrada(), reserva.getFechaSalida()
+						reserva.getNumeroReserva(), 
+						reserva.getCliente().getNombre() + " " + reserva.getCliente().getApellido(),
+						reserva.getHabitaciones().stream()
+											.map(habitacion -> String.valueOf(habitacion.getNumero()))
+											.collect(Collectors.joining(" , ")),
+						reserva.getPlan().getNombre(),
+						reserva.getFechaEntrada().format(formato), reserva.getFechaSalida().format(formato),
+						"$" + reserva.getCostoTotal()
 				});
 			}
 			}

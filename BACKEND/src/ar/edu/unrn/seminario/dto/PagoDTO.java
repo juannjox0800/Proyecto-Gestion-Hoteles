@@ -4,15 +4,14 @@ import java.time.LocalDate;
 
 public class PagoDTO {
 	private String tipoPago;
-	private int monto;
+	private float monto;
 	private LocalDate fechaPago;
 	private int idPago;
 	
-	public PagoDTO(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
+	public PagoDTO(String tipoPago, float monto, LocalDate fechaPago) {
 		this.tipoPago = tipoPago;
 		this.monto = monto;
 		this.fechaPago = fechaPago;
-		this.idPago = idPago;
 	}
 
 	public String getTipoPago() {
@@ -23,11 +22,11 @@ public class PagoDTO {
 		this.tipoPago = tipoPago;
 	}
 
-	public int getMonto() {
+	public float getMonto() {
 		return monto;
 	}
 
-	public void setMonto(int monto) {
+	public void setMonto(float monto) {
 		this.monto = monto;
 	}
 
