@@ -16,8 +16,10 @@ public interface ReservaDAO {
 	
 	void remove (int numero) throws AccesoDatosException, EntidadNoEncontradaException;
 	
+	void remove (Reserva reserva) throws AccesoDatosException, EntidadNoEncontradaException, ValorInvalidoException, AccesoDatosException;
+	
 	Reserva find (int numero) throws AccesoDatosException, EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException;
 	
-	List <Reserva> findAll() throws DatoVacioException, DatoVacioException;
+	List <Reserva> findAll() throws DatoVacioException, DatoVacioException, AccesoDatosException;
 }
 

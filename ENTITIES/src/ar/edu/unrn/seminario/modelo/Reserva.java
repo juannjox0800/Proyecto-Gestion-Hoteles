@@ -97,6 +97,10 @@ public class Reserva {
 	public void cambiarEstadoCancelacion() {
 		this.estadoCancelacion = !estadoCancelacion;
 	}
+	
+	public void setEstadoCancelacion(boolean estado){
+		this.estadoCancelacion = estado;
+	}
 
 	public int getNumeroReserva() {
 		return numeroReserva;
