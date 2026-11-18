@@ -65,7 +65,7 @@ public class RealizarReserva extends JFrame {
 	private IApi api;
 	private boolean enCurso;
 
-	public RealizarReserva(IApi api, ReservaDTO reserva) {
+	public RealizarReserva(IApi api, ReservaDTO reserva) throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException {
 		this.reserva = reserva;
 		this.api = api;
 
@@ -337,7 +337,7 @@ public class RealizarReserva extends JFrame {
 						JOptionPane.ERROR_MESSAGE);
 			}
 
-			catch (FormatoInvalidoException | EntidadNoEncontradaException e1) {
+			catch (FormatoInvalidoException | EntidadNoEncontradaException | DatoVacioException | ValorInvalidoException | AccesoDatosException e1) {
 				JOptionPane.showMessageDialog(RealizarReserva.this, e1.getMessage(), "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
@@ -484,7 +484,7 @@ public class RealizarReserva extends JFrame {
 				dispose();
 
 			} catch (EntidadNoEncontradaException | DatoVacioException | ValorInvalidoException
-					| EntidadDuplicadaException e1) {
+					| EntidadDuplicadaException | AccesoDatosException e1) {
 
 				JOptionPane.showMessageDialog(RealizarReserva.this, e1.getMessage(), "Advertencia",
 						JOptionPane.WARNING_MESSAGE);
@@ -537,6 +537,15 @@ public class RealizarReserva extends JFrame {
 			}
 		} catch (EntidadNoEncontradaException e) {
 			costoReserva = 0;
+		} catch (AccesoDatosException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DatoVacioException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ValorInvalidoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

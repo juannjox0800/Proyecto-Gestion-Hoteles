@@ -469,18 +469,11 @@ public class MemoryApi implements IApi {
 	}
 
 	public float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan){ //contar los fakin dias
-		float costoHabitaciones = habitaciones.stream() .mapToFloat (habitacion -> habitacion.getCosto()) .sum();
+		float costoHabitaciones = (float) habitaciones.stream() .mapToDouble (habitacion -> habitacion.getCosto()) .sum();
 
 		long dias = Duration.between(fechaEntrada.atStartOfDay(), fechaSalida.atStartOfDay()).toDays();
 		
 		return (costoHabitaciones + plan.getCosto())* (float) dias; //un plan tiene un costo fijo, independiente de la cantidad de dias????
 		}
 
-
-
-	@Override
-	public void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
-		// TODO Auto-generated method stub
-
-	}
 }

@@ -433,7 +433,7 @@ public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDat
         throw new FechaInvalidaException("la fecha de entrada debe ser anterior a la fecha de salida");
 
     ReservaDAO reservaDAO = new ReservaDAOJDBC();
-    HabitacionDAO habitacionDAO = new HabitacionDAOJDBC();
+    HabitacionDao habitacionDAO = new HabitacionDAOJDBC();
 
     List<HabitacionDTO> disponibles = new ArrayList<>();
 
@@ -453,7 +453,7 @@ public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDat
             if (!numerosOcupados.contains(habitacion.getNumero()))
                disponibles.add(HotelMapper.aDTO(habitacion));
 
-    } catch (AccesoDatosException | DatoVacioException e) {
+    } catch (AccesoDatosException | DatoVacioException | ValorInvalidoException e) {
         throw new RuntimeException("Error al buscar disponibilidad: " + e.getMessage(), e);
     }
 
@@ -462,7 +462,7 @@ public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDat
 	
 	@Override
 	public float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan){ //contar los fakin dias
-		int costoHabitaciones = habitaciones.stream() .mapToInt (habitacion -> habitacion.getCosto()) .sum();
+		float costoHabitaciones = (float) habitaciones.stream() .mapToDouble (habitacion -> habitacion.getCosto()) .sum();
 
 		long dias = Duration.between(fechaEntrada.atStartOfDay(), fechaSalida.atStartOfDay()).toDays();
 		

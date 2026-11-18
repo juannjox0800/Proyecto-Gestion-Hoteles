@@ -2,6 +2,7 @@ package ar.edu.unrn.seminario.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.attribute.AclEntry;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -100,11 +101,16 @@ public class VentanaPrincipal extends JFrame {
 		menuReserva.add(enlistarReserva);
 		JMenuItem registrarReserva = new JMenuItem("Registrar Reserva");
 		registrarReserva.addActionListener(new ActionListener() {
-
+			
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						RealizarReserva ventana= new RealizarReserva(api, null);
-						ventana.setVisible(true);
+						try {
+							RealizarReserva ventana= new RealizarReserva(api, null);
+							ventana.setVisible(true);
+						} catch (ValorInvalidoException | DatoVacioException | AccesoDatosException | EntidadDuplicadaException e2) {
+							JOptionPane.showMessageDialog(null,"Error" + e2.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+						}
+						
 					}
 				});
 		menuReserva.add(registrarReserva);

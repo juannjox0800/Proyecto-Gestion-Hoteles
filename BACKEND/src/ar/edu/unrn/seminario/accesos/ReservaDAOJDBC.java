@@ -24,6 +24,9 @@ import ar.edu.unrn.seminario.modelo.Reserva;
 
 public class ReservaDAOJDBC implements ReservaDAO{
 
+	ClienteDAO clienteDAO = new ClienteDAOJDBC();
+	PlanDAO planDAO = new PlanDAOJDBC();
+	HabitacionDao habitacionDAO = new HabitacionDAOJDBC();
 	@Override
 	public void create(Reserva reserva) throws AccesoDatosException, EntidadDuplicadaException {
 	    try {
