@@ -11,7 +11,7 @@ public class ServicioExtra extends Servicio {
 	private int dias;
 	private LocalDate fechaSolicitud;
 	
-	public ServicioExtra(String nombre, String descripcion, int precio, boolean estadoVigente)throws DatoVacioException, ValorInvalidoException {
+	public ServicioExtra(String nombre, String descripcion, float precio, boolean estadoVigente)throws DatoVacioException, ValorInvalidoException {
 		super(nombre, descripcion, precio, estadoVigente);
 	}
 	
