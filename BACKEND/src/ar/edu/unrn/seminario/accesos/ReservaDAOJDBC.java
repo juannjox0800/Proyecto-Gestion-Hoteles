@@ -35,7 +35,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 	                + "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 	        statement.setBoolean(1, reserva.isEstadoCancelacion());
-	        statement.setInt(2, reserva.getCostoTotal());
+	        statement.setFloat(2, reserva.getCostoTotal());
 	        statement.setDate(3, java.sql.Date.valueOf(reserva.getFechaSalida()));
 	        statement.setDate(4, java.sql.Date.valueOf(reserva.getFechaEntrada()));
 	        statement.setString(5, reserva.getPlan().getNombre());
@@ -72,7 +72,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 			PreparedStatement statement = conex.prepareStatement( "UPDATE reserva SET estado_cancelacion = ?, costoTotal = ?, fecha_salida = ?, "  + "fecha_entrada = ?, plan_nombre = ? WHERE numero_reserva = ?");
         
 			statement.setBoolean(1, reserva.isEstadoCancelacion());
-			statement.setInt(2, reserva.getCostoTotal());
+			statement.setFloat(2, reserva.getCostoTotal());
 			statement.setDate(3, java.sql.Date.valueOf(reserva.getFechaSalida()));
 			statement.setDate(4, java.sql.Date.valueOf(reserva.getFechaEntrada()));
 			statement.setString(5, reserva.getPlan().getNombre());
@@ -149,7 +149,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 		Reserva reserva = null;
 		
 		boolean cancelada;
-	    int costoTotal;
+	    float costoTotal;
 	    LocalDate fechaEntrada;
 	    LocalDate fechaSalida;
 	    String planNombre;
@@ -171,7 +171,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 		            throw new EntidadNoEncontradaException("No se encontró la reserva: " + numero);
 			 
 			 cancelada = rs.getBoolean("estado_cancelacion");
-		     costoTotal = rs.getInt("costoTotal");
+		     costoTotal =rs.getFloat("costoTotal");
 		     fechaSalida = rs.getDate("fecha_salida").toLocalDate();
 		     fechaEntrada = rs.getDate("fecha_entrada").toLocalDate();
 		     planNombre = rs.getString("plan_nombre");
@@ -197,7 +197,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 		     rs = statement.executeQuery();
 
 		     while (rs.next()) {
-		    	 Pago pago = new Pago(rs.getString("tipo_pago"), rs.getInt("monto"),
+		    	 Pago pago = new Pago(rs.getString("tipo_pago"), rs.getFloat("monto"),
 		         rs.getDate("fecha_pago").toLocalDate(), rs.getInt("id_pago"));
 		    	 
 		    	 if ("seña".equals(rs.getString("motivo")))
@@ -280,7 +280,7 @@ public class ReservaDAOJDBC implements ReservaDAO{
 	    PreparedStatement statement = conex.prepareStatement("INSERT INTO pago(monto, fecha_pago, tipo_pago, motivo, numero_reserva) VALUES (?, ?, ?, ?, ?)",
 	            Statement.RETURN_GENERATED_KEYS);
 
-	    statement.setInt(1, pago.getMonto());
+	    statement.setFloat(1, pago.getMonto());
 	    statement.setDate(2, java.sql.Date.valueOf(pago.getFechaPago()));
 	    statement.setString(3, pago.getTipoPago());
 	    statement.setString(4, motivo);

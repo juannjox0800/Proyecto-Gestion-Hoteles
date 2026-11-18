@@ -22,8 +22,10 @@ import javax.swing.table.DefaultTableModel;
 import ar.edu.unrn.seminario.api.IApi;
 import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
+import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 public class listarReservas extends JFrame {
 
@@ -128,11 +130,9 @@ public class listarReservas extends JFrame {
 				});
 				ventana.setVisible(true);
 
-				} catch (EntidadNoEncontradaException | FormatoInvalidoException e1) {
+				} catch (EntidadNoEncontradaException | FormatoInvalidoException | AccesoDatosException e1) {
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage(), "Error al registrar la reserva", JOptionPane.ERROR_MESSAGE);
-
-				}
-
+			}
 			}
 		});
 
@@ -157,7 +157,7 @@ public class listarReservas extends JFrame {
 					JOptionPane.showMessageDialog(null, "Reserva eliminada correctamente");
 					recargarTabla(api);
 				}
-			} catch (EntidadNoEncontradaException e2) {
+			} catch (EntidadNoEncontradaException | ValorInvalidoException e2) {
 				JOptionPane.showMessageDialog(null, "Error: " + e2.getMessage(), "Error al registrar la reserva", JOptionPane.ERROR_MESSAGE);
 			}
 		});
