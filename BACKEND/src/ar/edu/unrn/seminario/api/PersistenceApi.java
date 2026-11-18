@@ -1,8 +1,13 @@
 package ar.edu.unrn.seminario.api;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 
 import ar.edu.unrn.seminario.accesos.ReservaDAO;
 import ar.edu.unrn.seminario.accesos.ReservaDAOJDBC;
@@ -279,22 +284,52 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida)
-			throws FechaInvalidaException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida)
+        throws FechaInvalidaException {
 
+    if (!fechaEntrada.isBefore(fechaSalida))
+        throw new FechaInvalidaException("la fecha de entrada debe ser anterior a la fecha de salida");
+
+    ReservaDAO reservaDAO = new ReservaDAOJDBC();
+    HabitacionDAO habitacionDAO = new HabitacionDAOJDBC();
+
+    List<HabitacionDTO> disponibles = new ArrayList<>();
+
+    try {
+        List<Reserva> reservas = reservaDAO.findAll();
+        List<Habitacion> habitaciones = habitacionDAO.findAll();
+
+        List<Integer> numerosOcupados = reservas.stream()
+                .filter(reserva -> !reserva.isEstadoCancelacion())
+                .filter(reserva -> fechaEntrada.isBefore(reserva.getFechaSalida())
+                        && fechaSalida.isAfter(reserva.getFechaEntrada()))
+                .flatMap(reserva -> reserva.getHabitaciones().stream())
+                .map(Habitacion::getNumero)
+                .collect(Collectors.toList());
+
+        for (Habitacion habitacion : habitaciones)
+            if (!numerosOcupados.contains(habitacion.getNumero()))
+               disponibles.add(HotelMapper.aDTO(habitacion));
+
+    } catch (AccesoDatosException | DatoVacioException e) {
+        throw new RuntimeException("Error al buscar disponibilidad: " + e.getMessage(), e);
+    }
+
+    return disponibles;
+}
+	
+	@Override
+	public float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan){ //contar los fakin dias
+		int costoHabitaciones = habitaciones.stream() .mapToInt (habitacion -> habitacion.getCosto()) .sum();
+
+		long dias = Duration.between(fechaEntrada.atStartOfDay(), fechaSalida.atStartOfDay()).toDays();
+		
+		return (costoHabitaciones + plan.getCosto())* (float) dias; //un plan tiene un costo fijo, independiente de la cantidad de dias????
+	}
+	
 	@Override
 	public void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago) {
 		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override
