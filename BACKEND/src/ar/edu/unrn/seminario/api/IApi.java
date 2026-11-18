@@ -10,6 +10,7 @@ import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
 import ar.edu.unrn.seminario.dto.ServicioDTO;
+import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.EntidadEnUsoException;
@@ -18,12 +19,6 @@ import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
-
-import ar.edu.unrn.seminario.modelo.Cliente;
-import ar.edu.unrn.seminario.modelo.Habitacion;
-import ar.edu.unrn.seminario.modelo.Plan;
-import ar.edu.unrn.seminario.modelo.Reserva;
-import ar.edu.unrn.seminario.modelo.Servicio;
 
 public interface IApi {
 	
@@ -60,16 +55,12 @@ public interface IApi {
 	//
 	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, float costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
 	void modificarReserva(ReservaDTO reserva )throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
-	void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException;
-	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException;
+	void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException, ValorInvalidoException, ValorInvalidoException;
+	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException, AccesoDatosException;
 	List<ReservaDTO> obtenerListaReserva();
 	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException;
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
 	float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan);
-
-
-
-
-
+	
 
 }

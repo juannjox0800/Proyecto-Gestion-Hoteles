@@ -131,14 +131,14 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, int costo, String nombre, boolean esActivo)
+	public void registrarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
 			throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, int costo, String nombre, boolean esActivo)
+	public void modificarPlan(ArrayList<ServicioDTO> listaServicios, float costo, String nombre, boolean esActivo)
 			throws EntidadNoEncontradaException, ValorInvalidoException, DatoVacioException {
 		// TODO Auto-generated method stub
 		
@@ -163,15 +163,9 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public void guardarListaPLan(List<PlanDTO> listaNueva) throws DatoVacioException, ValorInvalidoException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
-			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)
-			throws DatoVacioException, ValorInvalidoException {
+			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, float costoTotal)
+			throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException {
 		List<Habitacion> habitaciones = new ArrayList<>();
 	    for (HabitacionDTO habitacionDTO : obtenerListaHabitacion)
 	        habitaciones.add(HotelMapper.aModelo(habitacionDTO));
@@ -194,7 +188,7 @@ public class PersistenceApi implements IApi{
 	}
 	
 	@Override
-	public void modificarReserva(ReservaDTO reserva) throws DatoVacioException, ValorInvalidoException, EntidadNoEncontradaException {
+	public void modificarReserva(ReservaDTO reserva) throws DatoVacioException, ValorInvalidoException, EntidadNoEncontradaException, EntidadDuplicadaException {
 
 	    ReservaDAO reservaDAO = new ReservaDAOJDBC();
 	    Reserva reservaEncontrada;
@@ -245,7 +239,7 @@ public class PersistenceApi implements IApi{
 	
 
 	@Override
-	public void cancelarReserva(int numeroReserva) throws EntidadNoEncontradaException, ValorInvalidoException {
+	public void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException, ValorInvalidoException {
 		ReservaDAO reservaDAO = new ReservaDAOJDBC();
 
 	    try {
@@ -298,13 +292,13 @@ public class PersistenceApi implements IApi{
 	}
 
 	@Override
-	public PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException {
+	public float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 	@Override
-	public int calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan) {
+	public float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

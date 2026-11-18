@@ -2,7 +2,6 @@ package ar.edu.unrn.seminario.api;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -399,8 +398,7 @@ public class MemoryApi implements IApi {
 
 
 	@Override
-	public void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException{ //  no lanza excepciones pq al llamar al metodo ya se verificaron en el momento de buscarReserva (?
-
+	public void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException{ 
 		boolean eliminado = this.reservas.removeIf(r -> r.getNumeroReserva() == numeroReserva);
 		
 		if (!eliminado) {
