@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.Statement;
+
 import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
@@ -22,57 +24,52 @@ import ar.edu.unrn.seminario.modelo.Reserva;
 
 public class ReservaDAOJDBC implements ReservaDAO{
 
-
-	
+	@Override
 	public void create(Reserva reserva) throws AccesoDatosException, EntidadDuplicadaException {
-		try {
-			Connection conex = ConnectionManager.getConnection();
-			
-			// reserva 
-	        PreparedStatement statement = conex.prepareStatement("INSERT INTO reserva(numero_reserva, estado_cancelacion, costoTotal, fecha_salida, fecha_entrada, plan_nombre, dni_cliente) " 
-			+ "VALUES (?, ?, ?, ?, ?, ?, ?)");
-	        
-	        statement.setInt(1, reserva.getNumeroReserva());
-	        statement.setBoolean(2, reserva.isEstadoCancelacion());
-	        statement.setInt(3, reserva.getCostoTotal());
-	        statement.setDate(4, java.sql.Date.valueOf(reserva.getFechaSalida()));
-	        statement.setDate(5, java.sql.Date.valueOf(reserva.getFechaEntrada()));
-	        statement.setString(6, reserva.getPlan().getNombre());
-	        statement.setInt(7, reserva.getCliente().getDni());
-	        
+	    try {
+	        Connection conex = ConnectionManager.getConnection();
+
+	        // reserva
+	        PreparedStatement statement = conex.prepareStatement(
+	                "INSERT INTO reserva(estado_cancelacion, costoTotal, fecha_salida, fecha_entrada, plan_nombre, dni_cliente) "
+	                + "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+	        statement.setBoolean(1, reserva.isEstadoCancelacion());
+	        statement.setInt(2, reserva.getCostoTotal());
+	        statement.setDate(3, java.sql.Date.valueOf(reserva.getFechaSalida()));
+	        statement.setDate(4, java.sql.Date.valueOf(reserva.getFechaEntrada()));
+	        statement.setString(5, reserva.getPlan().getNombre());
+	        statement.setInt(6, reserva.getCliente().getDni());
 	        statement.executeUpdate();
+
+	        ResultSet claves = statement.getGeneratedKeys();
+	        if (claves.next())
+	            reserva.setNumeroReserva(claves.getInt(1));
+
+	        claves.close();
 	        statement.close();
-	        
+
 	        // reserva_habitacion
 	        statement = conex.prepareStatement("INSERT INTO Reserva_Habitacion(numero_habitacion, numero_reserva) VALUES (?, ?)");
 
 	        for (Habitacion a : reserva.getHabitaciones()) {
-	        	statement.setInt(1, a.getNumero());
+	            statement.setInt(1, a.getNumero());
 	            statement.setInt(2, reserva.getNumeroReserva());
-	            
 	            statement.executeUpdate();
-	            statement.close();
 	        }
-	        // pago seña 
-	        statement = conex.prepareStatement( "INSERT INTO pago(id_pago, monto, fecha_pago, tipo_pago, motivo, numero_reserva) " + "VALUES (?, ?, ?, ?, ?, ?)");
-	        statement.setInt(1, reserva.getPagoSeña().getIdPago());
-	        statement.setInt(2, reserva.getPagoSeña().getMonto());
-	        statement.setDate(3, java.sql.Date.valueOf(reserva.getPagoSeña().getFechaPago()));
-	        statement.setString(4, reserva.getPagoSeña().getTipoPago());
-	        statement.setString(5, "Seña");
-	        statement.setInt(6, reserva.getNumeroReserva());
-	        
-	        statement.executeUpdate();
-	        
-		}  catch (SQLException e) {
-			if (e.getErrorCode() == 1062)
-				throw new EntidadDuplicadaException("Ya existe una reserva con el numero: " + reserva.getNumeroReserva());
-			
-			throw new AccesoDatosException("Error al intentar crear la reserva", e);
-		} finally {
-			ConnectionManager.disconnect();
-		}
-		
+	        statement.close();
+
+	        // pago seña
+	        insertarPago(conex, reserva.getPagoSeña(), reserva.getNumeroReserva(), "seña");
+
+	    } catch (SQLException e) {
+	        if (e.getErrorCode() == 1062)
+	            throw new EntidadDuplicadaException("Ya existe una habitación repetida en la reserva");
+
+	        throw new AccesoDatosException("Error al intentar crear la reserva", e);
+	    } finally {
+	        ConnectionManager.disconnect();
+	    }
 	}
                            
 	public void update(Reserva reserva) throws AccesoDatosException, EntidadNoEncontradaException {
@@ -102,6 +99,10 @@ public class ReservaDAOJDBC implements ReservaDAO{
 		
 			//creo la nueva tabla reserva_habitacion 
 			insertarHabitaciones(conex, reserva);
+			
+			  Pago pagoFinal = reserva.getPagoFinal();
+		      if (pagoFinal != null)
+		          insertarPago(conex, pagoFinal, reserva.getNumeroReserva(), "check out");
         
 		} catch (SQLException e) {
 			throw new AccesoDatosException("Error al intentar modificar la reserva", e);
@@ -275,12 +276,33 @@ public class ReservaDAOJDBC implements ReservaDAO{
 	        statement.setInt(1, h.getNumero());
 	        statement.setInt(2, reserva.getNumeroReserva());
 	        statement.executeUpdate();
-            statement.close();
 	    }
+	    statement.close();
 	   
 	}
 
+	private void insertarPago(Connection conex, Pago pago, int numeroReserva, String motivo) throws SQLException {
+	    if (pago == null)
+	        return;
 
+	    PreparedStatement statement = conex.prepareStatement(
+	            "INSERT INTO pago(monto, fecha_pago, tipo_pago, motivo, numero_reserva) VALUES (?, ?, ?, ?, ?)",
+	            Statement.RETURN_GENERATED_KEYS);
+
+	    statement.setInt(1, pago.getMonto());
+	    statement.setDate(2, java.sql.Date.valueOf(pago.getFechaPago()));
+	    statement.setString(3, pago.getTipoPago());
+	    statement.setString(4, motivo);
+	    statement.setInt(5, numeroReserva);
+	    statement.executeUpdate();
+
+	    ResultSet claves = statement.getGeneratedKeys();
+	    if (claves.next())
+	        pago.setIdPago(claves.getInt(1));
+
+	    claves.close();
+	    statement.close();
+	}
 
 	
 }

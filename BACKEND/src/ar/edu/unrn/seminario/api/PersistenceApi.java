@@ -163,7 +163,7 @@ public class PersistenceApi implements IApi{
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
 			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)
 			throws DatoVacioException, ValorInvalidoException {
-		// TODO Auto-generated method stub
+	
 		
 	}
 
