@@ -1,5 +1,6 @@
 package ar.edu.unrn.seminario.api;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -324,7 +325,7 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void realizarReserva(List<HabitacionDTO> obtenerListaHabitacion, PlanDTO plan, ClienteDTO cliente,
-			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal) throws DatoVacioException, ValorInvalidoException{
+			LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, float costoTotal) throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException{
 
 				//private boolean estadoCancelacion;
 		List<Habitacion> habitaciones = new ArrayList<>();
@@ -339,6 +340,7 @@ public class MemoryApi implements IApi {
 		Cliente clienteModelo = HotelMapper.aModelo(cliente);
 		Pago pagoModelo = HotelMapper.aModelo(pagoSeña);
 		pagoModelo.setIdPago(ultimoIdPago);
+		ultimoIdPago++;
 
 		int numeroReserva = contReservas;
 		contReservas ++;
@@ -354,7 +356,7 @@ public class MemoryApi implements IApi {
 
 	@Override
 	public void modificarReserva(ReservaDTO reserva )
-			throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException{
+			throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, EntidadDuplicadaException{
 		Reserva reservaEncontrada = null;
 		for (Reserva r : reservas) {
 			if (r.getNumeroReserva() == reserva.getNumeroReserva()) {
@@ -386,7 +388,7 @@ public class MemoryApi implements IApi {
 			if (reserva.getPlan().getCosto() <= reservaEncontrada.getPlan().getCosto()) {
 				throw new ValorInvalidoException ("El plan selecionado debe ser de mayor precio que el plan actual.");
 			}
-			reservaEncontrada.setCostoTotal(reservaEncontrada.getCostoTotal());
+			reservaEncontrada.setCostoTotal(reserva.getCostoTotal());
 			reservaEncontrada.setPlan(HotelMapper.aModelo(reserva.getPlan()));
 		}// TERMINO
 		else {
@@ -402,8 +404,8 @@ public class MemoryApi implements IApi {
 		for (Reserva reserva : reservas) {
 			if (reserva.getNumeroReserva() == numeroReserva) {
 				reserva.cambiarEstadoCancelacion();
-			}
 				break;
+			}
 		}
 	}
 
@@ -453,13 +455,12 @@ public class MemoryApi implements IApi {
 	}
 
 	@Override
-	public int calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan){ //contar los fakin dias
+	public float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan){ //contar los fakin dias
 		int costoHabitaciones = habitaciones.stream() .mapToInt (habitacion -> habitacion.getCosto()) .sum();
 
-		Period periodo = Period.between(fechaEntrada, fechaSalida);
-		int dias = periodo.getDays();
-		return (costoHabitaciones + plan.getCosto())* dias ; //un plan tiene un costo fijo, independiente de la cantidad de dias????
-
+		long dias = Duration.between(fechaEntrada.atStartOfDay(), fechaSalida.atStartOfDay()).toDays();
+		
+		return (costoHabitaciones + plan.getCosto())* (float) dias; //un plan tiene un costo fijo, independiente de la cantidad de dias????
 		}
 
 

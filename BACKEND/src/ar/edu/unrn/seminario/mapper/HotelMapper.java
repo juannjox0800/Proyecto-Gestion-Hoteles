@@ -15,6 +15,7 @@ import ar.edu.unrn.seminario.dto.ServicioDTO;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
 import ar.edu.unrn.seminario.exception.EntidadDuplicadaException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import ar.edu.unrn.seminario.modelo.Cama;
 import ar.edu.unrn.seminario.modelo.Cliente;
 import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Huesped;
@@ -63,7 +64,18 @@ public class HotelMapper {
 		if (h == null) {
 			return null;
 		}
-		return new Habitacion(h.getNumero(), h.getTipoHabitacion(), h.getCosto());
+		
+		Habitacion habitacion = new Habitacion(h.getNumero(), h.getTipoHabitacion(), h.getCosto());
+		
+		if (h.getEstado() != null)
+			habitacion.setEstado(h.getEstado());
+		
+		if (h.getCamas() != null) {
+			for (CamaDTO cama : h.getCamas()) {
+				habitacion.agregarCama(new Cama(cama.getTipo()));
+			}
+		}
+		return habitacion;
 
 	}
 
@@ -171,7 +183,7 @@ public class HotelMapper {
 								huespedesDTO, r.getNumeroReserva(), r.isEstadoCancelacion(), r.getCostoTotal());
 	}
 
-	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException{
+	public static Reserva aModelo (ReservaDTO r) throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException{
 		if (r == null) {
 			return null;
 		}
