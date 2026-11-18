@@ -1,27 +1,20 @@
 package ar.edu.unrn.seminario.gui;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 
 import ar.edu.unrn.seminario.api.IApi;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-
-import ar.edu.unrn.seminario.api.IApi;
-import ar.edu.unrn.seminario.api.MemoryApi;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.exception.AccesoDatosException;
 import ar.edu.unrn.seminario.exception.DatoVacioException;
@@ -34,128 +27,139 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel contentPane;
 
 	public VentanaPrincipal(IApi api) {
-		
+
 		setTitle("Sistema de Gestión de Hotel");
-	
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 350);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		JMenu menuCliente = new JMenu("Cliente");
 		menuBar.add(menuCliente);
-		
+
 		JMenuItem enlistarClientes = new JMenuItem("Enlistar Clientes");
 		enlistarClientes.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ListarClientes ventana = new ListarClientes(api);
 				ventana.setVisible(true);
 			}
 		});
 		menuCliente.add(enlistarClientes);
-		
+
 		JMenuItem altaCliente = new JMenuItem("Registrar Cliente");
 		altaCliente.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistrarCliente ventana = new RegistrarCliente(api, null);
 				ventana.setVisible(true);
 			}
 		});
 		menuCliente.add(altaCliente);
-		
+
 
 		JMenu menuHabitacion = new JMenu("Habitacion");
 		menuBar.add(menuHabitacion);
-		
+
 		JMenuItem enlistarHabitacion = new JMenuItem("Enlistar Habitacion");
 		enlistarHabitacion.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				EnlistarHabitación ventana = new EnlistarHabitación(api);
 				ventana.setVisible(true);
 			}
 		});
 		menuHabitacion.add(enlistarHabitacion);
-		
+
 
 		JMenuItem registrarHabitacion = new JMenuItem("Registrar Habitacion");
 		registrarHabitacion.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistrarHabitacion ventana = new RegistrarHabitacion(api, null);
 				ventana.setVisible(true);
-				
+
 			}});
-			
+
 		menuHabitacion.add(registrarHabitacion);
 
-		
+
 		JMenu menuReserva = new JMenu("Reserva");
 		menuBar.add(menuReserva);
 		JMenuItem enlistarReserva = new JMenuItem("Enlistar Reserva");
 		enlistarReserva.addActionListener(new ActionListener() {
-			
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				VentanaListadoDeReservas ventana= new VentanaListadoDeReservas();
+				listarReservas ventana= new listarReservas(api);
 				ventana.setVisible(true);
 			}
 		});
 		menuReserva.add(enlistarReserva);
 		JMenuItem registrarReserva = new JMenuItem("Registrar Reserva");
 		registrarReserva.addActionListener(new ActionListener() {
-					
+
+					@Override
 					public void actionPerformed(ActionEvent e) {
-						RealizarReserva ventana= new RealizarReserva(api);
+						RealizarReserva ventana= new RealizarReserva(api, null);
 						ventana.setVisible(true);
 					}
 				});
 		menuReserva.add(registrarReserva);
-		
-		
-		
+
+
+
 		JMenuItem hacerCheckIn = new JMenuItem("Hacer Check-In");
 		hacerCheckIn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				CheckIn ventana = new CheckIn();
 				ventana.setVisible(true);
 			}
 		});
 		menuReserva.add(hacerCheckIn);
-		
+
 		JMenuItem hacerCheckOut = new JMenuItem("Hacer Check-Out");
 		hacerCheckOut.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				CheckOut ventana = new CheckOut();
 				ventana.setVisible(true);
 			}
 		});
 		menuReserva.add(hacerCheckOut);
-		
+
 		JMenuItem pagarServicioExtra = new JMenuItem("Pagar Servicio Extra");
 		pagarServicioExtra.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistrarPago ventana = new RegistrarPago();
 				ventana.setVisible(true);
 			}
 		});
 		menuReserva.add(pagarServicioExtra);
-		
+
 		JMenuItem solicitarServicioExtra = new JMenuItem("Solicitar servicio extra");
 		solicitarServicioExtra.addActionListener(new ActionListener() {
-			
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				SolicitarServicio ventana = new SolicitarServicio();
 				ventana.setVisible(true);
 			}
 		});
 		menuReserva.add(solicitarServicioExtra);
-		
 
-		
+
+
 		JMenu menuPlan = new JMenu("Plan");
 		menuBar.add(menuPlan);
-		
+
 		JMenuItem enlistarPlan = new JMenuItem("Enlistar Plan");
 		enlistarPlan.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<PlanDTO> planesList=null;
 					try {
@@ -165,7 +169,7 @@ public class VentanaPrincipal extends JFrame {
 					}
 				if (planesList == null || planesList.isEmpty()) {
 				    JOptionPane.showMessageDialog(null,"No hay planes registrados en el sistema para listar, modificar o eliminar.","Aviso",JOptionPane.WARNING_MESSAGE);
-				   
+
 				}else {
 				ListaPlanes ventana=null;
 				
@@ -174,9 +178,10 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		menuPlan.add(enlistarPlan);
-		
+
 		JMenuItem registrarPlan = new JMenuItem("Registrar Plan");
 		registrarPlan.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 				    RegistrarPlan ventana = new RegistrarPlan(api);
@@ -187,21 +192,24 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 		menuPlan.add(registrarPlan);
-		
+
 		JMenu menuServicio = new JMenu("Servicio");
 		menuBar.add(menuServicio);
-		
+
 		JMenuItem enlistarServicio = new JMenuItem("Enlistar Servicio");
 		enlistarServicio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {ListaServicios ventana = new ListaServicios(api);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ListaServicios ventana = new ListaServicios(api);
 
 			ventana.setVisible(true);
 			}
 		});
 		menuServicio.add(enlistarServicio);
-		
+
 		JMenuItem registrarServicio = new JMenuItem("Registrar Servicio");
 		registrarServicio.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistrarServicio ventana = new RegistrarServicio(api,null);
 				ventana.setVisible(true);

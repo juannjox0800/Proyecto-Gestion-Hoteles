@@ -8,9 +8,9 @@ public class ConnectionManager {
 
 	private static String DRIVER = "com.mysql.jdbc.Driver";
 	private static String URL_DB = "jdbc:mysql://localhost:3306/";
-	protected static String DB = "gestion_Hotel?useSSL=false";
+	protected static String DB = "gestion_hotel?useSSL=false";
 	protected static String user = "root";
-	protected static String pass = "contraseñaDeSQL";
+	protected static String pass = "1234";
 	protected static Connection conn = null;
 
 	public static void connect() {

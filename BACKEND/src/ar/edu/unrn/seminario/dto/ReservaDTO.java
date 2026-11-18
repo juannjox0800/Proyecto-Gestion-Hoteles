@@ -11,14 +11,14 @@ public class ReservaDTO {
 	private LocalDate fechaSalida;
 	private PagoDTO pagoSeña;
 	private PagoDTO pagoFinal;
-	private int costoTotal;
+	private float costoTotal;
 	private boolean estadoCancelacion;
 	private int numeroReserva;
 	private List<HuespedDTO> huespedes;
-	
-	
+
+
 	public ReservaDTO(List<HabitacionDTO> habitaciones, PlanDTO plan, ClienteDTO cliente, LocalDate fechaEntrada,
-			LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes) {
+			LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes, int numeroReserva,  boolean estadoCancelacion, float costoTotal) {
 		this.habitaciones = habitaciones;
 		this.plan = plan;
 		this.cliente = cliente;
@@ -26,6 +26,9 @@ public class ReservaDTO {
 		this.fechaSalida = fechaSalida;
 		this.pagoSeña = pagoSeña;
 		this.huespedes = huespedes;
+		this.numeroReserva = numeroReserva;
+		this.estadoCancelacion = estadoCancelacion;
+		this.costoTotal = costoTotal;
 	}
 
 
@@ -99,12 +102,12 @@ public class ReservaDTO {
 	}
 
 
-	public int getCostoTotal() {
+	public float getCostoTotal() {
 		return costoTotal;
 	}
 
 
-	public void setCostoTotal(int costoTotal) {
+	public void setCostoTotal(float costoTotal) {
 		this.costoTotal = costoTotal;
 	}
 
@@ -137,6 +140,6 @@ public class ReservaDTO {
 	public void setHuespedes(List<HuespedDTO> huespedes) {
 		this.huespedes = huespedes;
 	}
-	
+
 
 }

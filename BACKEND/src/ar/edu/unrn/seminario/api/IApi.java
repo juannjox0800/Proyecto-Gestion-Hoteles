@@ -1,13 +1,15 @@
 package ar.edu.unrn.seminario.api;
 
-import java.sql.SQLException;
-import java.time.*;
-import java.util.*;
 
-import ar.edu.unrn.seminario.dto.CamaDTO;
+import java.sql.SQLException;
+import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+
 import ar.edu.unrn.seminario.dto.ClienteDTO;
 import ar.edu.unrn.seminario.dto.HabitacionDTO;
-import ar.edu.unrn.seminario.dto.HuespedDTO;
 import ar.edu.unrn.seminario.dto.PagoDTO;
 import ar.edu.unrn.seminario.dto.PlanDTO;
 import ar.edu.unrn.seminario.dto.ReservaDTO;
@@ -21,12 +23,6 @@ import ar.edu.unrn.seminario.exception.ValorInvalidoException;
 
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
-
-import ar.edu.unrn.seminario.modelo.Cliente;
-import ar.edu.unrn.seminario.modelo.Habitacion;
-import ar.edu.unrn.seminario.modelo.Plan;
-import ar.edu.unrn.seminario.modelo.Reserva;
-import ar.edu.unrn.seminario.modelo.Servicio;
 
 public interface IApi {
 	
@@ -59,20 +55,14 @@ public interface IApi {
 	float calcPrecioServicios(ArrayList<ServicioDTO> listaServicios);
 	
 	List<PlanDTO> obtenerListaPlan() throws AccesoDatosException, ValorInvalidoException, DatoVacioException, EntidadDuplicadaException;
-	//
-	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, int costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
-	void modificarReserva(int numeroReserva);
-	void cancelarReserva(int numeroReserva);
-	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException;
+	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, float costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
+	void modificarReserva(ReservaDTO reserva )throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
+	void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException, ValorInvalidoException, ValorInvalidoException;
+	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException, AccesoDatosException;
 	List<ReservaDTO> obtenerListaReserva();
-	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException;
+	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException, AccesoDatosException;
 	void RegistrarPago(String tipoPago, int monto, LocalDate fechaPago, int idPago);
-	PlanDTO buscarPlan(String nombrePlan) throws EntidadNoEncontradaException;
-	int calcularSeña(int costoHabitaciones, LocalDate fechaEntrada, LocalDate fechaSalida);
+	float calcularCostoReserva(List<HabitacionDTO> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida, PlanDTO plan);
 	
-	
-	
-	
-	
-	
+
 }
