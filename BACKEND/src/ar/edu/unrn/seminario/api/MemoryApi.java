@@ -399,13 +399,12 @@ public class MemoryApi implements IApi {
 
 
 	@Override
-	public void cancelarReserva(int numeroReserva) { //  no lanza excepciones pq al llamar al metodo ya se verificaron en el momento de buscarReserva (?
+	public void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException{ //  no lanza excepciones pq al llamar al metodo ya se verificaron en el momento de buscarReserva (?
 
-		for (Reserva reserva : reservas) {
-			if (reserva.getNumeroReserva() == numeroReserva) {
-				reserva.cambiarEstadoCancelacion();
-				break;
-			}
+		boolean eliminado = this.reservas.removeIf(r -> r.getNumeroReserva() == numeroReserva);
+		
+		if (!eliminado) {
+			throw new EntidadNoEncontradaException();
 		}
 	}
 

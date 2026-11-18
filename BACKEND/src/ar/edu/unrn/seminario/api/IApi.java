@@ -60,7 +60,7 @@ public interface IApi {
 	//
 	void realizarReserva(List <HabitacionDTO>obtenerListaHabitacion, PlanDTO plan,ClienteDTO cliente, LocalDate fechaDeEntrada, LocalDate fechaSalida, PagoDTO pagoSeña, float costoTotal)throws DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
 	void modificarReserva(ReservaDTO reserva )throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, EntidadDuplicadaException;
-	void cancelarReserva(int numeroReserva);
+	void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException;
 	ReservaDTO obtenerReserva(int numeroReserva) throws EntidadNoEncontradaException, FormatoInvalidoException;
 	List<ReservaDTO> obtenerListaReserva();
 	List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDate fechaSalida) throws FechaInvalidaException;
