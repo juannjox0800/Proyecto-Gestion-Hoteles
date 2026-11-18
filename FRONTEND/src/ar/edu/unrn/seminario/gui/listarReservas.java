@@ -137,10 +137,9 @@ public class listarReservas extends JFrame {
 		});
 
 
-		btnEliminar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
+		btnEliminar.addActionListener(e -> {
+			
+			try {
 				int filaSeleccionada = table.getSelectedRow();
 
 				if (filaSeleccionada == -1) {
@@ -153,12 +152,13 @@ public class listarReservas extends JFrame {
 
 				int confirmacion = JOptionPane.showConfirmDialog(null, "Esta seguro de que desea eliminar la reserva N.° " + numero + "?", "Confirmar Eleccion", JOptionPane.YES_NO_OPTION);
 				if (confirmacion == JOptionPane.YES_OPTION) {
-					api.cancelarReserva(numero);
+					api.eliminarReserva(numero);
 
 					JOptionPane.showMessageDialog(null, "Reserva eliminada correctamente");
 					recargarTabla(api);
 				}
-
+			} catch (EntidadNoEncontradaException e2) {
+				JOptionPane.showMessageDialog(null, "Error: " + e2.getMessage(), "Error al registrar la reserva", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 

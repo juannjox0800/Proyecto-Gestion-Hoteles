@@ -33,6 +33,10 @@ import ar.edu.unrn.seminario.exception.EntidadNoEncontradaException;
 import ar.edu.unrn.seminario.exception.FechaInvalidaException;
 import ar.edu.unrn.seminario.exception.FormatoInvalidoException;
 import ar.edu.unrn.seminario.exception.ValorInvalidoException;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
+import java.awt.Color;
+import java.awt.Font;
 
 public class RealizarReserva extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -60,181 +64,290 @@ public class RealizarReserva extends JFrame {
 	private IApi api;
 	private boolean enCurso;
 
-
-
 	public RealizarReserva(IApi api, ReservaDTO reserva) {
 		this.reserva = reserva;
 		this.api = api;
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		setBounds(100, 100, 975, 480);
+		setBounds(100, 100, 735, 531);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		JButton btnAceptar = new JButton("Guardar");
+		btnAceptar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		btnAceptar.setBounds(593, 456, 102, 23);
+		contentPane.add(btnAceptar);
+
+		JButton btnCancelar = new JButton("Salir");
+		btnCancelar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		btnCancelar.setBounds(479, 456, 102, 23);
+		contentPane.add(btnCancelar);
+
+		JPanel panelCliente = new JPanel();
+		panelCliente.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Datos del Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCliente.setBounds(10, 11, 357, 107);
+		contentPane.add(panelCliente);
+		panelCliente.setLayout(null);
+
+		JLabel lblNewLabel_5 = new JLabel("DNI:");
+		lblNewLabel_5.setBounds(10, 23, 46, 20);
+		panelCliente.add(lblNewLabel_5);
+
+		JLabel lblNewLabel_7 = new JLabel("Nombre:");
+		lblNewLabel_7.setBounds(10, 54, 60, 14);
+		panelCliente.add(lblNewLabel_7);
+
+		lblNombreCliente = new JLabel("-");
+		lblNombreCliente.setBounds(80, 54, 133, 14);
+		panelCliente.add(lblNombreCliente);
+
+		lblContactoCliente = new JLabel("-");
+		lblContactoCliente.setBounds(80, 79, 133, 14);
+		panelCliente.add(lblContactoCliente);
+
+		JLabel lblNewLabel_9 = new JLabel("Contacto:");
+		lblNewLabel_9.setBounds(10, 79, 60, 14);
+		panelCliente.add(lblNewLabel_9);
+
+		tfCliente = new JTextField();
+		tfCliente.setBounds(80, 24, 147, 20);
+		panelCliente.add(tfCliente);
+		tfCliente.setColumns(10);
+
+		JButton btnBuscarCliente = new JButton("Buscar");
+		btnBuscarCliente.setBounds(237, 23, 89, 23);
+		panelCliente.add(btnBuscarCliente);
+
+		JPanel panelPlan = new JPanel();
+		panelPlan.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Plan de Estadia", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelPlan.setBounds(377, 11, 332, 107);
+		contentPane.add(panelPlan);
+		panelPlan.setLayout(null);
+
+		cbPlan = new JComboBox<>();
+		cbPlan.setBounds(117, 44, 183, 22);
+		panelPlan.add(cbPlan);
+
+		JLabel lblNewLabel_6 = new JLabel("Plan solicitado:");
+		lblNewLabel_6.setBounds(21, 48, 86, 14);
+		panelPlan.add(lblNewLabel_6);
+
+		JPanel panelHabitaciones = new JPanel();
+		panelHabitaciones.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Seleccion de Habitaciones", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelHabitaciones.setBounds(10, 122, 699, 235);
+		contentPane.add(panelHabitaciones);
+		panelHabitaciones.setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("Fecha de Entrada:");
+		lblNewLabel.setBounds(10, 24, 136, 20);
+		panelHabitaciones.add(lblNewLabel);
+
+		tfFechaEntrada = new JTextField();
+		tfFechaEntrada.setBounds(156, 24, 117, 20);
+		panelHabitaciones.add(tfFechaEntrada);
+		tfFechaEntrada.setColumns(10);
+
+		JLabel lblNewLabel_1 = new JLabel("Fecha de Salida:");
+		lblNewLabel_1.setBounds(283, 24, 110, 20);
+		panelHabitaciones.add(lblNewLabel_1);
+
+		tfFechaSalida = new JTextField();
+		tfFechaSalida.setBounds(403, 24, 117, 20);
+		panelHabitaciones.add(tfFechaSalida);
+		tfFechaSalida.setColumns(10);
+
+		JButton btnBuscarDisponibilidad = new JButton("Buscar disponibilidad");
+		btnBuscarDisponibilidad.setBounds(530, 23, 159, 23);
+		panelHabitaciones.add(btnBuscarDisponibilidad);
+
+		JLabel lblNewLabel_2 = new JLabel("Habitación/es disponibles:");
+		lblNewLabel_2.setBounds(10, 55, 488, 14);
+		panelHabitaciones.add(lblNewLabel_2);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(445, 145, 488, 144);
-		contentPane.add(scrollPane_1);
+		scrollPane_1.setBounds(10, 80, 679, 144);
+		panelHabitaciones.add(scrollPane_1);
 
 		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {},
-			new String[] {
-				"N.°", "Tipo", "Tipo de camas", "Cantidad de camas", "Precio", " "
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-					false, false, false, false, false, true
-			};
+		table.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "N.\u00B0", "Tipo", "Tipo de camas", "Cantidad de camas", "Precio", " Seleccion" }) {
+			boolean[] columnEditables = new boolean[] { false, false, false, false, false, true };
+			
 			@Override
 			public boolean isCellEditable(int row, int column) {
-			    if (enCurso) {
-			        return false;
-			    }
-
-			    return columnEditables[column];
+				if (enCurso) {
+					return false;
+				}
+				return columnEditables[column];
 			}
-
+			
 			@Override
-			public Class getColumnClass(int column) {   // recibe una columna si es la 5 (sleccionar) devuelve boolean.class, porque puede ser true o false
-			    if (column == 5) {
-			        return Boolean.class;
-			    }
-			    return Object.class;
+			public Class getColumnClass (int column){
+				if (column == 5) {
+					return Boolean.class;
+				}
+				return Object.class;
 			}
 		});
 		table.getColumnModel().getColumn(0).setPreferredWidth(55);
 		table.getColumnModel().getColumn(0).setMinWidth(18);
-		table.getColumnModel().getColumn(1).setPreferredWidth(115);
-		table.getColumnModel().getColumn(2).setPreferredWidth(115);
-		table.getColumnModel().getColumn(3).setPreferredWidth(125);
+		table.getColumnModel().getColumn(1).setPreferredWidth(70);
+		table.getColumnModel().getColumn(2).setPreferredWidth(144);
+		table.getColumnModel().getColumn(3).setPreferredWidth(111);
+		table.getColumnModel().getColumn(4).setPreferredWidth(63);
 		table.getColumnModel().getColumn(5).setResizable(false);
+		table.getColumnModel().getColumn(5).setPreferredWidth(67);
 		scrollPane_1.setViewportView(table);
 
-		JLabel lblNewLabel_12 = new JLabel("Agregar habitación");
-		lblNewLabel_12.setBounds(454, 11, 111, 14);
-		contentPane.add(lblNewLabel_12);
-
-		JLabel lblNewLabel_14 = new JLabel("Agregar plan");
-		lblNewLabel_14.setBounds(10, 265, 90, 14);
-		contentPane.add(lblNewLabel_14);
-
-		JLabel lblNewLabel_3 = new JLabel("Metodo de pago ");
-		lblNewLabel_3.setBounds(511, 392, 111, 14);
-		contentPane.add(lblNewLabel_3);
-
-		cbMetodoPago = new JComboBox();
-		cbMetodoPago.setModel(new DefaultComboBoxModel(new String[] {"Efectivo", "Tarjeta", "Transferencia"}));
-		cbMetodoPago.setBounds(632, 388, 111, 22);
-		contentPane.add(cbMetodoPago);
+		JPanel panelPago = new JPanel();
+		panelPago.setBorder(new TitledBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Resumen y Pago de Se\u00F1a", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelPago.setBounds(10, 357, 699, 88);
+		contentPane.add(panelPago);
+		panelPago.setLayout(null);
 
 		JLabel lblNewLabel_4 = new JLabel("Se debe abonar un 50% del costo total para realizar una seña");
-		lblNewLabel_4.setBounds(445, 300, 404, 18);
-		contentPane.add(lblNewLabel_4);
+		lblNewLabel_4.setBounds(10, 21, 504, 18);
+		panelPago.add(lblNewLabel_4);
+
+		lbCostoTotal = new JLabel("-");
+		lbCostoTotal.setBounds(92, 48, 98, 23);
+		panelPago.add(lbCostoTotal);
+
+		JLabel lblNewLabel_8_1 = new JLabel("Costo total:");
+		lblNewLabel_8_1.setBounds(10, 48, 72, 23);
+		panelPago.add(lblNewLabel_8_1);
 
 		JLabel lblNewLabel_8 = new JLabel("Costo de la seña:");
-		lblNewLabel_8.setBounds(511, 358, 111, 23);
-		contentPane.add(lblNewLabel_8);
+		lblNewLabel_8.setBounds(200, 50, 112, 23);
+		panelPago.add(lblNewLabel_8);
 
 		lbSeña = new JLabel("-");
-		lbSeña.setBounds(632, 358, 98, 23);
-		contentPane.add(lbSeña);
+		lbSeña.setBounds(313, 50, 98, 23);
+		panelPago.add(lbSeña);
 
-		JLabel lblNewLabel_11 = new JLabel("Agregar cliente:");
-		lblNewLabel_11.setBounds(10, 11, 111, 14);
-		contentPane.add(lblNewLabel_11);
+		JLabel lblNewLabel_3 = new JLabel("Metodo de pago:");
+		lblNewLabel_3.setBounds(457, 49, 98, 21);
+		panelPago.add(lblNewLabel_3);
 
-		JLabel lblNewLabel_5 = new JLabel("Cliente");
-		lblNewLabel_5.setBounds(30, 36, 46, 14);
-		contentPane.add(lblNewLabel_5);
+		cbMetodoPago = new JComboBox();
+		cbMetodoPago.setBounds(567, 49, 112, 22);
+		panelPago.add(cbMetodoPago);
+		cbMetodoPago.setModel(new DefaultComboBoxModel(new String[] { "Efectivo", "Tarjeta", "Transferencia" }));
 
-		tfCliente = new JTextField();
-		tfCliente.setBounds(145, 33, 117, 20);
-		contentPane.add(tfCliente);
-		tfCliente.setColumns(10);
+		table.getModel().addTableModelListener(e -> {
+			if (e.getColumn() == 5) {
+				recalcularCosto();
+			}
+		});
 
-		JLabel lblNewLabel_7 = new JLabel("Nombre:");
-		lblNewLabel_7.setBounds(40, 61, 60, 14);
-		contentPane.add(lblNewLabel_7);
+		btnBuscarDisponibilidad.addActionListener(e -> {
 
-		JLabel lblNewLabel_9 = new JLabel("Contacto:");
-		lblNewLabel_9.setBounds(40, 86, 60, 14);
-		contentPane.add(lblNewLabel_9);
+			try {
+				fechaEntrada = LocalDate.parse(tfFechaEntrada.getText(), DateTimeFormatter.ofPattern("dd/MM/yy"));
+				fechaSalida = LocalDate.parse(tfFechaSalida.getText(), DateTimeFormatter.ofPattern("dd/MM/yy"));
+			} catch (DateTimeParseException e2) {
+				JOptionPane.showMessageDialog(RealizarReserva.this, "Ingrese las fechas con el formato dd/MM/yy",
+						"Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 
-		lblNombreCliente = new JLabel("-");
-		lblNombreCliente.setBounds(110, 61, 133, 14);
-		contentPane.add(lblNombreCliente);
+			List<Integer> numerosTildados = habitacionesSeleccionadas.stream().map(HabitacionDTO::getNumero)
+					.collect(Collectors.toList());
 
-		lblContactoCliente = new JLabel("-");
-		lblContactoCliente.setBounds(110, 86, 133, 14);
-		contentPane.add(lblContactoCliente);
+			try {
+				habitacionesDisponibles = api.buscarDisponibilidad(fechaEntrada, fechaSalida);
 
-		JButton btnBuscarCliente = new JButton("Buscar");
-		btnBuscarCliente.setBounds(307, 32, 89, 23);
-		contentPane.add(btnBuscarCliente);
+				if (reserva != null) {
+					List<HabitacionDTO> libresAntes = fechaEntrada.isBefore(reserva.getFechaEntrada())
+							? api.buscarDisponibilidad(fechaEntrada, reserva.getFechaEntrada())
+							: null;
 
-		JButton btnBuscarDisponibilidad = new JButton("Buscar disponibilidad");
-		btnBuscarDisponibilidad.setBounds(750, 32, 183, 23);
-		contentPane.add(btnBuscarDisponibilidad);
+					List<HabitacionDTO> libresDespues = fechaSalida.isAfter(reserva.getFechaSalida())
+							? api.buscarDisponibilidad(reserva.getFechaSalida(), fechaSalida)
+							: null;
 
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(32, 387, 89, 23);
-		contentPane.add(btnAceptar);
+					for (HabitacionDTO habOriginal : reserva.getHabitaciones()) {
+						int num = habOriginal.getNumero();
 
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(154, 387, 89, 23);
-		contentPane.add(btnCancelar);
+						boolean yaEnLista = habitacionesDisponibles.stream()
+								.anyMatch(h -> h.getNumero() == habOriginal.getNumero());
+						boolean okAntes = (libresAntes == null)
+								|| libresAntes.stream().anyMatch(h -> h.getNumero() == num);
+						boolean okDespues = (libresDespues == null)
+								|| libresDespues.stream().anyMatch(h -> h.getNumero() == num);
 
-		JLabel lblNewLabel = new JLabel("Fecha de entrada");
-		lblNewLabel.setBounds(474, 36, 109, 14);
-		contentPane.add(lblNewLabel);
+						if (!yaEnLista && okAntes && okDespues) {
+							habitacionesDisponibles.add(habOriginal);
+						}
+					}
+				}
+			} catch (FechaInvalidaException e2) {
+				JOptionPane.showMessageDialog(RealizarReserva.this, e2.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 
-		tfFechaEntrada = new JTextField();
-		tfFechaEntrada.setBounds(593, 33, 117, 20);
-		contentPane.add(tfFechaEntrada);
-		tfFechaEntrada.setColumns(10);
+			DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+			modelo.setRowCount(0); // para limpiar la tabla
 
+			for (HabitacionDTO habitacion : habitacionesDisponibles) {
+				modelo.addRow(new Object[] { habitacion.getNumero(), habitacion.getTipoHabitacion(),
 
+						habitacion.getCamas().stream().map(cama -> cama.getTipo()).collect(Collectors.joining(", ")),
 
-		JLabel lblNewLabel_1 = new JLabel("Fecha de salida");
-		lblNewLabel_1.setBounds(474, 61, 104, 14);
-		contentPane.add(lblNewLabel_1);
+						habitacion.getCamas().size(), habitacion.getCosto(),
+						numerosTildados.contains(habitacion.getNumero()) });
+			}
+			recalcularCosto();
+		});
+		cbPlan.removeAllItems();
 
-		tfFechaSalida = new JTextField();
-		tfFechaSalida.setBounds(593, 58, 117, 20);
-		contentPane.add(tfFechaSalida);
-		tfFechaSalida.setColumns(10);
+		cbPlan.addActionListener(e -> {
+			recalcularCosto();
+		});
 
-		JLabel lblNewLabel_2 = new JLabel("Habitación/es disponibles");
-		lblNewLabel_2.setBounds(445, 120, 488, 14);
-		contentPane.add(lblNewLabel_2);
+		btnBuscarCliente.addActionListener(e -> {
 
-		JLabel lblNewLabel_6 = new JLabel("Plan solicitado");
-		lblNewLabel_6.setBounds(30, 290, 86, 14);
-		contentPane.add(lblNewLabel_6);
+			try {
+				int dni = Integer.parseInt(tfCliente.getText());
+				clienteSeleccionado = api.obtenerCliente(dni);
 
-		cbPlan = new JComboBox<>();
-		cbPlan.setBounds(145, 286, 117, 22);
-		contentPane.add(cbPlan);
-		
-		lbCostoTotal = new JLabel("-");
-		lbCostoTotal.setBounds(632, 324, 98, 23);
-		contentPane.add(lbCostoTotal);
-		
-		JLabel lblNewLabel_8_1 = new JLabel("Costo total:");
-		lblNewLabel_8_1.setBounds(511, 324, 111, 23);
-		contentPane.add(lblNewLabel_8_1);
+				// si no tira ninguna excepcion, carga el nombre y el apellido del cliente en
+				// los lbl
+				if (clienteSeleccionado != null) {
+					lblNombreCliente.setText(clienteSeleccionado.getNombre());
+					lblContactoCliente.setText(clienteSeleccionado.getContacto());
+				}
+			}
+
+			catch (NumberFormatException e1) {
+				JOptionPane.showMessageDialog(RealizarReserva.this, "El DNI debe ser correcto", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+
+			catch (FormatoInvalidoException | EntidadNoEncontradaException e1) {
+				JOptionPane.showMessageDialog(RealizarReserva.this, e1.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		});
 
 		List<PlanDTO> planes = api.obtenerListaPlan();
-		cbPlan.removeAllItems();
 		for (PlanDTO plan : planes) {
-		    cbPlan.addItem(plan.getNombre());
+			cbPlan.addItem(plan.getNombre());
 		}
 
-		//como se muestra la ventana
+		// como se muestra la ventana
 
 		if (reserva != null) {
 			setTitle("Modificar Reserva");
@@ -260,27 +373,20 @@ public class RealizarReserva extends JFrame {
 			lbCostoTotal.setText("$" + String.valueOf(reserva.getCostoTotal()));
 
 			DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-			
-			costoReserva = reserva.getCostoTotal();		
+
+			costoReserva = reserva.getCostoTotal();
 			plan = reserva.getPlan();
-			
-			//recargar la tabla con las habitaciones del dto reserva
+
+			// recargar la tabla con las habitaciones del dto reserva
 			habitacionesDisponibles = new ArrayList<HabitacionDTO>(reserva.getHabitaciones());
 			habitacionesSeleccionadas = new ArrayList<HabitacionDTO>(reserva.getHabitaciones());
-			
+
 			for (HabitacionDTO habitacion : habitacionesDisponibles) {
-				modelo.addRow(new Object[] {
-						habitacion.getNumero(),
-						habitacion.getTipoHabitacion(),
-						habitacion.getCamas().stream()
-											.map (cama -> cama.getTipo())
-											.collect(Collectors.joining(", ")),
-						habitacion.getCamas().size(),
-						habitacion.getCosto(),
-						true
-						});
+				modelo.addRow(new Object[] { habitacion.getNumero(), habitacion.getTipoHabitacion(),
+						habitacion.getCamas().stream().map(cama -> cama.getTipo()).collect(Collectors.joining(", ")),
+						habitacion.getCamas().size(), habitacion.getCosto(), true });
 			}
-			
+
 			LocalDate hoy = LocalDate.now();
 
 			if (!hoy.isBefore(fechaEntrada) && hoy.isBefore(fechaSalida)) {
@@ -289,7 +395,7 @@ public class RealizarReserva extends JFrame {
 				tfFechaEntrada.setEnabled(false);
 				tfFechaSalida.setEnabled(false);
 				btnBuscarDisponibilidad.setEnabled(false);
-				
+
 				cbPlan.removeAllItems();
 				float costoActual = reserva.getPlan().getCosto();
 				for (PlanDTO p : planes) {
@@ -298,206 +404,112 @@ public class RealizarReserva extends JFrame {
 					}
 				}
 				cbPlan.setSelectedItem(reserva.getPlan().getNombre());
-				
+
 			} else if (!hoy.isBefore(fechaSalida)) {
 				// ya paso
-				JOptionPane.showMessageDialog(this, "No se puede modificar una reserva que ya finalizo.", "Reserva no modificable", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "No se puede modificar una reserva que ya finalizo.",
+						"Reserva no modificable", JOptionPane.WARNING_MESSAGE);
 				dispose();
 			}
 		} else {
 			setTitle("Realizar Reserva");
 		}
 
-		table.getModel().addTableModelListener(e -> {
-			if (e.getColumn() == 5) {
-				recalcularCosto();
-			}
-		});
-		
-		cbPlan.addActionListener(e -> {
-			recalcularCosto();
-		});
-		
-		btnBuscarCliente.addActionListener(e ->{
-
-				try {
-					int dni = Integer.parseInt(tfCliente.getText());
-					clienteSeleccionado = api.obtenerCliente(dni);
-
-					//si no tira ninguna excepcion, carga el nombre y el apellido del cliente en los lbl
-					if (clienteSeleccionado != null) {
-						lblNombreCliente.setText(clienteSeleccionado.getNombre());
-						lblContactoCliente.setText(clienteSeleccionado.getContacto());
-						}
-					}
-
-				catch (NumberFormatException e1) {
-					JOptionPane.showMessageDialog(RealizarReserva.this, "El DNI debe ser correcto", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-
-				catch (FormatoInvalidoException | EntidadNoEncontradaException e1) {
-					JOptionPane.showMessageDialog(RealizarReserva.this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-					}
-		});
-
-
-
-		btnBuscarDisponibilidad.addActionListener(e ->{
+		btnAceptar.addActionListener(e -> {
+			String nombrePlan = (String) cbPlan.getSelectedItem();
 
 			try {
-				fechaEntrada = LocalDate.parse(tfFechaEntrada.getText(), DateTimeFormatter.ofPattern("dd/MM/yy"));
-				fechaSalida = LocalDate.parse(tfFechaSalida.getText(),  DateTimeFormatter.ofPattern("dd/MM/yy"));
-			}
-			catch (DateTimeParseException e2) {
-				JOptionPane.showMessageDialog(RealizarReserva.this, "Ingrese las fechas con el formato dd/MM/yy", "Error", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
+				PlanDTO planElegido;
 
-			List<Integer> numerosTildados = habitacionesSeleccionadas.stream()
-					.map(HabitacionDTO :: getNumero)
-					.collect(Collectors.toList());
-			
-			try {
-				habitacionesDisponibles =  api.buscarDisponibilidad(fechaEntrada, fechaSalida);
-				
+				if (reserva != null && reserva.getPlan().getNombre().equals(nombrePlan)) {
+					planElegido = reserva.getPlan();
+				} else {
+					planElegido = api.obtenerPlan(nombrePlan);
+				}
+
 				if (reserva != null) {
-					List<HabitacionDTO> libresAntes = fechaEntrada.isBefore(reserva.getFechaEntrada())
-													? api.buscarDisponibilidad(fechaEntrada, reserva.getFechaEntrada())
-													: null;
-					
-					List<HabitacionDTO> libresDespues = fechaSalida.isAfter(reserva.getFechaSalida())
-													? api.buscarDisponibilidad(reserva.getFechaSalida(), fechaSalida)
-													: null;
-					
-					for (HabitacionDTO habOriginal : reserva.getHabitaciones()) {
-						int num = habOriginal.getNumero();
-						
-						boolean yaEnLista = habitacionesDisponibles.stream().anyMatch(h -> h.getNumero() == habOriginal.getNumero());
-						boolean okAntes = (libresAntes == null) || libresAntes.stream().anyMatch(h -> h.getNumero() == num);
-						boolean okDespues = (libresDespues == null) || libresDespues.stream().anyMatch(h -> h.getNumero() == num);
-						
-						if (!yaEnLista && okAntes && okDespues) {
-							habitacionesDisponibles.add(habOriginal);
+					LocalDate hoy = LocalDate.now();
+
+					if (hoy.isBefore(reserva.getFechaEntrada())) {
+						if (fechaEntrada == null || fechaSalida == null || habitacionesSeleccionadas.isEmpty()) {
+							JOptionPane.showMessageDialog(RealizarReserva.this, "Debe completar todos los campos",
+									"Error", JOptionPane.ERROR_MESSAGE);
+							return;
 						}
+
+						reserva.setPlan(planElegido);
+						reserva.setHabitaciones(habitacionesSeleccionadas);
+						reserva.setFechaEntrada(fechaEntrada);
+						reserva.setFechaSalida(fechaSalida);
+						reserva.setCostoTotal(costoReserva);
+
+					} else if (hoy.isBefore(reserva.getFechaSalida())) {
+						// reserva en curso
+						reserva.setPlan(planElegido);
+						reserva.setCostoTotal(costoReserva);
+
+					} else {
+						JOptionPane.showMessageDialog(RealizarReserva.this,
+								"No se puede modificar una reserva finalizada.", "Reserva no modificable",
+								JOptionPane.WARNING_MESSAGE);
+						return;
 					}
+
+					api.modificarReserva(reserva);
+
+				} else {
+
+					if (clienteSeleccionado == null || fechaEntrada == null || fechaSalida == null
+							|| habitacionesSeleccionadas.isEmpty()) {
+						JOptionPane.showMessageDialog(RealizarReserva.this, "Debe completar todos los campos", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+
+					String tipoPago = cbMetodoPago.getSelectedItem().toString();
+					LocalDate fechaPago = LocalDate.now();
+
+					PagoDTO pagoSeña = new PagoDTO(tipoPago, precioSeña, fechaPago);
+
+					api.realizarReserva(habitacionesSeleccionadas, planElegido, clienteSeleccionado, fechaEntrada,
+							fechaSalida, pagoSeña, costoReserva);
 				}
+
+				JOptionPane.showMessageDialog(RealizarReserva.this,
+						reserva != null ? "Reserva modificada correctamente" : "Reserva registrada correctamente",
+						"Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+				limpiarCampos();
+				dispose();
+
+			} catch (EntidadNoEncontradaException | DatoVacioException | ValorInvalidoException
+					| EntidadDuplicadaException e1) {
+
+				JOptionPane.showMessageDialog(RealizarReserva.this, e1.getMessage(), "Advertencia",
+						JOptionPane.WARNING_MESSAGE);
 			}
-			catch (FechaInvalidaException e2) {
-				JOptionPane.showMessageDialog(RealizarReserva.this, e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-			modelo.setRowCount(0);                      // para limpiar la tabla
-
-			for (HabitacionDTO habitacion : habitacionesDisponibles) {
-				modelo.addRow(new Object[] {
-						habitacion.getNumero(),
-						habitacion.getTipoHabitacion(),
-
-						habitacion.getCamas().stream() .map (cama -> cama.getTipo())
-						.collect(Collectors.joining(", ")),
-
-						habitacion.getCamas().size(),
-						habitacion.getCosto(),
-						numerosTildados.contains(habitacion.getNumero())
-					});
-				}
-			recalcularCosto();
 		});
-
-
-
-
-
-	btnAceptar.addActionListener(e -> {
-	        String nombrePlan = (String) cbPlan.getSelectedItem();
-	
-	        try {
-	            PlanDTO planElegido;
-	            
-	            if (reserva != null && reserva.getPlan().getNombre().equals(nombrePlan)) {
-	            	planElegido = reserva.getPlan();
-	            } else {
-	            	planElegido = api.obtenerPlan(nombrePlan);
-	            }
-	
-	            if (reserva != null) {
-	                LocalDate hoy = LocalDate.now();
-	
-	                if (hoy.isBefore(reserva.getFechaEntrada())) {
-	                	if ( fechaEntrada == null || fechaSalida == null || habitacionesSeleccionadas.isEmpty()) {
-	                    	JOptionPane.showMessageDialog(RealizarReserva.this, "Debe completar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
-	                        return;
-	                	}
-	                	
-	                    reserva.setPlan(planElegido);
-	                    reserva.setHabitaciones(habitacionesSeleccionadas);
-	                    reserva.setFechaEntrada(fechaEntrada);
-	                    reserva.setFechaSalida(fechaSalida);
-	                    reserva.setCostoTotal(costoReserva);
-	                    
-	                } else if (hoy.isBefore(reserva.getFechaSalida())) {
-	                    // reserva en curso
-	                    reserva.setPlan(planElegido);
-	                    reserva.setCostoTotal(costoReserva);
-	
-	                } else {
-	                    JOptionPane.showMessageDialog(RealizarReserva.this, "No se puede modificar una reserva finalizada.", "Reserva no modificable", JOptionPane.WARNING_MESSAGE);
-	                    return;
-	                }
-	
-	                api.modificarReserva(reserva);
-	
-	            } else {
-	
-	            	if (clienteSeleccionado == null || fechaEntrada == null || fechaSalida == null || habitacionesSeleccionadas.isEmpty()) {
-	                	JOptionPane.showMessageDialog(RealizarReserva.this, "Debe completar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
-	                    return;
-	                }
-	
-	                String tipoPago = cbMetodoPago.getSelectedItem().toString();
-	                LocalDate fechaPago = LocalDate.now();
-	
-	                PagoDTO pagoSeña = new PagoDTO(tipoPago, precioSeña, fechaPago);
-	
-	                api.realizarReserva(habitacionesSeleccionadas, planElegido, clienteSeleccionado, fechaEntrada, fechaSalida, pagoSeña, costoReserva);
-	            }
-	
-	
-	            JOptionPane.showMessageDialog(RealizarReserva.this, reserva != null ? "Reserva modificada correctamente" : "Reserva registrada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-	
-	            limpiarCampos();
-	            dispose();
-	
-	        } catch (EntidadNoEncontradaException | DatoVacioException  | ValorInvalidoException | EntidadDuplicadaException e1) {
-	
-	            JOptionPane.showMessageDialog(RealizarReserva.this, e1.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
-	        }
-	});
-
-
 
 		btnCancelar.addActionListener(e -> {
-				dispose();
+			dispose();
 
 		});
 
 	}
 
-
 	private void recalcularCosto() {
 		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-		
+
 		habitacionesSeleccionadas = new ArrayList<>();
-		
-		for (int i = 0; i<modelo.getRowCount(); i++) {
+
+		for (int i = 0; i < modelo.getRowCount(); i++) {
 			if (Boolean.TRUE.equals(modelo.getValueAt(i, 5))) {
 				habitacionesSeleccionadas.add(habitacionesDisponibles.get(i));
 			}
 		}
-		
-		if (habitacionesSeleccionadas.isEmpty() || fechaEntrada == null || fechaSalida == null || cbPlan.getSelectedItem() == null) {
+
+		if (habitacionesSeleccionadas.isEmpty() || fechaEntrada == null || fechaSalida == null
+				|| cbPlan.getSelectedItem() == null) {
 			costoReserva = 0;
 			lbCostoTotal.setText("$0");
 			if (reserva == null) {
@@ -506,18 +518,18 @@ public class RealizarReserva extends JFrame {
 			}
 			return;
 		}
-		
+
 		try {
 			String nombrePlan = cbPlan.getSelectedItem().toString();
-			
+
 			if (reserva != null && reserva.getPlan().getNombre().equals(nombrePlan)) {
 				plan = reserva.getPlan();
 			} else {
-				plan = api.obtenerPlan (nombrePlan);
+				plan = api.obtenerPlan(nombrePlan);
 			}
-			
+
 			costoReserva = api.calcularCostoReserva(habitacionesSeleccionadas, fechaEntrada, fechaSalida, plan);
-			lbCostoTotal.setText("$"+String.valueOf(costoReserva));
+			lbCostoTotal.setText("$" + String.valueOf(costoReserva));
 			if (reserva == null) {
 				precioSeña = costoReserva / 2;
 				lbSeña.setText("$" + String.valueOf(precioSeña));
@@ -526,40 +538,40 @@ public class RealizarReserva extends JFrame {
 			costoReserva = 0;
 		}
 	}
-	
+
 	private void limpiarCampos() {
-	
-	    // Campos de texto
-	    tfCliente.setText("");
-	    tfFechaEntrada.setText("");
-	    tfFechaSalida.setText("");
-	
-	    // Datos del cliente
-	    clienteSeleccionado = null;
-	    lblNombreCliente.setText("-");
-	    lblContactoCliente.setText("-");
-	
-	    // Fechas
-	    fechaEntrada = null;
-	    fechaSalida = null;
-	
-	    // Habitaciones
-	    habitacionesSeleccionadas.clear();
-	    habitacionesDisponibles.clear();
-	
-	    DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-	    modelo.setRowCount(0);
-	
-	    // Plan y método de pago
-	    if (cbPlan.getItemCount() > 0) {
-	    	cbPlan.setSelectedIndex(0);
-	    }
-	    cbMetodoPago.setSelectedIndex(0);
-	
-	    // Seña
-	    precioSeña = 0;
-	    lbSeña.setText("-");
-	    
-	    lbCostoTotal.setText("-");
+
+		// Campos de texto
+		tfCliente.setText("");
+		tfFechaEntrada.setText("");
+		tfFechaSalida.setText("");
+
+		// Datos del cliente
+		clienteSeleccionado = null;
+		lblNombreCliente.setText("-");
+		lblContactoCliente.setText("-");
+
+		// Fechas
+		fechaEntrada = null;
+		fechaSalida = null;
+
+		// Habitaciones
+		habitacionesSeleccionadas.clear();
+		habitacionesDisponibles.clear();
+
+		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+		modelo.setRowCount(0);
+
+		// Plan y método de pago
+		if (cbPlan.getItemCount() > 0) {
+			cbPlan.setSelectedIndex(0);
 		}
+		cbMetodoPago.setSelectedIndex(0);
+
+		// Seña
+		precioSeña = 0;
+		lbSeña.setText("-");
+
+		lbCostoTotal.setText("-");
 	}
+}
