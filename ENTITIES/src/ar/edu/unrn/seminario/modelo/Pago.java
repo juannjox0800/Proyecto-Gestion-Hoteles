@@ -13,7 +13,7 @@ public class Pago {
 		this.tipoPago = tipoPago;
 		this.monto = monto;
 		this.fechaPago = fechaPago;
-		this.idPago = idPago;
+		this.idPago = 0;
 	}
 
 	public String getTipoPago() {

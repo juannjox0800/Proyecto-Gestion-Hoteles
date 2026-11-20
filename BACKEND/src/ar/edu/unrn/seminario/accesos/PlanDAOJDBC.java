@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import ar.edu.unrn.seminario.exception.*;
 import ar.edu.unrn.seminario.modelo.Plan;
 import ar.edu.unrn.seminario.modelo.Servicio;
@@ -41,7 +39,7 @@ public class PlanDAOJDBC implements PlanDAO {
 		}
 		catch (SQLException e) {
 			try {
-				conex.rollback();                             // si algo falla reinicia td al pingo
+				conex.rollback();                             // si algo falla reinicia td 
 			} 
 			catch (SQLException ex) {ex.printStackTrace();}
 			
@@ -111,7 +109,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	@Override
 	public void remove(Plan plan) throws  EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException {
 		if(plan==null||plan.getNombre().trim().isEmpty()) 
-					throw new EntidadNoEncontradaException("plan nulo ingresa otro");
+					throw new EntidadNoEncontradaException("Plan nulo. Ingrese otro");
 		
 		remove(plan.getNombre());
 	}

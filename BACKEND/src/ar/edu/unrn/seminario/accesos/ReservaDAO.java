@@ -12,7 +12,7 @@ import ar.edu.unrn.seminario.modelo.Reserva;
 public interface ReservaDAO {
 	void create (Reserva reserva )throws AccesoDatosException, EntidadDuplicadaException;
 	
-	void update (Reserva reserva) throws AccesoDatosException, EntidadNoEncontradaException;
+	void update (Reserva reserva) throws AccesoDatosException, EntidadNoEncontradaException, EntidadDuplicadaException;
 	
 	void remove (int numero) throws AccesoDatosException, EntidadNoEncontradaException;
 	

@@ -455,15 +455,13 @@ public class MemoryApi implements IApi {
 		}
 
 		List<Habitacion> habitacionesOcupadas = reservas.stream()
-											.filter(reserva -> !reserva.isEstadoCancelacion())
-											.filter(reserva -> fechaEntrada.isBefore(reserva.getFechaSalida()) &&
-								                       fechaSalida.isAfter(reserva.getFechaEntrada()))
-											.flatMap (reserva -> reserva.getHabitaciones().stream())
-											.collect(Collectors.toList());
+				.filter(reserva -> fechaEntrada.isBefore(reserva.getFechaSalida()) && fechaSalida.isAfter(reserva.getFechaEntrada()))
+				.flatMap (reserva -> reserva.getHabitaciones().stream())
+				.collect(Collectors.toList());
 
 	   List <HabitacionDTO> habitacionesDisponibles = habitaciones.stream().filter (habitacion -> !habitacionesOcupadas.contains(habitacion))
-			   									  .map(habitacion -> HotelMapper.aDTO(habitacion))
-			   									  .collect(Collectors.toList());
+			    .map(habitacion -> HotelMapper.aDTO(habitacion))
+			    .collect(Collectors.toList());
 
 	   return habitacionesDisponibles;
 	}
@@ -473,7 +471,7 @@ public class MemoryApi implements IApi {
 
 		long dias = Duration.between(fechaEntrada.atStartOfDay(), fechaSalida.atStartOfDay()).toDays();
 		
-		return (costoHabitaciones + plan.getCosto())* (float) dias; //un plan tiene un costo fijo, independiente de la cantidad de dias????
+		return (costoHabitaciones + plan.getCosto())* (float) dias; //un plan tiene un costo por dia
 		}
 
 }

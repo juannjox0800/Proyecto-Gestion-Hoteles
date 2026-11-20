@@ -19,9 +19,6 @@ import ar.edu.unrn.seminario.accesos.ServicioDAOJDBC;
 import ar.edu.unrn.seminario.accesos.ClienteDAO;
 import ar.edu.unrn.seminario.accesos.ClienteDAOJDBC;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-
 import ar.edu.unrn.seminario.accesos.ReservaDAO;
 import ar.edu.unrn.seminario.accesos.ReservaDAOJDBC;
 
@@ -48,9 +45,7 @@ import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Plan;
 import ar.edu.unrn.seminario.modelo.Servicio;
 
-import ar.edu.unrn.seminario.modelo.Habitacion;
 import ar.edu.unrn.seminario.modelo.Pago;
-import ar.edu.unrn.seminario.modelo.Plan;
 import ar.edu.unrn.seminario.modelo.Reserva;
 
 
@@ -59,15 +54,18 @@ public class PersistenceApi implements IApi{
 	private HabitacionDao habitacionDao;
 	private PlanDAO planDao;
 	private ServicioDAO servicioDao;
-
-private ClienteDAO clienteDao; 
+	private ReservaDAO reservaDao;
+	private ClienteDAO clienteDao; 
 
 	public PersistenceApi() {
 		planDao = new PlanDAOJDBC();
 		servicioDao = new ServicioDAOJDBC();
 		habitacionDao = new HabitacionDAOJDBC();
 		clienteDao = new ClienteDAOJDBC();
+		reservaDao = new ReservaDAOJDBC();
 	}
+	
+	// ------------------------------------------------------------- CLIENTE
 	
 	@Override
 	public void registrarCliente(String nombre, String apellido, String contacto, int dni) throws EntidadDuplicadaException, DatoVacioException, ValorInvalidoException, AccesoDatosException {
@@ -78,7 +76,6 @@ private ClienteDAO clienteDao;
 
 	@Override
 	public void modificarCLiente(int dni, String nombre, String apellido, String contacto) throws EntidadNoEncontradaException, DatoVacioException, ValorInvalidoException, AccesoDatosException{
-			// TODO Auto-generated method stub
 			Cliente cliente = clienteDao.find(dni);
 			cliente.setApellido(apellido);
 			cliente.setContacto(contacto);
@@ -325,8 +322,7 @@ private ClienteDAO clienteDao;
 	    reserva.setCostoTotal(costoTotal);
 
 	    try {
-	    	ReservaDAO reservaDAO = new ReservaDAOJDBC();
-			reservaDAO.create(reserva);
+			reservaDao.create(reserva);
 	    } catch (EntidadDuplicadaException | AccesoDatosException e) {
 	        throw new ValorInvalidoException("No se pudo guardar la reserva: " + e.getMessage());
 	    }
@@ -335,12 +331,11 @@ private ClienteDAO clienteDao;
 	@Override
 	public void modificarReserva(ReservaDTO reserva) throws DatoVacioException, ValorInvalidoException, EntidadNoEncontradaException, EntidadDuplicadaException {
 
-	    ReservaDAO reservaDAO = new ReservaDAOJDBC();
 	    Reserva reservaEncontrada;
 
 	    // busco la reserva guardada en la BD
 	    try {
-	        reservaEncontrada = reservaDAO.find(reserva.getNumeroReserva());
+	        reservaEncontrada = reservaDao.find(reserva.getNumeroReserva());
 	    } catch (AccesoDatosException e) {
 	        throw new ValorInvalidoException(e.getMessage());
 	    }
@@ -375,7 +370,7 @@ private ClienteDAO clienteDao;
 
 	    //guardo en la BD
 	    try {
-	        reservaDAO.update(reservaEncontrada);
+	        reservaDao.update(reservaEncontrada);
 	    } catch (AccesoDatosException e) {
 	        throw new ValorInvalidoException(e.getMessage());
 	    }
@@ -385,10 +380,9 @@ private ClienteDAO clienteDao;
 
 	@Override
 	public void eliminarReserva(int numeroReserva) throws EntidadNoEncontradaException, ValorInvalidoException {
-		ReservaDAO reservaDAO = new ReservaDAOJDBC();
 
 	    try {
-	        reservaDAO.remove(numeroReserva);
+	        reservaDao.remove(numeroReserva);
 	    } catch (AccesoDatosException e) {
 	        throw new ValorInvalidoException(e.getMessage());
 	    }
@@ -409,12 +403,11 @@ private ClienteDAO clienteDao;
 
 	@Override
 	public List<ReservaDTO> obtenerListaReserva() {
-
-	    ReservaDAO reservaDAO = new ReservaDAOJDBC();
+		
 	    List<ReservaDTO> reservasDTO = new ArrayList<>();
 
 	    try {
-	        for (Reserva r : reservaDAO.findAll())
+	        for (Reserva r : reservaDao.findAll())
 	            reservasDTO.add(HotelMapper.aDTO(r));
 
 	    } catch (AccesoDatosException | DatoVacioException e) {
@@ -432,17 +425,14 @@ public List<HabitacionDTO> buscarDisponibilidad(LocalDate fechaEntrada, LocalDat
     if (!fechaEntrada.isBefore(fechaSalida))
         throw new FechaInvalidaException("la fecha de entrada debe ser anterior a la fecha de salida");
 
-    ReservaDAO reservaDAO = new ReservaDAOJDBC();
-    HabitacionDao habitacionDAO = new HabitacionDAOJDBC();
 
     List<HabitacionDTO> disponibles = new ArrayList<>();
 
     try {
-        List<Reserva> reservas = reservaDAO.findAll();
-        List<Habitacion> habitaciones = habitacionDAO.findAll();
+        List<Reserva> reservas = reservaDao.findAll();
+        List<Habitacion> habitaciones = habitacionDao.findAll();
 
         List<Integer> numerosOcupados = reservas.stream()
-                .filter(reserva -> !reserva.isEstadoCancelacion())
                 .filter(reserva -> fechaEntrada.isBefore(reserva.getFechaSalida())
                         && fechaSalida.isAfter(reserva.getFechaEntrada()))
                 .flatMap(reserva -> reserva.getHabitaciones().stream())

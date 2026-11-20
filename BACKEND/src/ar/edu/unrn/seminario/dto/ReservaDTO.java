@@ -18,7 +18,7 @@ public class ReservaDTO {
 
 
 	public ReservaDTO(List<HabitacionDTO> habitaciones, PlanDTO plan, ClienteDTO cliente, LocalDate fechaEntrada,
-			LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes, int numeroReserva,  boolean estadoCancelacion, float costoTotal) {
+			LocalDate fechaSalida, PagoDTO pagoSeña, List<HuespedDTO> huespedes, int numeroReserva,  float costoTotal) {
 		this.habitaciones = habitaciones;
 		this.plan = plan;
 		this.cliente = cliente;
@@ -27,7 +27,6 @@ public class ReservaDTO {
 		this.pagoSeña = pagoSeña;
 		this.huespedes = huespedes;
 		this.numeroReserva = numeroReserva;
-		this.estadoCancelacion = estadoCancelacion;
 		this.costoTotal = costoTotal;
 	}
 
