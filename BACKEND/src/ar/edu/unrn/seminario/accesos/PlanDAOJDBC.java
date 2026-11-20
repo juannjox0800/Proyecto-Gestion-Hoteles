@@ -118,7 +118,7 @@ public class PlanDAOJDBC implements PlanDAO {
 	
 	@Override
 	public void remove(String nombre) throws EntidadNoEncontradaException, AccesoDatosException, EntidadEnUsoException {
-		String sql = "DELETE FROM plan WHERE nombre_plan = ?";
+		String sql = "DELETE FROM plan WHERE plan_nombre = ?";
 
 		Connection conex = ConnectionManager.getConnection();
 
